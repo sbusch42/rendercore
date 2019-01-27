@@ -65,3 +65,19 @@ In this library, the main loop is implemented in the following way:
 - When a draw-event occurs, it invokes the renderer exactly once.
 
 [TODO]
+
+### Continuous rendering
+
+By default, the rendering is non-continuous, so a rendering is only triggered
+when a redraw-event by the windowing system has arrived, e.g., because the
+window has been resized.
+
+[TODO]
+
+### Animation
+
+[TODO]
+
+### Interaction
+
+[TODO]

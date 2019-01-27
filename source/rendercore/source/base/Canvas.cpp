@@ -1,16 +1,7 @@
 
 #include <rendercore/base/Canvas.h>
 
-#include <functional>
-#include <algorithm>
-
-#include <glm/glm.hpp>
-
 #include <cppassist/logging/logging.h>
-#include <cppassist/memory/make_unique.h>
-#include <cppassist/string/manipulation.h>
-
-#include <glbinding/gl/enum.h>
 
 #include <globjects/Framebuffer.h>
 
@@ -25,12 +16,7 @@ namespace rendercore
 Canvas::Canvas(Environment * environment)
 : m_environment(environment)
 , m_openGLContext(nullptr)
-, m_initialized(false)
 , m_timeDelta(0.0f)
-, m_rendered(false)
-, m_renderer(nullptr)
-, m_oldRenderer(nullptr)
-, m_replaceRenderer(false)
 {
 }
 
@@ -58,47 +44,63 @@ AbstractGLContext * Canvas::openGLContext()
     return m_openGLContext;
 }
 
-void Canvas::setOpenGLContext(AbstractGLContext * context)
+void Canvas::initContext(AbstractGLContext * context)
 {
     std::lock_guard<std::recursive_mutex> lock(this->m_mutex);
+    cppassist::debug(0, "rendercore") << "Canvas::initContext()";
 
-    // Deinitialize renderer in old context
-    if (m_openGLContext)
-    {
-        cppassist::debug(2, "rendercore") << "deinitContext()";
+    // Check if canvas is already attached to this context
+    if (m_openGLContext == context) {
+        cppassist::error("rendercore") << "Canvas::initContext(): Canvas is already attached to this context.";
+        return;
+    }
 
-        if (m_renderer)
-        {
+    // Check if canvas is attached to another context
+    if (m_openGLContext != nullptr) {
+        cppassist::error("rendercore") << "Canvas::initContext(): Canvas is already attached to another context.";
+        return;
+    }
+
+    // Initialize context
+    if (context) {
+        // Save context
+        m_openGLContext = context;
+
+        // The renderer will be initialized in the new context on the next rendering call
+        redraw();
+    }
+}
+
+void Canvas::deinitContext(AbstractGLContext * context)
+{
+    std::lock_guard<std::recursive_mutex> lock(this->m_mutex);
+    cppassist::debug(0, "rendercore") << "Canvas::deinitContext()";
+
+    // Check if canvas is attached to the context
+    if (m_openGLContext != context) {
+        cppassist::error("rendercore") << "Canvas::deinitContext(): Canvas is not attached to this context.";
+        return;
+    }
+
+    // Deinitialize context
+    if (m_openGLContext) {
+        // Deinitialize renderer in context
+        if (m_renderer) {
             m_renderer->deinitContext(m_openGLContext);
         }
 
+        // Reset context
         m_openGLContext = nullptr;
     }
 
-    // Initialize renderer in new context
-    if (context)
-    {
-        cppassist::debug(2, "rendercore") << "initContext()";
-
-        m_openGLContext = context;
-
-        // Initialization happens later during render
-        /*
-        if (m_renderer)
-        {
-            m_renderer->initContext(m_openGLContext);
-        }
-        */
-        m_replaceRenderer = true;
-    }
-
-    // Reset status
-    m_initialized = false;
+    // Reset viewport
+    m_viewport.invalidate();
 }
 
-void Canvas::setRenderer(Renderer * renderer)
+void Canvas::setRenderer(std::unique_ptr<Renderer> && renderer)
 {
-    m_renderer = renderer;
+    // Set new renderer to replace the old one
+    m_newRenderer = std::move(renderer);
 }
 
 void Canvas::updateTime()
@@ -117,8 +119,7 @@ void Canvas::updateTime()
     float timeDelta = std::chrono::duration_cast<std::chrono::duration<float>>(duration).count();
     m_timeDelta += timeDelta;
 
-    if (!m_renderer)
-    {
+    if (!m_renderer) {
         return;
     }
 
@@ -129,29 +130,25 @@ void Canvas::updateTime()
     checkRedraw();
 }
 
-void Canvas::setViewport(const glm::vec4 & deviceViewport)
+glm::vec4 Canvas::viewport() const
+{
+    return m_viewport.value();
+}
+
+void Canvas::setViewport(const glm::vec4 & viewport)
 {
     std::lock_guard<std::recursive_mutex> lock(this->m_mutex);
 
     // Store viewport information
-    m_viewport  = deviceViewport;
-    m_initialized = true;
-
-    if (!m_renderer)
-    {
-        return;
-    }
+    m_viewport = viewport;
 
     // Promote new viewport
-    m_renderer->setViewport(m_viewport);
+    if (m_renderer) {
+        m_renderer->setViewport(m_viewport.value());
+    }
 
     // Check if a redraw is required
     checkRedraw();
-}
-
-const glm::vec4 & Canvas::viewport() const
-{
-    return m_viewport;
 }
 
 void Canvas::render(globjects::Framebuffer * targetFBO)
@@ -162,61 +159,46 @@ void Canvas::render(globjects::Framebuffer * targetFBO)
     m_timeDelta = 0.0f;
 
     auto fboName = targetFBO->hasName() ? targetFBO->name() : std::to_string(targetFBO->id());
-    cppassist::debug(2, "rendercore") << "render(); " << "targetFBO: " << fboName;
+    cppassist::debug(0, "rendercore") << "Canvas::render(); " << "targetFBO: " << fboName;
 
-    // Abort if not initialized
-    if (!m_initialized || !m_renderer)
-    {
+    // Check if the renderer must be replaced
+    if (m_newRenderer) {
+        // Deinitialize old renderer
+        if (m_renderer && m_renderer->openGLContext()) {
+            m_renderer->deinitContext(m_openGLContext);
+        }
+
+        // Replace renderer
+        m_renderer = std::move(m_newRenderer);
+    }
+
+    // Check for a valid renderer
+    if (!m_renderer || !m_viewport.isValid()) {
         return;
     }
 
-    // Check if the renderer is to be replaced
-    if (m_replaceRenderer)
-    {
-        // Check if an old renderer must be destroyed
-        if (m_oldRenderer)
-        {
-            // Deinitialize old renderer
-            m_oldRenderer->deinitContext(m_openGLContext);
-
-            // Destroy old renderer
-            m_oldRenderer = nullptr;
-        }
-
+    // Check if renderer needs to be initialized in context
+    if (m_renderer->openGLContext() != m_openGLContext) {
         // Initialize renderer
         m_renderer->initContext(m_openGLContext);
 
         // Promote viewport information
-        m_renderer->setViewport(m_viewport);
-
-        // Replace finished
-        m_replaceRenderer = false;
+        m_renderer->setViewport(m_viewport.value());
     }
 
     // Render
     m_renderer->render();
-
-    // Signal that a frame has been rendered
-    m_rendered = true;
 }
 
 void Canvas::checkRedraw()
 {
-    // Invoke callbacks after a frame has been rendered
-    if (m_rendered) {
-        // Reset flag
-        m_rendered = false;
-    }
-
-    if (!m_renderer)
-    {
+    if (!m_renderer) {
         return;
     }
 
     bool redraw = false;
 
-    if (redraw)
-    {
+    if (redraw) {
         this->redraw();
     }
 }

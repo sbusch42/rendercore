@@ -1,15 +1,15 @@
 
+// [TODO] Review
 #include <rendercore-glfw/Application.h>
 
+#include <iostream>
+
 #include <cassert>
-#include <chrono>
-#include <thread>
 
 #define GLFW_INCLUDE_NONE
 #include <GLFW/glfw3.h>
 
 #include <rendercore/base/Environment.h>
-#include <rendercore/base/TimerManager.h>
 
 #include <rendercore-glfw/Window.h>
 
@@ -37,6 +37,7 @@ void Application::quit(int code)
 
 void Application::wakeup()
 {
+    // Post event to wake up the mainloop
     glfwPostEmptyEvent();
 }
 
@@ -77,6 +78,8 @@ int Application::run()
     // Execute main loop
     while (m_running)
     {
+        std::cout << "mainloop!" << std::endl;
+
         // Wait until events arrive.
         // To unlock the main loop, call wakeup().
         glfwWaitEvents();
@@ -123,16 +126,6 @@ void Application::processEvents()
             window->processEvents();
         }
     }
-
-    // Update scripting timers
-    // [TODO]
-    // m_environment->timerManager()->update();
-
-    // Make sure we don't saturate the CPU
-    std::this_thread::sleep_for(std::chrono::milliseconds(5));
-
-    // Wake up mainloop to enable continuous update/simulation
-    wakeup();
 }
 
 

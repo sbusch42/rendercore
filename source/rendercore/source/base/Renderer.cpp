@@ -26,6 +26,7 @@ namespace rendercore
 
 Renderer::Renderer(Environment * environment)
 : m_environment(environment)
+, m_openGLContext(nullptr)
 , m_viewport(0, 0, 0, 0)
 , m_timeDelta(0.0f)
 , m_timeMeasurement(false)
@@ -50,32 +51,75 @@ Environment * Renderer::environment()
     return m_environment;
 }
 
+const AbstractGLContext * Renderer::openGLContext() const
+{
+    return m_openGLContext;
+}
+
+AbstractGLContext * Renderer::openGLContext()
+{
+    return m_openGLContext;
+}
+
 void Renderer::initContext(AbstractGLContext * context)
 {
-    cppassist::debug(2, "rendercore") << "Renderer::initContext()";
+    cppassist::debug(0, "rendercore") << "Renderer::initContext()";
 
-    // Create time queries
-    gl::glGenQueries(4, m_queries.data());
-
-    // Dummy querys for first frame
-    if (m_useQueryPairOne)
-    {
-        gl::glQueryCounter(m_queries[Query::PairOneStart], gl::GL_TIMESTAMP);
-        gl::glQueryCounter(m_queries[Query::PairOneEnd], gl::GL_TIMESTAMP);
-    }
-    else
-    {
-        gl::glQueryCounter(m_queries[Query::PairTwoStart], gl::GL_TIMESTAMP);
-        gl::glQueryCounter(m_queries[Query::PairTwoEnd], gl::GL_TIMESTAMP);
+    // Check if renderer is already attached to this context
+    if (m_openGLContext == context) {
+        cppassist::error("rendercore") << "Renderer::initContext(): Renderer is already attached to this context.";
+        return;
     }
 
-    onContextInit(context);
+    // Check if renderer is attached to another context
+    if (m_openGLContext != nullptr) {
+        cppassist::error("rendercore") << "Renderer::initContext(): Renderer is already attached to another context.";
+        return;
+    }
+
+    // Initialize new context
+    if (context) {
+        // Save context
+        m_openGLContext = context;
+
+        // Create time queries
+        gl::glGenQueries(4, m_queries.data());
+
+        // Dummy querys for first frame
+        if (m_useQueryPairOne)
+        {
+            gl::glQueryCounter(m_queries[Query::PairOneStart], gl::GL_TIMESTAMP);
+            gl::glQueryCounter(m_queries[Query::PairOneEnd], gl::GL_TIMESTAMP);
+        }
+        else
+        {
+            gl::glQueryCounter(m_queries[Query::PairTwoStart], gl::GL_TIMESTAMP);
+            gl::glQueryCounter(m_queries[Query::PairTwoEnd], gl::GL_TIMESTAMP);
+        }
+
+        // Initialize renderer in context
+        onContextInit(context);
+    }
 }
 
 void Renderer::deinitContext(AbstractGLContext * context)
 {
-    cppassist::debug(2, "rendercore") << "Renderer::deinitContext()";
-    onContextDeinit(context);
+    cppassist::debug(0, "rendercore") << "Renderer::deinitContext()";
+
+    // Check if renderer is attached to the context
+    if (m_openGLContext != context) {
+        cppassist::error("rendercore") << "Renderer::deinitContext(): Renderer is not attached to this context.";
+        return;
+    }
+
+    // Deinitialize context
+    if (m_openGLContext) {
+        // Deinitialize renderer in context
+        onContextDeinit(context);
+
+        // Reset context
+        m_openGLContext = nullptr;
+    }
 }
 
 void Renderer::render()

@@ -1,4 +1,5 @@
 
+// [TODO] Review
 #include <rendercore-glfw/RenderWindow.h>
 
 #define GLFW_INCLUDE_NONE
@@ -55,12 +56,12 @@ Canvas * RenderWindow::canvas() const
 
 void RenderWindow::onContextInit()
 {
-    m_canvas->setOpenGLContext(m_context.get());
+    m_canvas->initContext(m_context.get());
 }
 
 void RenderWindow::onContextDeinit()
 {
-    m_canvas->setOpenGLContext(nullptr);
+    m_canvas->deinitContext(m_context.get());
 }
 
 void RenderWindow::onResize(ResizeEvent & event)
@@ -98,17 +99,20 @@ void RenderWindow::onKeyPress(KeyEvent & event)
     }
 
     /*
+    // Promote event to canvas
     m_canvas->promoteKeyPress(
         fromGLFWKeyCode(event.key()),
         fromGLFWModifier(event.modifiers())
     );
     */
 
+    // F11/ALT+ENTER: Toogle fullscreen
     if (event.key() == GLFW_KEY_F11 || (event.key() == GLFW_KEY_ENTER && (event.modifiers() & GLFW_MOD_ALT) != 0) )
     {
         setFullscreen(!isFullscreen());
     }
 
+    // ESC: Close window
     if (event.key() == GLFW_KEY_ESCAPE)
     {
         close();
@@ -118,6 +122,7 @@ void RenderWindow::onKeyPress(KeyEvent & event)
 void RenderWindow::onKeyRelease(KeyEvent & event)
 {
     /*
+    // Promote event to canvas
     m_canvas->promoteKeyRelease(
         fromGLFWKeyCode(event.key()),
         fromGLFWModifier(event.modifiers())
@@ -128,6 +133,7 @@ void RenderWindow::onKeyRelease(KeyEvent & event)
 void RenderWindow::onMousePress(MouseEvent & event)
 {
     /*
+    // Promote event to canvas
     m_canvas->promoteMousePress(
         fromGLFWMouseButton(event.button())
       , event.pos()
@@ -139,6 +145,7 @@ void RenderWindow::onMousePress(MouseEvent & event)
 void RenderWindow::onMouseRelease(MouseEvent & event)
 {
     /*
+    // Promote event to canvas
     m_canvas->promoteMouseRelease(
         fromGLFWMouseButton(event.button())
       , event.pos()
@@ -150,21 +157,27 @@ void RenderWindow::onMouseRelease(MouseEvent & event)
 void RenderWindow::onMouseMove(MouseEvent & event)
 {
     /*
+    // Promote event to canvas
     m_canvas->promoteMouseMove(event.pos(), event.modifiers());
     */
 }
 
 void RenderWindow::onMouseEnter(MouseEnterEvent &)
 {
+    // Promote event to canvas
+    // [TODO]
 }
 
 void RenderWindow::onMouseLeave(MouseLeaveEvent &)
 {
+    // Promote event to canvas
+    // [TODO]
 }
 
 void RenderWindow::onScroll(MouseEvent & event)
 {
     /*
+    // Promote event to canvas
     m_canvas->promoteMouseWheel(
         event.delta()
       , event.pos()

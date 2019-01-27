@@ -2,12 +2,14 @@
 #pragma once
 
 
+#include <memory>
 #include <mutex>
 
 #include <glm/vec4.hpp>
 
 #include <cppexpose/signal/Signal.h>
 
+#include <rendercore/base/CachedValue.h>
 #include <rendercore/base/ChronoTimer.h>
 
 
@@ -38,8 +40,8 @@ class Renderer;
 class RENDERCORE_API Canvas
 {
 public:
-    // Must be emitted only from the UI thread
     cppexpose::Signal<> redraw; ///< Called when the canvas needs to be redrawn
+    cppexpose::Signal<> update; ///< Called when the canvas needs to be redrawn
 
 public:
     //@{
@@ -81,8 +83,8 @@ public:
     *
     *  @remarks
     *    The returned context can be null if the canvas has not been
-    *    initialized yet, or the method is called between onContextDeinit()
-    *    and onContextInit() when the context has been changed.
+    *    initialized yet, or the method is called between deinitContext()
+    *    and initContext() when the context has been changed.
     *    Aside from that, there should always be a valid OpenGL context
     *    attached to the canvas.
     */
@@ -93,19 +95,37 @@ public:
     //@{
     /**
     *  @brief
-    *    Set OpenGL context
+    *    Initialize in OpenGL context
     *
     *  @param[in] context
-    *    OpenGL context used for rendering on the canvas (can be null)
+    *    OpenGL context used for rendering on the canvas (must NOT be null)
     *
     *  @remarks
-    *    This function should only be called by the windowing backend.
-    *    If the canvas still has a valid context, onContextDeinit()
-    *    will be called and the context pointer will be set to nullptr.
-    *    Then, if the new context is valid, the context pointer will be
-    *    set to that new context and onContextInit() will be invoked.
+    *    This function needs to be called by the windowing backend after
+    *    a new context has been created. The context must already be
+    *    active when this function is called. If the canvas has been
+    *    used in another context previously, it must first be deinitialized
+    *    in that context using contextDeinit(), before calling this
+    *    function. If another context is still set for this canvas,
+    *    the function will fail with an error.
     */
-    void setOpenGLContext(AbstractGLContext * context);
+    void initContext(AbstractGLContext * context);
+
+    /**
+    *  @brief
+    *    De-initialize in OpenGL context
+    *
+    *  @param[in] context
+    *    OpenGL context used for rendering on the canvas (must NOT be null)
+    *
+    *  @remarks
+    *    This function needs to be called by the windowing backend
+    *    before a context is destroyed or a new one is set for the canvas.
+    *    The context must be active when this function is called.
+    *    If the canvas has not been initialized for this context,
+    *    the function will fail with an error.
+    */
+    void deinitContext(AbstractGLContext * context);
 
     /**
     *  @brief
@@ -113,8 +133,12 @@ public:
     *
     *  @param[in] renderer
     *    Renderer to use
+    *
+    *  @remarks
+    *    Will replace the previous renderer attach to the canvas.
+    *    The canvas takes over ownership over the renderer.
     */
-    void setRenderer(Renderer * renderer);
+    void setRenderer(std::unique_ptr<Renderer> && renderer);
 
     /**
     *  @brief
@@ -133,21 +157,21 @@ public:
 
     /**
     *  @brief
+    *    Get viewport
+    *
+    *  @return
+    *    Viewport (in real device coordinates)
+    */
+    glm::vec4 viewport() const;
+
+    /**
+    *  @brief
     *    Set viewport (must be called from UI thread)
     *
     *  @param[in] viewport
     *    Viewport (in real device coordinates)
     */
     void setViewport(const glm::vec4 & viewport);
-
-    /**
-    *  @brief
-    *    Get viewport (in real device coordinates)
-    *
-    *  @return
-    *    The viewport
-    */
-    const glm::vec4 & viewport() const;
 
     /**
     *  @brief
@@ -173,17 +197,14 @@ protected:
     //@}
 
 protected:
-    Environment          * m_environment;   ///< Environment to which the canvas belongs
-    AbstractGLContext    * m_openGLContext; ///< OpenGL context used for rendering onto the canvas
-    bool                   m_initialized;   ///< 'true' if the context has been initialized and the viewport has been set, else 'false'
-    ChronoTimer            m_clock;         ///< Time measurement
-    glm::vec4              m_viewport;      ///< Viewport (in real device coordinates)
-    float                  m_timeDelta;     ///< Time delta since the last update (in seconds)
-    std::recursive_mutex   m_mutex;         ///< Mutex for separating main and render thread
-    bool                   m_rendered;      ///< 'true' after a new frame has been drawn
-    Renderer             * m_renderer;      ///< Renderer that renders into the canvas
-    Renderer             * m_oldRenderer;
-    bool                   m_replaceRenderer;
+    Environment               * m_environment;   ///< Environment to which the canvas belongs
+    AbstractGLContext         * m_openGLContext; ///< OpenGL context used for rendering onto the canvas
+    std::unique_ptr<Renderer>   m_renderer;      ///< Renderer that renders into the canvas
+    std::unique_ptr<Renderer>   m_newRenderer;   ///< Renderer that is scheduled to replace the current renderer
+    CachedValue<glm::vec4>      m_viewport;      ///< Viewport (in real device coordinates)
+    std::recursive_mutex        m_mutex;         ///< Mutex for separating main and render thread
+    ChronoTimer                 m_clock;         ///< Time measurement
+    float                       m_timeDelta;     ///< Time delta since the last update (in seconds)
 };
 
 

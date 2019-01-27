@@ -73,8 +73,8 @@ void ExampleRenderer::onContextDeinit(AbstractGLContext *)
 void ExampleRenderer::onRender()
 {
     // [DEBUG]
-    std::cout << "onRender()" << std::endl;
-    std::cout << "viewport: " << m_viewport.x << ", " << m_viewport.y << ", " << m_viewport.z << ", " << m_viewport.w << std::endl;
+//  std::cout << "onRender()" << std::endl;
+//  std::cout << "viewport: " << m_viewport.x << ", " << m_viewport.y << ", " << m_viewport.z << ", " << m_viewport.w << std::endl;
 
     // Update viewport
     gl::glViewport(m_viewport.x, m_viewport.y, m_viewport.z, m_viewport.w);

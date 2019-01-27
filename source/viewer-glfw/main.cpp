@@ -1,4 +1,8 @@
 
+
+#include <memory>
+
+#include <cppassist/memory/make_unique.h>
 #include <cppassist/logging/logging.h>
 #include <cppassist/cmdline/ArgumentParser.h>
 
@@ -40,26 +44,26 @@ int main(int argc, char * argv[])
     format.setVersion(3, 2);
     format.setProfile(rendercore::GLContextFormat::Profile::Core);
     format.setForwardCompatible(true);
-
     if (!contextString.empty())
     {
+        // Set format from command line parameter
         if (!format.initializeFromString(contextString))
         {
             return 1;
         }
     }
 
+    // Create window
     window.setContextFormat(format);
-
-    ExampleRenderer renderer(&environment);
-    window.canvas()->setRenderer(&renderer);
-
     window.setTitle("rendercore viewer");
     window.setSize(1280, 720);
     if (!window.create())
     {
         return 1;
     }
+
+    // Create renderer
+    window.canvas()->setRenderer(cppassist::make_unique<ExampleRenderer>(&environment));
 
     // Initialize context, print context info
     window.context()->use();

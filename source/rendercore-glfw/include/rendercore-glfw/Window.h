@@ -1,5 +1,7 @@
 
+// [TODO] Review
 #pragma once
+
 
 #include <memory>
 #include <queue>
@@ -61,7 +63,7 @@ public:
     static const std::set<Window*> & instances();
 
 private:
-    static std::set<Window*> s_instances;   ///< List of window instances
+    static std::set<Window*> s_instances; ///< List of window instances
 
 public:
     /**
@@ -416,7 +418,6 @@ protected:
 protected:
     std::string                              m_title;            ///< Window title
     rendercore::GLContextFormat              m_format;           ///< The desired OpenGL context format
-
     GLFWwindow                             * m_window;           ///< GLFW window (can be nullptr)
     std::queue<std::unique_ptr<WindowEvent>> m_eventQueue;       ///< List of events to be processed by the window
     bool                                     m_fullscreen;       ///< 'true' if window is in fullscreen mode, else 'false'
