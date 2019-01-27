@@ -8,7 +8,9 @@
 #include <rendercore-glfw/rendercore-glfw_api.h>
 
 
-namespace rendercore_glfw
+namespace rendercore
+{
+namespace glfw
 {
 
 
@@ -332,4 +334,5 @@ protected:
 };
 
 
-} // namespace rendercore_glfw
+} // namespace glfw
+} // namespace rendercore

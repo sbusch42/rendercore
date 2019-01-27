@@ -9,12 +9,14 @@
 #define GLFW_INCLUDE_NONE
 #include <GLFW/glfw3.h>
 
-#include <rendercore/base/Environment.h>
+#include <rendercore/Environment.h>
 
 #include <rendercore-glfw/Window.h>
 
 
-namespace rendercore_glfw
+namespace rendercore
+{
+namespace glfw
 {
 
 
@@ -129,4 +131,5 @@ void Application::processEvents()
 }
 
 
-} // namespace rendercore_glfw
+} // namespace glfw
+} // namespace rendercore

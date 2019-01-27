@@ -3,7 +3,7 @@
 #pragma once
 
 
-#include <rendercore/base/AbstractGLContext.h>
+#include <rendercore-opengl/AbstractGLContext.h>
 
 #include <rendercore-glfw/rendercore-glfw_api.h>
 
@@ -11,7 +11,9 @@
 struct GLFWwindow;
 
 
-namespace rendercore_glfw
+namespace rendercore
+{
+namespace glfw
 {
 
 
@@ -19,7 +21,7 @@ namespace rendercore_glfw
 *  @brief
 *    OpenGL context implementation based on GLFW
 */
-class RENDERCORE_GLFW_API GLContext : public rendercore::AbstractGLContext
+class RENDERCORE_GLFW_API GLContext : public rendercore::opengl::AbstractGLContext
 {
 public:
     /**
@@ -32,7 +34,7 @@ public:
     *  @remarks
     *    Operates on the current OpenGL context
     */
-    static void updateSwapBehavior(rendercore::GLContextFormat::SwapBehavior swapBehavior);
+    static void updateSwapBehavior(rendercore::opengl::GLContextFormat::SwapBehavior swapBehavior);
 
 public:
     /**
@@ -68,4 +70,5 @@ protected:
 };
 
 
-} // namespace rendercore_glfw
+} // namespace glfw
+} // namespace rendercore

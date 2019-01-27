@@ -10,7 +10,7 @@
 
 #include <glm/vec2.hpp>
 
-#include <rendercore/base/GLContextFormat.h>
+#include <rendercore-opengl/GLContextFormat.h>
 
 #include <rendercore-glfw/rendercore-glfw_api.h>
 
@@ -21,11 +21,19 @@ struct GLFWmonitor;
 
 namespace rendercore
 {
-    class AbstractGLContext;
+
+
+namespace opengl
+{
+
+
+class AbstractGLContext;
+
+
 }
 
 
-namespace rendercore_glfw
+namespace glfw
 {
 
 
@@ -93,7 +101,7 @@ public:
     *    has been created. Afterwards, the function will fail
     *    and the context format will not be changed.
     */
-    bool setContextFormat(const rendercore::GLContextFormat & format);
+    bool setContextFormat(const rendercore::opengl::GLContextFormat & format);
 
     /**
     *  @brief
@@ -384,7 +392,7 @@ protected:
     *    This function will actually create a new window with the given context
     *    format, so any previously obtained window IDs will be rendered invalid.
     */
-    bool createInternalWindow(const rendercore::GLContextFormat & format, int width, int height, GLFWmonitor * monitor = nullptr);
+    bool createInternalWindow(const rendercore::opengl::GLContextFormat & format, int width, int height, GLFWmonitor * monitor = nullptr);
 
     /**
     *  @brief
@@ -417,7 +425,7 @@ protected:
 
 protected:
     std::string                              m_title;            ///< Window title
-    rendercore::GLContextFormat              m_format;           ///< The desired OpenGL context format
+    rendercore::opengl::GLContextFormat      m_format;           ///< The desired OpenGL context format
     GLFWwindow                             * m_window;           ///< GLFW window (can be nullptr)
     std::queue<std::unique_ptr<WindowEvent>> m_eventQueue;       ///< List of events to be processed by the window
     bool                                     m_fullscreen;       ///< 'true' if window is in fullscreen mode, else 'false'
@@ -428,4 +436,5 @@ protected:
 };
 
 
-} // namespace rendercore_glfw
+} // namespace glfw
+} // namespace rendercore

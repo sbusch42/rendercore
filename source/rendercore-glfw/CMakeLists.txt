@@ -164,6 +164,7 @@ target_link_libraries(${target}
     globjects::globjects
     glfw
     ${META_PROJECT_NAME}::rendercore
+    ${META_PROJECT_NAME}::rendercore-opengl
 
     INTERFACE
 )

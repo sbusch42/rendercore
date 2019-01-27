@@ -7,10 +7,11 @@
 #include <cppassist/cmdline/ArgumentParser.h>
 
 #include <rendercore/rendercore.h>
-#include <rendercore/base/Environment.h>
-#include <rendercore/base/Canvas.h>
-#include <rendercore/base/GLContextUtils.h>
-#include <rendercore/base/ExampleRenderer.h>
+#include <rendercore/Environment.h>
+#include <rendercore/Canvas.h>
+
+#include <rendercore-opengl/GLContextUtils.h>
+#include <rendercore-opengl/ExampleRenderer.h>
 
 #include <rendercore-glfw/Application.h>
 #include <rendercore-glfw/RenderWindow.h>
@@ -18,7 +19,8 @@
 
 
 using namespace rendercore;
-using namespace rendercore_glfw;
+using namespace rendercore::opengl;
+using namespace rendercore::glfw;
 
 
 int main(int argc, char * argv[])
@@ -40,9 +42,9 @@ int main(int argc, char * argv[])
     RenderWindow window(&environment);
 
     // Specify desired context format
-    rendercore::GLContextFormat format;
+    rendercore::opengl::GLContextFormat format;
     format.setVersion(3, 2);
-    format.setProfile(rendercore::GLContextFormat::Profile::Core);
+    format.setProfile(rendercore::opengl::GLContextFormat::Profile::Core);
     format.setForwardCompatible(true);
     if (!contextString.empty())
     {

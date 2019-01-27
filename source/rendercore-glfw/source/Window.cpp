@@ -10,7 +10,7 @@
 #include <cppassist/logging/logging.h>
 #include <cppassist/memory/make_unique.h>
 
-#include <rendercore/base/GLContextFormat.h>
+#include <rendercore-opengl/GLContextFormat.h>
 
 #include <rendercore-glfw/GLContext.h>
 #include <rendercore-glfw/GLContextFactory.h>
@@ -22,7 +22,9 @@
 using namespace rendercore;
 
 
-namespace rendercore_glfw
+namespace rendercore
+{
+namespace glfw
 {
 
 
@@ -58,7 +60,7 @@ Window::~Window()
     destroy();
 }
 
-bool Window::setContextFormat(const rendercore::GLContextFormat & format)
+bool Window::setContextFormat(const rendercore::opengl::GLContextFormat & format)
 {
     // If window has already been created, the context format cannot be changed anymore
     if (m_context)
@@ -510,7 +512,7 @@ void Window::clearEventQueue()
     std::swap(m_eventQueue, empty);
 }
 
-bool Window::createInternalWindow(const GLContextFormat & format, int width, int height, GLFWmonitor * monitor)
+bool Window::createInternalWindow(const rendercore::opengl::GLContextFormat & format, int width, int height, GLFWmonitor * monitor)
 {
     // Abort if window is already created
     assert(!m_context);
@@ -651,4 +653,5 @@ void Window::onIdle()
 }
 
 
-} // namespace rendercore_glfw
+} // namespace glfw
+} // namespace rendercore

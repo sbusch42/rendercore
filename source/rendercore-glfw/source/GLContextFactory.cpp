@@ -14,7 +14,7 @@
 
 #include <glbinding/Binding.h>
 
-#include <rendercore/base/GLContextFormat.h>
+#include <rendercore-opengl/GLContextFormat.h>
 
 #include <rendercore-glfw/GLContext.h>
 
@@ -22,7 +22,9 @@
 using namespace rendercore;
 
 
-namespace rendercore_glfw
+namespace rendercore
+{
+namespace glfw
 {
 
 
@@ -37,7 +39,7 @@ GLContextFactory::~GLContextFactory()
 {
 }
 
-std::unique_ptr<rendercore::AbstractGLContext> GLContextFactory::createContext(const rendercore::GLContextFormat & format) const
+std::unique_ptr<rendercore::opengl::AbstractGLContext> GLContextFactory::createContext(const rendercore::opengl::GLContextFormat & format) const
 {
     // Adjust GLFW settings to produce the given context format
     initializeGLFWState(format);
@@ -59,7 +61,7 @@ std::unique_ptr<rendercore::AbstractGLContext> GLContextFactory::createContext(c
     return std::move(context);
 }
 
-void GLContextFactory::initializeGLFWState(const rendercore::GLContextFormat & format)
+void GLContextFactory::initializeGLFWState(const rendercore::opengl::GLContextFormat & format)
 {
     // GLFW3 does not set default hint values on window creation so at least
     // the default values must be set before glfwCreateWindow can be called.
@@ -83,11 +85,11 @@ void GLContextFactory::initializeGLFWState(const rendercore::GLContextFormat & f
     // Set OpenGL profile
     switch (format.profile())
     {
-        case rendercore::GLContextFormat::Profile::Core:
+        case rendercore::opengl::GLContextFormat::Profile::Core:
             glfwWindowHint(GLFW_OPENGL_PROFILE, GLFW_OPENGL_CORE_PROFILE);
             break;
 
-        case rendercore::GLContextFormat::Profile::Compatibility:
+        case rendercore::opengl::GLContextFormat::Profile::Compatibility:
             glfwWindowHint(GLFW_OPENGL_PROFILE, GLFW_OPENGL_COMPAT_PROFILE);
             break;
 
@@ -108,4 +110,5 @@ void GLContextFactory::initializeGLFWState(const rendercore::GLContextFormat & f
 }
 
 
-} // namespace rendercore_glfw
+} // namespace glfw
+} // namespace rendercore

@@ -11,8 +11,8 @@
 
 #include <globjects/Framebuffer.h>
 
-#include <rendercore/base/Canvas.h>
-#include <rendercore/base/Environment.h>
+#include <rendercore/Canvas.h>
+#include <rendercore/Environment.h>
 
 #include <rendercore-glfw/GLContext.h>
 #include <rendercore-glfw/WindowEvent.h>
@@ -21,7 +21,9 @@
 using namespace rendercore;
 
 
-namespace rendercore_glfw
+namespace rendercore
+{
+namespace glfw
 {
 
 
@@ -230,4 +232,5 @@ KeyModifier RenderWindow::fromGLFWModifier(int modifier) const
 */
 
 
-} // namespace rendercore_glfw
+} // namespace glfw
+} // namespace rendercore

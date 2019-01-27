@@ -3,7 +3,7 @@
 #pragma once
 
 
-#include <rendercore/base/AbstractGLContextFactory.h>
+#include <rendercore-opengl/AbstractGLContextFactory.h>
 
 #include <rendercore-glfw/rendercore-glfw_api.h>
 
@@ -11,7 +11,9 @@
 struct GLFWmonitor;
 
 
-namespace rendercore_glfw
+namespace rendercore
+{
+namespace glfw
 {
 
 
@@ -19,7 +21,7 @@ namespace rendercore_glfw
 *  @brief
 *    OpenGL context factory
 */
-class RENDERCORE_GLFW_API GLContextFactory : public rendercore::AbstractGLContextFactory
+class RENDERCORE_GLFW_API GLContextFactory : public rendercore::opengl::AbstractGLContextFactory
 {
 public:
     /**
@@ -42,7 +44,7 @@ public:
     virtual ~GLContextFactory();
 
     // Virtual rendercore::AbstractGLContextFactory functions
-    virtual std::unique_ptr<rendercore::AbstractGLContext> createContext(const rendercore::GLContextFormat & format) const override;
+    virtual std::unique_ptr<rendercore::opengl::AbstractGLContext> createContext(const rendercore::opengl::GLContextFormat & format) const override;
 
 private:
     /**
@@ -52,7 +54,7 @@ private:
     *  @param[in] format
     *    OpenGL context format
     */
-    static void initializeGLFWState(const rendercore::GLContextFormat & format);
+    static void initializeGLFWState(const rendercore::opengl::GLContextFormat & format);
 
 private:
     GLFWmonitor * m_monitor; ///< GLFW monitor (if valid, fullscreen mode is used, else windowed mode)
@@ -61,4 +63,5 @@ private:
 };
 
 
-} // namespace rendercore_glfw
+} // namespace glfw
+} // namespace rendercore

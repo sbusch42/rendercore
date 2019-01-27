@@ -12,22 +12,25 @@
 #include <GLFW/glfw3.h> // specifies APIENTRY, should be after Error.h include,
                         // which requires APIENTRY in windows..
 
-#include <rendercore/base/GLContextUtils.h>
-#include <rendercore/base/GLContextFormat.h>
+#include <rendercore-opengl/GLContextUtils.h>
+#include <rendercore-opengl/GLContextFormat.h>
 
 
 using namespace rendercore;
+using namespace rendercore::opengl;
 
 
-namespace rendercore_glfw
+namespace rendercore
+{
+namespace glfw
 {
 
 
-void GLContext::updateSwapBehavior(rendercore::GLContextFormat::SwapBehavior swapBehavior)
+void GLContext::updateSwapBehavior(rendercore::opengl::GLContextFormat::SwapBehavior swapBehavior)
 {
     switch (swapBehavior)
     {
-    case rendercore::GLContextFormat::SwapBehavior::DoubleBuffering:
+    case rendercore::opengl::GLContextFormat::SwapBehavior::DoubleBuffering:
         glfwSwapInterval(1);
         break;
 
@@ -83,4 +86,5 @@ void GLContext::release() const
 }
 
 
-} // namespace rendercore_glfw
+} // namespace glfw
+} // namespace rendercore

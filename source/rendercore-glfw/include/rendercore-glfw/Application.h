@@ -8,11 +8,12 @@
 
 namespace rendercore
 {
-    class Environment;
-}
 
 
-namespace rendercore_glfw
+class Environment;
+
+
+namespace glfw
 {
 
 
@@ -22,7 +23,7 @@ namespace rendercore_glfw
 *
 *    The Application class is a singleton that has to be instanciated exactly
 *    once in an application. It controls the main message loop for all windows
-*    (instances of rendercore_glfw::Window).
+*    (instances of rendercore::glfw::Window).
 */
 class RENDERCORE_GLFW_API Application
 {
@@ -137,4 +138,5 @@ protected:
 };
 
 
-} // namespace rendercore_glfw
+} // namespace glfw
+} // namespace rendercore

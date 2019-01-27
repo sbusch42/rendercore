@@ -15,7 +15,7 @@ find_package(glm       REQUIRED)
 #
 
 # Target name
-set(target rendercore)
+set(target rendercore-opengl)
 
 # Exit here if required dependencies are not met
 message(STATUS "Lib ${target}")
@@ -37,33 +37,39 @@ set(include_path "${CMAKE_CURRENT_SOURCE_DIR}/include/${target}")
 set(source_path  "${CMAKE_CURRENT_SOURCE_DIR}/source")
 
 set(headers
-    ${include_path}/rendercore.h
-
-    ${include_path}/AbstractContext.h
-    ${include_path}/AbstractDrawable.h
-    ${include_path}/CachedValue.h
-    ${include_path}/CachedValue.inl
-    ${include_path}/Camera.h
-    ${include_path}/CameraUtils.h
-    ${include_path}/Canvas.h
-    ${include_path}/ChronoTimer.h
-    ${include_path}/Environment.h
-    ${include_path}/Icosahedron.h
-    ${include_path}/Renderer.h
+    ${include_path}/AbstractGLContext.h
+    ${include_path}/AbstractGLContextFactory.h
+    ${include_path}/Box.h
+    ${include_path}/Drawable.h
+    ${include_path}/Drawable.inl
+    ${include_path}/ExampleRenderer.h
+    ${include_path}/GLContextFormat.h
+    ${include_path}/GLContextUtils.h
+    ${include_path}/GlrawTextureLoader.h
+    ${include_path}/Quad.h
+    ${include_path}/RawFileNameSuffix.h
+    ${include_path}/ShaderLoader.h
+    ${include_path}/Shape.h
+    ${include_path}/ShapeType.h
+    ${include_path}/Sphere.h
+    ${include_path}/Triangle.h
 )
 
 set(sources
-    ${source_path}/rendercore.cpp
-
-    ${source_path}/AbstractContext.cpp
-    ${source_path}/AbstractDrawable.cpp
-    ${source_path}/Camera.cpp
-    ${source_path}/CameraUtils.cpp
-    ${source_path}/Canvas.cpp
-    ${source_path}/ChronoTimer.cpp
-    ${source_path}/Environment.cpp
-    ${source_path}/Icosahedron.cpp
-    ${source_path}/Renderer.cpp
+    ${source_path}/AbstractGLContext.cpp
+    ${source_path}/AbstractGLContextFactory.cpp
+    ${source_path}/Box.cpp
+    ${source_path}/Drawable.cpp
+    ${source_path}/ExampleRenderer.cpp
+    ${source_path}/GLContextFormat.cpp
+    ${source_path}/GLContextUtils.cpp
+    ${source_path}/GlrawTextureLoader.cpp
+    ${source_path}/Quad.cpp
+    ${source_path}/RawFileNameSuffix.cpp
+    ${source_path}/ShaderLoader.cpp
+    ${source_path}/Shape.cpp
+    ${source_path}/Sphere.cpp
+    ${source_path}/Triangle.cpp
 )
 
 # Group source files
@@ -171,6 +177,7 @@ target_link_libraries(${target}
     glbinding::glbinding-aux
     globjects::globjects
     glm
+    ${META_PROJECT_NAME}::rendercore
 
     INTERFACE
 )

@@ -15,7 +15,9 @@
 #include <rendercore-glfw/WindowEvent.h>
 
 
-namespace rendercore_glfw
+namespace rendercore
+{
+namespace glfw
 {
 
 
@@ -200,4 +202,5 @@ void WindowEventDispatcher::handleClose(GLFWwindow * glfwWindow)
 }
 
 
-} // namespace rendercore_glfw
+} // namespace glfw
+} // namespace rendercore

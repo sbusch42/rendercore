@@ -6,7 +6,9 @@
 #include <GLFW/glfw3.h>
 
 
-namespace rendercore_glfw
+namespace rendercore
+{
+namespace glfw
 {
 
 
@@ -270,4 +272,5 @@ bool IconifyEvent::isIconified() const
 }
 
 
-} // namespace rendercore_glfw
+} // namespace glfw
+} // namespace rendercore

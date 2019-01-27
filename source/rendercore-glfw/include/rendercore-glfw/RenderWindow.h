@@ -12,12 +12,13 @@
 
 namespace rendercore
 {
-    class Environment;
-    class Canvas;
-}
 
 
-namespace rendercore_glfw
+class Environment;
+class Canvas;
+
+
+namespace glfw
 {
 
 
@@ -136,4 +137,5 @@ protected:
 };
 
 
-} // namespace rendercore_glfw
+} // namespace glfw
+} // namespace rendercore
