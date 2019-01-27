@@ -41,8 +41,8 @@ set(headers
 
     ${include_path}/AbstractContext.h
     ${include_path}/AbstractDrawable.h
-    ${include_path}/CachedValue.h
-    ${include_path}/CachedValue.inl
+    ${include_path}/Cached.h
+    ${include_path}/Cached.inl
     ${include_path}/Camera.h
     ${include_path}/CameraUtils.h
     ${include_path}/Canvas.h

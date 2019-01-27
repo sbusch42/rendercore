@@ -1,5 +1,5 @@
 
-#include <rendercore-opengl/Drawable.h>
+#include <rendercore-opengl/Geometry.h>
 
 #include <cassert>
 
@@ -17,7 +17,7 @@ namespace opengl
 {
 
 
-Drawable::Drawable()
+Geometry::Geometry()
 : m_vao(cppassist::make_unique<globjects::VertexArray>())
 , m_drawMode(DrawMode::Arrays)
 , m_size(0)
@@ -27,31 +27,31 @@ Drawable::Drawable()
 {
 }
 
-Drawable::~Drawable()
+Geometry::~Geometry()
 {
 }
 
-globjects::VertexArray * Drawable::vao() const
+globjects::VertexArray * Geometry::vao() const
 {
     return m_vao.get();
 }
 
-DrawMode Drawable::drawMode() const
+DrawMode Geometry::drawMode() const
 {
     return m_drawMode;
 }
 
-void Drawable::setDrawMode(DrawMode drawMode)
+void Geometry::setDrawMode(DrawMode drawMode)
 {
     m_drawMode = drawMode;
 }
 
-void Drawable::draw() const
+void Geometry::draw() const
 {
     draw(m_drawMode);
 }
 
-void Drawable::draw(DrawMode drawMode) const
+void Geometry::draw(DrawMode drawMode) const
 {
     switch (drawMode)
     {
@@ -67,32 +67,32 @@ void Drawable::draw(DrawMode drawMode) const
     }
 }
 
-void Drawable::drawArrays() const
+void Geometry::drawArrays() const
 {
     drawArrays(m_primitiveMode, 0, m_size);
 }
 
-void Drawable::drawArrays(gl::GLenum mode) const
+void Geometry::drawArrays(gl::GLenum mode) const
 {
     drawArrays(mode, 0, m_size);
 }
 
-void Drawable::drawArrays(gl::GLint first, gl::GLsizei count) const
+void Geometry::drawArrays(gl::GLint first, gl::GLsizei count) const
 {
     drawArrays(m_primitiveMode, first, count);
 }
 
-void Drawable::drawArrays(gl::GLenum mode, gl::GLint first, gl::GLsizei count) const
+void Geometry::drawArrays(gl::GLenum mode, gl::GLint first, gl::GLsizei count) const
 {
     m_vao->drawArrays(mode, first, count);
 }
 
-void Drawable::drawElements() const
+void Geometry::drawElements() const
 {
     drawElements(m_primitiveMode);
 }
 
-void Drawable::drawElements(gl::GLenum mode) const
+void Geometry::drawElements(gl::GLenum mode) const
 {
     if (m_drawMode == DrawMode::ElementsIndices)
     {
@@ -104,7 +104,7 @@ void Drawable::drawElements(gl::GLenum mode) const
     }
 }
 
-void Drawable::drawElements(gl::GLenum mode, gl::GLsizei count, gl::GLenum type, const void * indices) const
+void Geometry::drawElements(gl::GLenum mode, gl::GLsizei count, gl::GLenum type, const void * indices) const
 {
     // [TODO]: rethink recorded vao state
     globjects::Buffer::unbind(gl::GL_ELEMENT_ARRAY_BUFFER);
@@ -112,33 +112,33 @@ void Drawable::drawElements(gl::GLenum mode, gl::GLsizei count, gl::GLenum type,
     m_vao->drawElements(mode, count, type, indices);
 }
 
-void Drawable::drawElements(gl::GLenum mode, gl::GLsizei count, gl::GLenum type, globjects::Buffer *) const
+void Geometry::drawElements(gl::GLenum mode, gl::GLsizei count, gl::GLenum type, globjects::Buffer *) const
 {
     // [TODO]: rethink recorded vao state
     m_vao->drawElements(mode, count, type, nullptr);
 }
 
-gl::GLsizei Drawable::size() const
+gl::GLsizei Geometry::size() const
 {
     return m_size;
 }
 
-void Drawable::setSize(gl::GLsizei size)
+void Geometry::setSize(gl::GLsizei size)
 {
     m_size = size;
 }
 
-gl::GLenum Drawable::primitiveMode() const
+gl::GLenum Geometry::primitiveMode() const
 {
     return m_primitiveMode;
 }
 
-void Drawable::setPrimitiveMode(gl::GLenum mode)
+void Geometry::setPrimitiveMode(gl::GLenum mode)
 {
     m_primitiveMode = mode;
 }
 
-globjects::Buffer * Drawable::buffer(size_t index)
+globjects::Buffer * Geometry::buffer(size_t index)
 {
     if (m_buffers.count(index) == 0)
     {
@@ -148,7 +148,7 @@ globjects::Buffer * Drawable::buffer(size_t index)
     return m_buffers.at(index);
 }
 
-globjects::Buffer * Drawable::buffer(size_t index) const
+globjects::Buffer * Geometry::buffer(size_t index) const
 {
     if (m_buffers.count(index) == 0)
     {
@@ -158,17 +158,17 @@ globjects::Buffer * Drawable::buffer(size_t index) const
     return m_buffers.at(index);
 }
 
-void Drawable::setBuffer(size_t index, globjects::Buffer * buffer)
+void Geometry::setBuffer(size_t index, globjects::Buffer * buffer)
 {
     m_buffers[index] = buffer;
 }
 
-globjects::Buffer * Drawable::indexBuffer() const
+globjects::Buffer * Geometry::indexBuffer() const
 {
     return m_indexBuffer;
 }
 
-void Drawable::setIndexBuffer(globjects::Buffer * buffer)
+void Geometry::setIndexBuffer(globjects::Buffer * buffer)
 {
     m_vao->bind();
     buffer->bind(gl::GL_ELEMENT_ARRAY_BUFFER);
@@ -176,65 +176,65 @@ void Drawable::setIndexBuffer(globjects::Buffer * buffer)
     m_vao->unbind();
 }
 
-void Drawable::setIndexBuffer(globjects::Buffer * buffer, gl::GLenum bufferType)
+void Geometry::setIndexBuffer(globjects::Buffer * buffer, gl::GLenum bufferType)
 {
     setIndexBuffer(buffer);
     setIndexBufferType(bufferType);
 }
 
-gl::GLenum Drawable::indexBufferType() const
+gl::GLenum Geometry::indexBufferType() const
 {
     return m_indexBufferType;
 }
 
-void Drawable::setIndexBufferType(gl::GLenum bufferType)
+void Geometry::setIndexBufferType(gl::GLenum bufferType)
 {
     m_indexBufferType = bufferType;
 }
 
-const std::vector<std::uint32_t> & Drawable::indices() const
+const std::vector<std::uint32_t> & Geometry::indices() const
 {
     return m_indices;
 }
 
-void Drawable::setIndices(const std::vector<std::uint32_t> & indices)
+void Geometry::setIndices(const std::vector<std::uint32_t> & indices)
 {
     m_indices = indices;
 }
 
-globjects::VertexAttributeBinding * Drawable::attributeBinding(size_t index) const
+globjects::VertexAttributeBinding * Geometry::attributeBinding(size_t index) const
 {
     return m_vao->binding(index);
 }
 
-void Drawable::setAttributeBindingBuffer(size_t bindingIndex, size_t bufferIndex, gl::GLint baseOffset, gl::GLint stride)
+void Geometry::setAttributeBindingBuffer(size_t bindingIndex, size_t bufferIndex, gl::GLint baseOffset, gl::GLint stride)
 {
     assert(m_buffers.count(bufferIndex) > 0);
 
     m_vao->binding(bindingIndex)->setBuffer(m_buffers.at(bufferIndex), baseOffset, stride);
 }
 
-void Drawable::setAttributeBindingFormat(size_t bindingIndex, gl::GLint size, gl::GLenum type, gl::GLboolean normalized, gl::GLuint relativeOffset)
+void Geometry::setAttributeBindingFormat(size_t bindingIndex, gl::GLint size, gl::GLenum type, gl::GLboolean normalized, gl::GLuint relativeOffset)
 {
     m_vao->binding(bindingIndex)->setFormat(size, type, normalized, relativeOffset);
 }
 
-void Drawable::setAttributeBindingFormatI(size_t bindingIndex, gl::GLint size, gl::GLenum type, gl::GLuint relativeOffset)
+void Geometry::setAttributeBindingFormatI(size_t bindingIndex, gl::GLint size, gl::GLenum type, gl::GLuint relativeOffset)
 {
     m_vao->binding(bindingIndex)->setIFormat(size, type, relativeOffset);
 }
 
-void Drawable::setAttributeBindingFormatL(size_t bindingIndex, gl::GLint size, gl::GLenum type, gl::GLuint relativeOffset)
+void Geometry::setAttributeBindingFormatL(size_t bindingIndex, gl::GLint size, gl::GLenum type, gl::GLuint relativeOffset)
 {
     m_vao->binding(bindingIndex)->setLFormat(size, type, relativeOffset);
 }
 
-void Drawable::bindAttribute(size_t bindingIndex, gl::GLint attributeIndex)
+void Geometry::bindAttribute(size_t bindingIndex, gl::GLint attributeIndex)
 {
     m_vao->binding(bindingIndex)->setAttribute(attributeIndex);
 }
 
-void Drawable::bindAttributes(const std::vector<gl::GLint> & attributeIndices)
+void Geometry::bindAttributes(const std::vector<gl::GLint> & attributeIndices)
 {
     for (size_t i = 0; i < attributeIndices.size(); ++i)
     {
@@ -242,12 +242,12 @@ void Drawable::bindAttributes(const std::vector<gl::GLint> & attributeIndices)
     }
 }
 
-void Drawable::enableAttributeBinding(size_t bindingIndex)
+void Geometry::enableAttributeBinding(size_t bindingIndex)
 {
     m_vao->enable(m_vao->binding(bindingIndex)->attributeIndex());
 }
 
-void Drawable::enableAllAttributeBindings()
+void Geometry::enableAllAttributeBindings()
 {
     for (const globjects::VertexAttributeBinding * binding : m_vao->bindings())
     {

@@ -11,40 +11,40 @@ namespace rendercore
 
 
 template <typename T>
-CachedValue<T>::CachedValue()
+Cached<T>::Cached()
 : m_valid(false)
 , m_value(T())
 {
 }
 
 template <typename T>
-CachedValue<T>::CachedValue(const T & value)
+Cached<T>::Cached(const T & value)
 : m_valid(true)
 , m_value(value)
 {
 }
 
 template <typename T>
-CachedValue<T>::CachedValue(T && value)
+Cached<T>::Cached(T && value)
 : m_valid(true)
 , m_value(std::move(value))
 {
 }
 
 template <typename T>
-bool CachedValue<T>::isValid() const
+bool Cached<T>::isValid() const
 {
     return m_valid;
 }
 
 template <typename T>
-T & CachedValue<T>::value()
+T & Cached<T>::value()
 {
     return m_value;
 }
 
 template <typename T>
-const T & CachedValue<T>::value() const
+const T & Cached<T>::value() const
 {
     assert(m_valid);
 
@@ -52,27 +52,27 @@ const T & CachedValue<T>::value() const
 }
 
 template <typename T>
-void CachedValue<T>::setValue(const T & value, const bool validate) const
+void Cached<T>::setValue(const T & value, const bool validate) const
 {
     m_valid = validate;
     m_value = value;
 }
 
 template <typename T>
-void CachedValue<T>::setValue(T && value, const bool validate) const
+void Cached<T>::setValue(T && value, const bool validate) const
 {
     m_valid = validate;
     m_value = std::move(value);
 }
 
 template <typename T>
-void CachedValue<T>::validate() const
+void Cached<T>::validate() const
 {
     m_valid = true;
 }
 
 template <typename T>
-void CachedValue<T>::invalidate() const
+void Cached<T>::invalidate() const
 {
     m_valid = false;
 }

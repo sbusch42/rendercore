@@ -6,7 +6,7 @@
 
 #include <cppexpose/signal/Signal.h>
 
-#include <rendercore/CachedValue.h>
+#include <rendercore/Cached.h>
 
 
 namespace rendercore
@@ -241,13 +241,13 @@ protected:
 
 protected:
     // Camera matrices
-                            glm::mat4  m_viewMatrix;                   ///< View matrix
-                            glm::mat4  m_projectionMatrix;             ///< Projection matrix
-    rendercore::CachedValue<glm::mat4> m_viewInvertedMatrix;           ///< Inverted view matrix
-    rendercore::CachedValue<glm::mat4> m_projectionInvertedMatrix;     ///< Inverted projection matrix
-    rendercore::CachedValue<glm::mat4> m_viewProjectionMatrix;         ///< View-projection matrix
-    rendercore::CachedValue<glm::mat4> m_viewProjectionInvertedMatrix; ///< Invertex view-projection matrix
-    rendercore::CachedValue<glm::mat3> m_normalMatrix;                 ///< Normal matrix
+    glm::mat4         m_viewMatrix;                   ///< View matrix
+    glm::mat4         m_projectionMatrix;             ///< Projection matrix
+    Cached<glm::mat4> m_viewInvertedMatrix;           ///< Inverted view matrix
+    Cached<glm::mat4> m_projectionInvertedMatrix;     ///< Inverted projection matrix
+    Cached<glm::mat4> m_viewProjectionMatrix;         ///< View-projection matrix
+    Cached<glm::mat4> m_viewProjectionInvertedMatrix; ///< Invertex view-projection matrix
+    Cached<glm::mat3> m_normalMatrix;                 ///< Normal matrix
 };
 
 

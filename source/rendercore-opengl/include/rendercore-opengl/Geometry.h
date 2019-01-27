@@ -27,7 +27,7 @@ namespace opengl
 *  @brief
 *    Draw mode
 *
-*    Specifies the draw mode (e.g., indexed or arrays) for a Drawable.
+*    Specifies the draw mode (e.g., indexed or arrays) for a Geometry.
 */
 enum class DrawMode : unsigned int
 {
@@ -41,7 +41,7 @@ enum class DrawMode : unsigned int
 *  @brief
 *    Drawable geometry
 *
-*    The Drawable class wraps the setup and drawing routine for vertex arrays,
+*    The Geometry class wraps the setup and drawing routine for vertex arrays,
 *    vertex attribute bindings, and buffers. It can be used to define and render
 *    geometries on the GPU.
 *
@@ -58,7 +58,7 @@ enum class DrawMode : unsigned int
 *   Note: most configurable parameters (such as DrawMode, primitive mode, draw count,
 *         index buffer source, ...) can be temporarily overwritten for each draw call.
 */
-class RENDERCORE_OPENGL_API Drawable : public rendercore::AbstractDrawable
+class RENDERCORE_OPENGL_API Geometry : public rendercore::AbstractDrawable
 {
 public:
     /**
@@ -68,7 +68,7 @@ public:
     *  @remarks
     *    Creates OpenGL objects, thus, a current context is required.
     */
-    Drawable();
+    Geometry();
 
     /**
     *  @brief
@@ -77,7 +77,7 @@ public:
     *  @remarks
     *    Destroys OpenGL objects, thus, a current context is required.
     */
-    virtual ~Drawable();
+    virtual ~Geometry();
 
     /**
     *  @brief
@@ -545,4 +545,4 @@ protected:
 } // namespace rendercore
 
 
-#include <rendercore-opengl/Drawable.inl>
+#include <rendercore-opengl/Geometry.inl>

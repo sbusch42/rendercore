@@ -40,9 +40,9 @@ set(headers
     ${include_path}/AbstractGLContext.h
     ${include_path}/AbstractGLContextFactory.h
     ${include_path}/Box.h
-    ${include_path}/Drawable.h
-    ${include_path}/Drawable.inl
     ${include_path}/ExampleRenderer.h
+    ${include_path}/Geometry.h
+    ${include_path}/Geometry.inl
     ${include_path}/GLContextFormat.h
     ${include_path}/GLContextUtils.h
     ${include_path}/GlrawTextureLoader.h
@@ -59,8 +59,8 @@ set(sources
     ${source_path}/AbstractGLContext.cpp
     ${source_path}/AbstractGLContextFactory.cpp
     ${source_path}/Box.cpp
-    ${source_path}/Drawable.cpp
     ${source_path}/ExampleRenderer.cpp
+    ${source_path}/Geometry.cpp
     ${source_path}/GLContextFormat.cpp
     ${source_path}/GLContextUtils.cpp
     ${source_path}/GlrawTextureLoader.cpp

@@ -7,7 +7,7 @@
 #include <globjects/Buffer.h>
 
 #include <rendercore-opengl/Shape.h>
-#include <rendercore-opengl/Drawable.h>
+#include <rendercore-opengl/Geometry.h>
 
 
 namespace rendercore
@@ -18,7 +18,7 @@ namespace opengl
 
 /**
 *  @brief
-*    Box drawable
+*    Box shape
 */
 class RENDERCORE_OPENGL_API Box : public Shape
 {
@@ -59,7 +59,7 @@ public:
     virtual void draw() const override;
 
 protected:
-    std::unique_ptr<Drawable>          m_drawable;  ///< Underlying drawable object
+    std::unique_ptr<Geometry>          m_geometry;  ///< Underlying geometry
     std::unique_ptr<globjects::Buffer> m_vertices;  ///< Vertex buffer
     std::unique_ptr<globjects::Buffer> m_texCoords; ///< Texture coordinate buffer
 };

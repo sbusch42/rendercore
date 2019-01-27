@@ -19,7 +19,7 @@ namespace rendercore
 *    validity flags. Note: all setters of this class are const, simplifying const
 *    getters in classes by holding a mutable value as member.
 *
-*    Typeical usage of the CachedValue:
+*    Typical usage of Cached:
 *    \code{.cpp}
 *
 *        // on update
@@ -36,7 +36,7 @@ namespace rendercore
 *    The wrapped value type
 */
 template <typename T>
-class RENDERCORE_TEMPLATE_API CachedValue
+class RENDERCORE_TEMPLATE_API Cached
 {
 public:
     /**
@@ -46,7 +46,7 @@ public:
     *  @remarks
     *    Creates an empty, invalid cached value
     */
-    CachedValue();
+    Cached();
 
     /**
     *  @brief
@@ -58,7 +58,7 @@ public:
     *  @remarks
     *    Creates an initialized, valid cached value
     */
-    CachedValue(const T & value);
+    Cached(const T & value);
 
     /**
     *  @brief
@@ -70,7 +70,7 @@ public:
     *  @remarks
     *    Creates an initialized, valid cached value
     */
-    CachedValue(T && value);
+    Cached(T && value);
 
     /**
     *  @brief
@@ -142,4 +142,4 @@ protected:
 } // namespace rendercore
 
 
-#include <rendercore/CachedValue.inl>
+#include <rendercore/Cached.inl>

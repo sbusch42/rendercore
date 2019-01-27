@@ -9,7 +9,7 @@
 
 #include <cppexpose/signal/Signal.h>
 
-#include <rendercore/CachedValue.h>
+#include <rendercore/Cached.h>
 #include <rendercore/ChronoTimer.h>
 
 
@@ -201,7 +201,7 @@ protected:
     AbstractContext           * m_context;       ///< Rendering context used for rendering onto the canvas
     std::unique_ptr<Renderer>   m_renderer;      ///< Renderer that renders into the canvas
     std::unique_ptr<Renderer>   m_newRenderer;   ///< Renderer that is scheduled to replace the current renderer
-    CachedValue<glm::vec4>      m_viewport;      ///< Viewport (in real device coordinates)
+    Cached<glm::vec4>           m_viewport;      ///< Viewport (in real device coordinates)
     std::recursive_mutex        m_mutex;         ///< Mutex for separating main and render thread
     ChronoTimer                 m_clock;         ///< Time measurement
     float                       m_timeDelta;     ///< Time delta since the last update (in seconds)
