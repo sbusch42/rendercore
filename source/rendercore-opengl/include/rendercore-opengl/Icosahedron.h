@@ -11,10 +11,12 @@
 
 #include <glbinding/gl/types.h>
 
-#include <rendercore/rendercore_api.h>
+#include <rendercore-opengl/rendercore-opengl_api.h>
 
 
 namespace rendercore
+{
+namespace opengl
 {
 
 
@@ -22,7 +24,7 @@ namespace rendercore
 *  @brief
 *    Helper class to create an icosahedron geometry that can be refined dynamically
 */
-class RENDERCORE_API Icosahedron
+class RENDERCORE_OPENGL_API Icosahedron
 {
 public:
     /**
@@ -161,4 +163,5 @@ private:
 };
 
 
+} // namespace opengl
 } // namespace rendercore

@@ -2,8 +2,6 @@
 #pragma once
 
 
-#include <array>
-
 #include <glm/vec4.hpp>
 
 #include <rendercore/rendercore_api.h>
@@ -130,18 +128,10 @@ protected:
     virtual void onRender();
 
 protected:
-    Environment       * m_environment;        ///< Environment to which the renderer belongs
-    AbstractContext   * m_context;            ///< Rendering context used for rendering
-    glm::vec4           m_viewport;           ///< Viewport in device coordinates (x, y, w, h)
-    float               m_timeDelta;          ///< Time delta (in seconds)
-    bool                m_timeMeasurement;    ///< Status of time measurements for CPU and GPU
-    bool                m_resultAvailable;    ///< Flag indicating whether a measurement from previous frames is available for report
-    bool                m_useQueryPairOne;    ///< Flag indicating which queries are currently used
-    uint64_t            m_lastCPUDuration;    ///< Time spent in onRender last frame (in nanoseconds)
-    uint64_t            m_currentCPUDuration; ///< Time spent in onRender current frame (in nanoseconds)
-    uint64_t            m_lastGPUDuration;    ///< Time for GPU commands issued during onRender (in nanoseconds)
-
-    std::array<unsigned int, 4> m_queries; ///< OpenGL query objects (front/back; start/end)
+    Environment     * m_environment; ///< Environment to which the renderer belongs
+    AbstractContext * m_context;     ///< Rendering context used for rendering
+    glm::vec4         m_viewport;    ///< Viewport in device coordinates (x, y, w, h)
+    float             m_timeDelta;   ///< Time delta (in seconds)
 };
 
 

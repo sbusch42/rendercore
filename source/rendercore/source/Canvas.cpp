@@ -3,8 +3,6 @@
 
 #include <cppassist/logging/logging.h>
 
-#include <globjects/Framebuffer.h>
-
 #include <rendercore/Environment.h>
 #include <rendercore/Renderer.h>
 
@@ -151,15 +149,15 @@ void Canvas::setViewport(const glm::vec4 & viewport)
     checkRedraw();
 }
 
-void Canvas::render(globjects::Framebuffer * targetFBO)
+void Canvas::render()
 {
     std::lock_guard<std::recursive_mutex> lock(this->m_mutex);
 
+    // [DEBUG]
+    cppassist::debug(0, "rendercore") << "Canvas::render()";
+
     // Reset time delta
     m_timeDelta = 0.0f;
-
-    auto fboName = targetFBO->hasName() ? targetFBO->name() : std::to_string(targetFBO->id());
-    cppassist::debug(0, "rendercore") << "Canvas::render(); " << "targetFBO: " << fboName;
 
     // Check if the renderer must be replaced
     if (m_newRenderer) {

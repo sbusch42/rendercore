@@ -1,5 +1,5 @@
 
-#include <rendercore/Icosahedron.h>
+#include <rendercore-opengl/Icosahedron.h>
 
 #include <iterator>
 #include <algorithm>
@@ -12,6 +12,8 @@ using namespace glm;
 
 
 namespace rendercore
+{
+namespace opengl
 {
 
 
@@ -180,4 +182,5 @@ gl::GLushort Icosahedron::split(
 }
 
 
+} // namespace opengl
 } // namespace rendercore

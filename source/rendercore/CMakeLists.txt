@@ -5,8 +5,6 @@
 
 find_package(cpplocate REQUIRED)
 find_package(cppexpose REQUIRED)
-find_package(glbinding REQUIRED)
-find_package(globjects REQUIRED)
 find_package(glm       REQUIRED)
 
 
@@ -48,7 +46,6 @@ set(headers
     ${include_path}/Canvas.h
     ${include_path}/ChronoTimer.h
     ${include_path}/Environment.h
-    ${include_path}/Icosahedron.h
     ${include_path}/Renderer.h
 )
 
@@ -62,7 +59,6 @@ set(sources
     ${source_path}/Canvas.cpp
     ${source_path}/ChronoTimer.cpp
     ${source_path}/Environment.cpp
-    ${source_path}/Icosahedron.cpp
     ${source_path}/Renderer.cpp
 )
 
@@ -167,9 +163,6 @@ target_link_libraries(${target}
     ${DEFAULT_LIBRARIES}
     cpplocate::cpplocate
     cppexpose::cppexpose
-    glbinding::glbinding
-    glbinding::glbinding-aux
-    globjects::globjects
     glm
 
     INTERFACE

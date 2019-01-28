@@ -89,7 +89,7 @@ void RenderWindow::onPaint(PaintEvent &)
     // [TODO] Optimize memory reallocation problem
     auto defaultFBO = globjects::Framebuffer::defaultFBO();
 
-    m_canvas->render(defaultFBO.get());
+    m_canvas->render();
 }
 
 void RenderWindow::onKeyPress(KeyEvent & event)

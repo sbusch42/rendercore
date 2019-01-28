@@ -13,12 +13,6 @@
 #include <rendercore/ChronoTimer.h>
 
 
-namespace globjects
-{
-    class Framebuffer;
-}
-
-
 namespace rendercore
 {
 
@@ -176,11 +170,8 @@ public:
     /**
     *  @brief
     *    Perform rendering (must be called from render thread)
-    *
-    *  @param[in] targetFBO
-    *    Framebuffer into which is rendered
     */
-    void render(globjects::Framebuffer * targetFBO);
+    void render();
     //@}
 
 protected:

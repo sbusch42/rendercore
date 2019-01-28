@@ -6,10 +6,9 @@
 
 #include <globjects/Buffer.h>
 
-#include <rendercore/Icosahedron.h>
-
 #include <rendercore-opengl/Shape.h>
 #include <rendercore-opengl/Geometry.h>
+#include <rendercore-opengl/Icosahedron.h>
 
 
 namespace rendercore
