@@ -47,10 +47,8 @@ set(headers
     ${include_path}/GLContextUtils.h
     ${include_path}/GlrawTextureLoader.h
     ${include_path}/Quad.h
-    ${include_path}/RawFileNameSuffix.h
     ${include_path}/ShaderLoader.h
     ${include_path}/Shape.h
-    ${include_path}/ShapeType.h
     ${include_path}/Sphere.h
     ${include_path}/Triangle.h
 )
@@ -65,7 +63,6 @@ set(sources
     ${source_path}/GLContextUtils.cpp
     ${source_path}/GlrawTextureLoader.cpp
     ${source_path}/Quad.cpp
-    ${source_path}/RawFileNameSuffix.cpp
     ${source_path}/ShaderLoader.cpp
     ${source_path}/Shape.cpp
     ${source_path}/Sphere.cpp
