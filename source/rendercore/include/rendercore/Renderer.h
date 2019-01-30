@@ -22,12 +22,25 @@ class Environment;
 *    A renderer is a class that does the actual rendering. It can be attached
 *    to a canvas, into which it will then render. It is not possible to attach
 *    the same renderer to more than one canvas at a time, because different
-*    canvases can use different rendering contexts.
+*    canvases can have different rendering contexts.
+*
+*    There are two important functions on a renderer: update and render.
+*
+*    The update function allows a renderer to "think", e.g., to update its
+*    simulation or animation processes. Therefore, its onUpdate-method is
+*    called, in which the simulation can be implemented. This function is
+*    executed solely on the CPU, no rendering context is active, so don't call
+*    or use any GPU functions in this context. An update is triggered once,
+*    so if a simulation needs to be update continuously, the renderer must
+*    call scheduleUpdate() in onUpdate to schedule an update for the next frame.
+*    If as a result of the update, a new frame must be drawn, the renderer
+*    should call redraw(), then the rendering of a frame will be scheduled
+*    right after the update.
 *
 *    Whenever the canvas needs a redraw, e.g., if the window has been resized
 *    or otherwise needs to be redrawn, it will call the render-function of the
 *    renderer. But also the renderer can trigger a redraw, if it decides that
-*    it needs to be redrawn, by invoking its redraw-signal. The canvas will
+*    it needs to be redrawn, by calling scheduleRedraw(). The canvas will
 *    then issue a redraw.
 */
 class RENDERCORE_API Renderer
@@ -104,11 +117,72 @@ public:
 
     /**
     *  @brief
-    *    Execute rendering
+    *    Get viewport for rendering
     *
-    *  @see onRender
+    *  @return
+    *    Viewport in device coordinates (x, y, w, h)
     */
-    void render();
+    glm::vec4 viewport() const;
+
+    /**
+    *  @brief
+    *    Set viewport for rendering
+    *
+    *  @param[in] viewport
+    *    Viewport in device coordinates (x, y, w, h)
+    */
+    void setViewport(const glm::vec4 & viewport);
+
+    /**
+    *  @brief
+    *    Get time delta since last update
+    *
+    *  @return
+    *    Time delta (in seconds)
+    */
+    float timeDelta() const;
+
+    /**
+    *  @brief
+    *    Set time delta since last update
+    *
+    *  @param[in] timeDelta
+    *    Time delta (in seconds)
+    */
+    void setTimeDelta(float timeDelta);
+
+    /**
+    *  @brief
+    *    Check if renderer needs to be updated
+    *
+    *  @return
+    *    'true' if renderer needs to be updated, else 'false'
+    *
+    *  @see update
+    */
+    bool needsUpdate() const;
+
+    /**
+    *  @brief
+    *    Schedule update on renderer
+    *
+    *  @see update
+    */
+    void scheduleUpdate();
+
+    /**
+    *  @brief
+    *    Update (handle animation etc.)
+    *
+    *  @remarks
+    *    When the renderer is updated, its onUpdate-method is called.
+    *    In this method, all updates to its simulation or animation
+    *    take place. This only updates the simulation, it does not
+    *    automatically redraw the renderer.
+    *
+    *  @see onUpdate
+    */
+    void update();
 
     /**
     *  @brief
@@ -116,15 +190,91 @@ public:
     *
     *  @return
     *    'true' if renderer needs to be executed, else 'false'
+    *
+    *  @see render
     */
     bool needsRedraw() const;
 
-    void setViewport(const glm::vec4 & viewport);
-    void setTimeDelta(float timeDelta);
+    /**
+    *  @brief
+    *    Schedule redraw on renderer
+    *
+    *  @see render
+    */
+    void scheduleRedraw();
+
+    /**
+    *  @brief
+    *    Execute rendering
+    *
+    *  @remarks
+    *    When the renderer is redrawn, its onRender-method is called.
+    *    In this method, the rendering code must be executed to
+    *    produce a new frame for the output.
+    *
+    *  @see onRender
+    */
+    void render();
 
 protected:
+    /**
+    *  @brief
+    *    Called when the renderer is initialized in a new rendering context
+    *
+    *  @param[in] context
+    *    Rendering context (never null)
+    *
+    *  @remarks
+    *    Use this function to initialize all GPU objects, or use lazy
+    *    initialization and initialize them on the first rendering call.
+    *    Do not store them as direct members of the class, as they must
+    *    be de-initialized in onContextDeinit(), not on the call of the
+    *    destructor. This method can also be used to restore GPU objects
+    *    from CPU data, when a context switch has occured.
+    */
     virtual void onContextInit(AbstractContext * context);
+
+    /**
+    *  @brief
+    *    Called when the renderer is de-initialized in its rendering context
+    *
+    *  @param[in] context
+    *    Rendering context (never null)
+    *
+    *  @remarks
+    *    Use this function to de-initialize all GPU objects. It is
+    *    important to do it here instead of the destructor, because
+    *    this needs the context to still be active, which is guaranteed
+    *    only in this function. This method can also be used to backup
+    *    data from GPU objects into CPU data, which can later be restored
+    *    when a context switch has occured.
+    */
     virtual void onContextDeinit(AbstractContext * context);
+
+    /**
+    *  @brief
+    *    Called when the renderer is updated
+    *
+    *  @remarks
+    *    During update, the renderer executes its simulation or animation.
+    *    Read m_timeDelta to determine the time that has passed since the
+    *    last call to onUpdate(). It should be used to advance the simulation.
+    *    Do not use any GPU function or objects in this function, as no
+    *    rendering context is active. To schedule a redraw as a result of
+    *    the update, call scheduleRedraw(). To continuously update the
+    *    simulation, call scheduleUpdate().
+    */
+    virtual void onUpdate();
+
+    /**
+    *  @brief
+    *    Called when the renderer is redrawn
+    *
+    *  @remarks
+    *    This function is called to produce exactly one frame for the output.
+    *    Use m_viewport to set the viewport for rendering into the currently
+    *    set canvas.
+    */
     virtual void onRender();
 
 protected:
@@ -132,6 +282,8 @@ protected:
     AbstractContext * m_context;     ///< Rendering context used for rendering
     glm::vec4         m_viewport;    ///< Viewport in device coordinates (x, y, w, h)
     float             m_timeDelta;   ///< Time delta (in seconds)
+    bool              m_needsUpdate; ///< Is an update needed?
+    bool              m_needsRedraw; ///< Is a redraw needed?
 };
 
 

@@ -44,6 +44,7 @@ Window::Window()
 , m_fullscreen(false)
 , m_windowedModeSize(100, 100)
 , m_quitOnDestroy(true)
+, m_needsUpdate(false)
 , m_needsRepaint(false)
 , m_context(nullptr)
 {
@@ -315,6 +316,18 @@ void Window::setQuitOnDestroy(bool quitOnDestroy)
     m_quitOnDestroy = quitOnDestroy;
 }
 
+void Window::update()
+{
+    if (!m_window)
+    {
+        return;
+    }
+
+    m_needsUpdate = true;
+
+    Application::wakeup();
+}
+
 void Window::repaint()
 {
     if (!m_window)
@@ -357,7 +370,17 @@ void Window::queueEvent(std::unique_ptr<WindowEvent> && event)
     m_eventQueue.push(std::move(event));
 }
 
-void Window::updateRepaintEvent()
+void Window::checkUpdateEvent()
+{
+    if (m_needsUpdate)
+    {
+        m_needsUpdate = false;
+
+        glfwPostEmptyEvent();
+    }
+}
+
+void Window::checkRepaintEvent()
 {
     if (m_needsRepaint)
     {

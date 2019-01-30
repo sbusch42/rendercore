@@ -56,7 +56,6 @@ public:
     */
     static void wakeup();
 
-
 public:
     /**
     *  @brief
@@ -118,7 +117,6 @@ public:
     */
     int exitCode();
 
-
 protected:
     /**
     *  @brief
@@ -126,10 +124,8 @@ protected:
     */
     void processEvents();
 
-
 protected:
     static Application * s_app; ///< Pointer to the current application instance, can be nullptr
-
 
 protected:
     rendercore::Environment * m_environment; ///< Environment

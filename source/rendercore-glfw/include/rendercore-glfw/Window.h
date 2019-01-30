@@ -289,6 +289,17 @@ public:
 
     /**
     *  @brief
+    *    Schedule an update on the window
+    *
+    *  @remarks
+    *    When calling this function, an empty event will be sent to the
+    *    message queue, causing the idle-function of the window to be
+    *    called during the next event processing.
+    */
+    void update();
+
+    /**
+    *  @brief
     *    Schedule a repaint on the window
     *
     *  @remarks
@@ -346,16 +357,29 @@ protected:
 
     /**
     *  @brief
+    *    Check for idle event
+    *
+    *  @remarks
+    *    If update() has been called on the window, an update event
+    *    will be added to the window's event queue. This needs to be
+    *    done as a separate call to avoid event processing to get stuck
+    *    in an endless loop. Make sure to call Application::pollEvents(),
+    *    checkUpdateEvent() and checkRepaintEvent() in turn.
+    */
+    void checkUpdateEvent();
+
+    /**
+    *  @brief
     *    Check for repaint event
     *
     *  @remarks
     *    If repaint() has been called on the window, a repaint event
     *    will be added to the window's event queue. This needs to be
     *    done as a separate call to avoid event processing to get stuck
-    *    in an endless loop. Make sure to call Application::pollEvents()
-    *    and updateRepaintEvent() in turn.
+    *    in an endless loop. Make sure to call Application::pollEvents(),
+    *    checkUpdateEvent() and checkRepaintEvent() in turn.
     */
-    void updateRepaintEvent();
+    void checkRepaintEvent();
 
     /**
     *  @brief
@@ -431,6 +455,7 @@ protected:
     bool                                     m_fullscreen;       ///< 'true' if window is in fullscreen mode, else 'false'
     glm::ivec2                               m_windowedModeSize; ///< Size of window when returned from fullscreen mode
     bool                                     m_quitOnDestroy;    ///< Quit application when window is closed?
+    bool                                     m_needsUpdate;      ///< Has an update be scheduled?
     bool                                     m_needsRepaint;     ///< Has a repaint be scheduled?
     std::unique_ptr<GLContext>               m_context;          ///< OpenGL context (can be nullptr)
 };

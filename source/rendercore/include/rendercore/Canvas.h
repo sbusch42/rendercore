@@ -34,8 +34,7 @@ class Renderer;
 class RENDERCORE_API Canvas
 {
 public:
-    cppexpose::Signal<> redraw; ///< Called when the canvas needs to be redrawn
-    cppexpose::Signal<> update; ///< Called when the canvas needs to be redrawn
+    cppexpose::Signal<> wakeup; ///< Use this to wakeup the main loop to resume continuous simulation or redraw
 
 public:
     //@{
@@ -136,21 +135,6 @@ public:
 
     /**
     *  @brief
-    *    Update virtual time (must be called from UI thread)
-    *
-    *  @remarks
-    *    This function determines the time delta since the last call to
-    *    the function and updates the internal virtual time. This is
-    *    passed on to the renderer to allow for continuous updates
-    *    of the virtual scene. If a pipeline depends on the virtual time
-    *    or time delta inputs and in turn invalidates its render outputs,
-    *    a redraw will be scheduled. Otherwise, only the virtual time is
-    *    updated regularly, but no redraw occurs.
-    */
-    void updateTime();
-
-    /**
-    *  @brief
     *    Get viewport
     *
     *  @return
@@ -169,22 +153,82 @@ public:
 
     /**
     *  @brief
-    *    Perform rendering (must be called from render thread)
+    *    Get time delta since last update
+    *
+    *  @return
+    *    Time delta (in seconds)
     */
-    void render();
-    //@}
+    float timeDelta() const;
 
-protected:
-    //@{
     /**
     *  @brief
-    *    Check if a redraw is required
+    *    Update virtual time (must be called from UI thread)
     *
     *  @remarks
-    *    This function checks if the renderer needs to be redrawn
-    *    and invokes the redraw signal if that is the case.
+    *    This function determines the time delta since the last call to
+    *    this function and passes it on to the renderer to allow for
+    *    continuous updates of the simulation. If this function is
+    *    called multiple times, the time delta is accumulated until
+    *    update() is finally called. That will reset the time delta to 0.
     */
-    void checkRedraw();
+    void updateTime();
+
+    /**
+    *  @brief
+    *    Check if canvas needs to be updated
+    *
+    *  @return
+    *    'true' if canvas needs to be updated, else 'false'
+    *
+    *  @see update
+    */
+    bool needsUpdate() const;
+
+    /**
+    *  @brief
+    *    Schedule update on canvas
+    *
+    *  @see update
+    */
+    void scheduleUpdate();
+
+    /**
+    *  @brief
+    *    Update the simulation (must be called from UI thread)
+    *
+    *  @remarks
+    *    This will call update on the renderer and then reset
+    *    the time delta to 0.
+    */
+    void update();
+
+    /**
+    *  @brief
+    *    Check if canvas needs to be executed
+    *
+    *  @return
+    *    'true' if canvas needs to be executed, else 'false'
+    *
+    *  @see render
+    */
+    bool needsRedraw() const;
+
+    /**
+    *  @brief
+    *    Schedule redraw on canvas
+    *
+    *  @see render
+    */
+    void scheduleRedraw();
+
+    /**
+    *  @brief
+    *    Perform rendering (must be called from render thread)
+    *
+    *  @remarks
+    *    This will call render on the renderer.
+    */
+    void render();
     //@}
 
 protected:
@@ -193,9 +237,9 @@ protected:
     std::unique_ptr<Renderer>   m_renderer;      ///< Renderer that renders into the canvas
     std::unique_ptr<Renderer>   m_newRenderer;   ///< Renderer that is scheduled to replace the current renderer
     Cached<glm::vec4>           m_viewport;      ///< Viewport (in real device coordinates)
-    std::recursive_mutex        m_mutex;         ///< Mutex for separating main and render thread
-    ChronoTimer                 m_clock;         ///< Time measurement
     float                       m_timeDelta;     ///< Time delta since the last update (in seconds)
+    ChronoTimer                 m_clock;         ///< Time measurement
+    std::recursive_mutex        m_mutex;         ///< Mutex for separating main and render thread
 };
 
 

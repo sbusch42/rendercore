@@ -22,6 +22,7 @@ namespace opengl
 
 ExampleRenderer::ExampleRenderer(Environment * environment)
 : Renderer(environment)
+, m_counter(0)
 {
 }
 
@@ -73,11 +74,19 @@ void ExampleRenderer::onContextDeinit(AbstractContext *)
     m_camera.reset();
 }
 
+void ExampleRenderer::onUpdate()
+{
+    // [DEBUG]
+    std::cout << "onUpdate(" << m_counter << ")" << std::endl;
+
+    // Advance counter
+    m_counter++;
+}
+
 void ExampleRenderer::onRender()
 {
     // [DEBUG]
-//  std::cout << "onRender()" << std::endl;
-//  std::cout << "viewport: " << m_viewport.x << ", " << m_viewport.y << ", " << m_viewport.z << ", " << m_viewport.w << std::endl;
+    std::cout << "onRender()" << std::endl;
 
     // Update viewport
     gl::glViewport(m_viewport.x, m_viewport.y, m_viewport.z, m_viewport.w);

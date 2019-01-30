@@ -65,7 +65,7 @@ void Canvas::initContext(AbstractContext * context)
         m_context = context;
 
         // The renderer will be initialized in the new context on the next rendering call
-        redraw();
+        wakeup();
     }
 }
 
@@ -101,33 +101,6 @@ void Canvas::setRenderer(std::unique_ptr<Renderer> && renderer)
     m_newRenderer = std::move(renderer);
 }
 
-void Canvas::updateTime()
-{
-    std::lock_guard<std::recursive_mutex> lock(this->m_mutex);
-
-    // In multithreaded viewers, updateTime() might get called several times
-    // before render(). Therefore, the time delta is accumulated until the
-    // pipeline is actually rendered, and then reset by the method render().
-
-    // Get number of milliseconds since last call
-    auto duration = m_clock.elapsed();
-    m_clock.reset();
-
-    // Determine time delta and virtual time
-    float timeDelta = std::chrono::duration_cast<std::chrono::duration<float>>(duration).count();
-    m_timeDelta += timeDelta;
-
-    if (!m_renderer) {
-        return;
-    }
-
-    // Update timing
-    m_renderer->setTimeDelta(m_timeDelta);
-
-    // Check if a redraw is required
-    checkRedraw();
-}
-
 glm::vec4 Canvas::viewport() const
 {
     return m_viewport.value();
@@ -144,9 +117,76 @@ void Canvas::setViewport(const glm::vec4 & viewport)
     if (m_renderer) {
         m_renderer->setViewport(m_viewport.value());
     }
+}
 
-    // Check if a redraw is required
-    checkRedraw();
+float Canvas::timeDelta() const
+{
+    return m_timeDelta;
+}
+
+void Canvas::updateTime()
+{
+    std::lock_guard<std::recursive_mutex> lock(this->m_mutex);
+
+    // In multithreaded viewers, updateTime() might get called several times
+    // before update(). Therefore, the time delta is accumulated until the
+    // renderer is actually updated, and then reset in the method update().
+
+    // Get number of milliseconds since last call
+    auto duration = m_clock.elapsed();
+    m_clock.reset();
+
+    // Determine and update time delta
+    float timeDelta = std::chrono::duration_cast<std::chrono::duration<float>>(duration).count();
+    m_timeDelta += timeDelta;
+}
+
+bool Canvas::needsUpdate() const
+{
+    // Check on renderer
+    return m_renderer ? m_renderer->needsUpdate() : false;
+}
+
+void Canvas::scheduleUpdate()
+{
+    // Schedule update on renderer
+    if (m_renderer) {
+        m_renderer->scheduleUpdate();
+    }
+}
+
+void Canvas::update()
+{
+    // [DEBUG]
+    cppassist::debug(0, "rendercore") << "Canvas::update()";
+
+    // Check for a valid renderer
+    if (!m_renderer) {
+        return;
+    }
+
+    // Update timing
+    m_renderer->setTimeDelta(m_timeDelta);
+
+    // Update renderer
+    m_renderer->update();
+
+    // Reset time delta
+    m_timeDelta = 0.0f;
+}
+
+bool Canvas::needsRedraw() const
+{
+    // Check on renderer
+    return m_renderer ? m_renderer->needsRedraw() : false;
+}
+
+void Canvas::scheduleRedraw()
+{
+    // Schedule redraw on renderer
+    if (m_renderer) {
+        m_renderer->scheduleUpdate();
+    }
 }
 
 void Canvas::render()
@@ -155,9 +195,6 @@ void Canvas::render()
 
     // [DEBUG]
     cppassist::debug(0, "rendercore") << "Canvas::render()";
-
-    // Reset time delta
-    m_timeDelta = 0.0f;
 
     // Check if the renderer must be replaced
     if (m_newRenderer) {
@@ -186,19 +223,6 @@ void Canvas::render()
 
     // Render
     m_renderer->render();
-}
-
-void Canvas::checkRedraw()
-{
-    if (!m_renderer) {
-        return;
-    }
-
-    bool redraw = false;
-
-    if (redraw) {
-        this->redraw();
-    }
 }
 
 

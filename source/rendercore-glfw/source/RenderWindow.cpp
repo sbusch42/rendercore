@@ -31,9 +31,11 @@ RenderWindow::RenderWindow(Environment * environment)
 : m_environment(environment)
 , m_canvas(cppassist::make_unique<Canvas>(environment))
 {
-    m_canvas->redraw.connect([this] ()
+    // Connect to wakeup-signal
+    m_canvas->wakeup.connect([this] ()
     {
-        repaint();
+        // Schedule update on the window
+        update();
     } );
 }
 
@@ -198,7 +200,23 @@ void RenderWindow::onIconify(IconifyEvent &)
 
 void RenderWindow::onIdle()
 {
+    // Update time delta
     m_canvas->updateTime();
+
+    // Update simulation
+    m_canvas->update();
+
+    // Is another simulation update needed?
+    if (m_canvas->needsUpdate()) {
+        // Schedule update
+        this->update();
+    }
+
+    // Is a repaint needed?
+    if (m_canvas->needsRedraw()) {
+        // Schedule repaint
+        this->repaint();
+    }
 }
 
 /*

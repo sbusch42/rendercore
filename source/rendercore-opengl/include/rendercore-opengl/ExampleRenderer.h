@@ -52,9 +52,14 @@ public:
 protected:
     virtual void onContextInit(AbstractContext * context) override;
     virtual void onContextDeinit(AbstractContext * context) override;
+    virtual void onUpdate() override;
     virtual void onRender() override;
 
 protected:
+    // Simulation data
+    unsigned int m_counter; ///< Update counter
+
+    // GPU data
     std::unique_ptr<rendercore::Camera>           m_camera;     ///< Camera in the scene
     std::unique_ptr<rendercore::AbstractDrawable> m_geometry;   ///< Geometry that is rasterized
     std::unique_ptr<globjects::Texture>           m_texture;    ///< Texture

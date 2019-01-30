@@ -2,8 +2,6 @@
 // [TODO] Review
 #include <rendercore-glfw/Application.h>
 
-#include <iostream>
-
 #include <cassert>
 
 #define GLFW_INCLUDE_NONE
@@ -80,8 +78,6 @@ int Application::run()
     // Execute main loop
     while (m_running)
     {
-        std::cout << "mainloop!" << std::endl;
-
         // Wait until events arrive.
         // To unlock the main loop, call wakeup().
         glfwWaitEvents();
@@ -117,11 +113,14 @@ void Application::processEvents()
     // Get messages for all windows
     for (Window * window : Window::instances())
     {
-        // Update timing
+        // Update simulation
         window->idle();
 
-        // If window needs updating, let it send an udate event
-        window->updateRepaintEvent();
+        // If window needs updating, let it send an update event
+        window->checkUpdateEvent();
+
+        // If window needs repainting, let it send a repaint event
+        window->checkRepaintEvent();
 
         // Process all events for the window
         if (window->hasPendingEvents()) {
