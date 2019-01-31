@@ -7,8 +7,6 @@
 
 #include <cppfs/FilePath.h>
 
-#include <cppexpose/variant/Variant.h>
-
 #include <glbinding-aux/Meta.h>
 
 #include <globjects/base/File.h>

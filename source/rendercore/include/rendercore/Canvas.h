@@ -7,9 +7,8 @@
 
 #include <glm/vec4.hpp>
 
-#include <cppexpose/signal/Signal.h>
-
 #include <rendercore/Cached.h>
+#include <rendercore/Signal.h>
 #include <rendercore/ChronoTimer.h>
 
 
@@ -34,7 +33,7 @@ class Renderer;
 class RENDERCORE_API Canvas
 {
 public:
-    cppexpose::Signal<> wakeup; ///< Use this to wakeup the main loop to resume continuous simulation or redraw
+    Signal<> wakeup; ///< Use this to wakeup the main loop to resume continuous simulation or redraw
 
 public:
     //@{

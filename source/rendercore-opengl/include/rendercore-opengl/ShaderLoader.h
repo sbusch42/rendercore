@@ -6,8 +6,6 @@
 #include <string>
 #include <unordered_map>
 
-#include <cppexpose/plugin/plugin_api.h>
-
 #include <glbinding/gl/enum.h>
 
 #include <rendercore-opengl/rendercore-opengl_api.h>

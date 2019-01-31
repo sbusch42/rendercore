@@ -8,12 +8,10 @@
 #include <cppfs/FilePath.h>
 
 #include <cppassist/string/regex.h>
-//#include <cppassist/string/conversion.h>
+#include <cppassist/string/conversion.h>
 #include <cppassist/fs/readfile.h>
 #include <cppassist/fs/RawFile.h>
 #include <cppassist/fs/DescriptiveRawFile.h>
-
-#include <cppexpose/variant/Variant.h>
 
 #include <glbinding/gl/enum.h>
 

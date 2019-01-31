@@ -2,9 +2,7 @@
 #pragma once
 
 
-#include <cppexpose/signal/Signal.h>
-
-#include <rendercore/rendercore_api.h>
+#include <rendercore/Signal.h>
 
 
 namespace rendercore
@@ -18,7 +16,7 @@ namespace rendercore
 class RENDERCORE_API Environment
 {
 public:
-    cppexpose::Signal<int> exitApplication; ///< Called when application shall exit
+    Signal<int> exitApplication; ///< Called when application shall exit
 
 public:
     /**

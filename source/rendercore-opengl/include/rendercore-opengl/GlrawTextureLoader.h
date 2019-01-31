@@ -5,8 +5,6 @@
 #include <vector>
 #include <string>
 
-#include <cppexpose/plugin/plugin_api.h>
-
 #include <rendercore-opengl/rendercore-opengl_api.h>
 
 

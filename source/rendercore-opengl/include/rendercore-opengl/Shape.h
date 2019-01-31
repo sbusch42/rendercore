@@ -4,8 +4,6 @@
 
 #include <map>
 
-#include <cppexpose/reflection/Property.h>
-
 #include <rendercore/AbstractDrawable.h>
 
 #include <rendercore-opengl/rendercore-opengl_api.h>

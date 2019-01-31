@@ -4,7 +4,7 @@
 #
 
 find_package(cpplocate REQUIRED)
-find_package(cppexpose REQUIRED)
+find_package(cppassist REQUIRED)
 find_package(glm       REQUIRED)
 
 
@@ -39,14 +39,19 @@ set(headers
 
     ${include_path}/AbstractContext.h
     ${include_path}/AbstractDrawable.h
+    ${include_path}/AbstractSignal.h
     ${include_path}/Cached.h
     ${include_path}/Cached.inl
     ${include_path}/Camera.h
     ${include_path}/CameraUtils.h
     ${include_path}/Canvas.h
     ${include_path}/ChronoTimer.h
+    ${include_path}/Connection.h
     ${include_path}/Environment.h
     ${include_path}/Renderer.h
+    ${include_path}/ScopedConnection.h
+    ${include_path}/Signal.h
+    ${include_path}/Signal.inl
 )
 
 set(sources
@@ -54,12 +59,15 @@ set(sources
 
     ${source_path}/AbstractContext.cpp
     ${source_path}/AbstractDrawable.cpp
+    ${source_path}/AbstractSignal.cpp
     ${source_path}/Camera.cpp
     ${source_path}/CameraUtils.cpp
     ${source_path}/Canvas.cpp
     ${source_path}/ChronoTimer.cpp
+    ${source_path}/Connection.cpp
     ${source_path}/Environment.cpp
     ${source_path}/Renderer.cpp
+    ${source_path}/ScopedConnection.cpp
 )
 
 # Group source files
@@ -162,7 +170,7 @@ target_link_libraries(${target}
     PUBLIC
     ${DEFAULT_LIBRARIES}
     cpplocate::cpplocate
-    cppexpose::cppexpose
+    cppassist::cppassist
     glm
 
     INTERFACE

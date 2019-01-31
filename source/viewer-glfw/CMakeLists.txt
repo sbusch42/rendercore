@@ -6,7 +6,6 @@
 find_package(glm       REQUIRED)
 find_package(glbinding REQUIRED)
 find_package(globjects REQUIRED)
-find_package(cppexpose REQUIRED)
 find_package(cppassist REQUIRED)
 find_package(cpplocate REQUIRED)
 find_package(glfw3     REQUIRED)
@@ -81,7 +80,6 @@ target_link_libraries(${target}
     PRIVATE
     ${DEFAULT_LIBRARIES}
     cpplocate::cpplocate
-    cppexpose::cppexpose
     cppassist::cppassist
     glbinding::glbinding
     globjects::globjects

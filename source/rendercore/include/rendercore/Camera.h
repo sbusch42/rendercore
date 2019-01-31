@@ -4,9 +4,8 @@
 
 #include <glm/glm.hpp>
 
-#include <cppexpose/signal/Signal.h>
-
 #include <rendercore/Cached.h>
+#include <rendercore/Signal.h>
 
 
 namespace rendercore
@@ -26,7 +25,7 @@ namespace rendercore
 class RENDERCORE_API Camera
 {
 public:
-    cppexpose::Signal<> invalidated; ///< Called when the camera has been modified
+    Signal<> invalidated; ///< Called when the camera has been modified
 
 public:
     /**
