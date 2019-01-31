@@ -1,15 +1,13 @@
 
-#include <rendercore-opengl/GlrawTextureLoader.h>
+#include <rendercore-opengl/TextureLoader.h>
 
 #include <string>
 #include <map>
-#include <algorithm>
 
 #include <cppfs/FilePath.h>
 
 #include <cppassist/string/regex.h>
 #include <cppassist/string/conversion.h>
-#include <cppassist/fs/readfile.h>
 #include <cppassist/fs/RawFile.h>
 #include <cppassist/fs/DescriptiveRawFile.h>
 
@@ -22,6 +20,10 @@ namespace
 {
 
 
+/**
+*  @brief
+*    Texture format description
+*/
 struct TextureFormat
 {
     bool       valid;      ///< Is the format valid?
@@ -32,6 +34,7 @@ struct TextureFormat
     gl::GLenum type;       ///< Type of the Texture
 };
 
+// Color formats and their names
 static const std::map<std::string, gl::GLenum> formatsBySuffix =
 {
     { "rh",     gl::GL_RED      },
@@ -44,6 +47,7 @@ static const std::map<std::string, gl::GLenum> formatsBySuffix =
     { "bgra",   gl::GL_BGRA     }
 };
 
+// Data types and their names
 static const std::map<std::string, gl::GLenum> typesBySuffix =
 {
     { "ub",             gl::GL_UNSIGNED_BYTE    },
@@ -66,11 +70,23 @@ static const std::map<std::string, gl::GLenum> typesBySuffix =
     { "dxt5-rgba",      gl::GL_COMPRESSED_RGBA_S3TC_DXT5_EXT  }
 };
 
+// Regular expressions describing possible filename formats
 static const std::string regex1 = "(^.*\\.(\\d+)\\.(\\d+)\\.(\\w+)\\.raw$)";
 static const std::string regex2 = "(^.*\\.(\\d+)\\.(\\d+)\\.(\\w+)\\.(\\w+)\\.raw$)";
 
+/**
+*  @brief
+*    Parse texture format from filename
+*
+*  @param[in] filename
+*    Texture filename
+*
+*  @return
+*    Texture format
+*/
 static TextureFormat getFormatFromFilename(const std::string & filename)
 {
+    // Initialize texture format
     TextureFormat format;
     format.valid      = false;
     format.width      = -1;
@@ -127,74 +143,53 @@ namespace opengl
 {
 
 
-GlrawTextureLoader::GlrawTextureLoader(Environment *)
-{
-    m_extensions.push_back(".raw");
-    m_extensions.push_back(".glraw");
-
-    m_types.push_back("raw images (*.raw)");
-    m_types.push_back("glraw images (*.glraw)");
-}
-
-GlrawTextureLoader::~GlrawTextureLoader()
+TextureLoader::TextureLoader(Environment *)
 {
 }
 
-bool GlrawTextureLoader::canLoad(const std::string & ext) const
+TextureLoader::~TextureLoader()
 {
-    // Check if file type is supported
-    return std::find(m_extensions.begin(), m_extensions.end(), "." + ext) != m_extensions.end();
 }
 
-std::vector<std::string> GlrawTextureLoader::loadingTypes() const
+std::unique_ptr<globjects::Texture> TextureLoader::load(const std::string & filename) const
 {
-    // Return list of supported file types
-    return m_types;
-}
-
-std::string GlrawTextureLoader::allLoadingTypes() const
-{
-    // Compose list of all supported file extensions
-    std::string allTypes;
-    for (unsigned int i = 0; i < m_extensions.size(); ++i) {
-        if (i > 0) allTypes += " ";
-        allTypes += "*." + m_extensions[i].substr(1);
+    // Check filename extension
+    std::string ext = cppfs::FilePath(filename).extension();
+    if (ext == ".glraw") {
+        // Parse glraw file (RAW file with extended header)
+        return loadGLRawImage(filename);
+    } else if (ext == ".raw") {
+        // Parse RAW file (get texture format from filename)
+        return loadRawImage(filename);
+    } else {
+        // Unsupported file
+        return nullptr;
     }
-
-    // Return supported types
-    return allTypes;
 }
 
-globjects::Texture * GlrawTextureLoader::load(const std::string & filename) const
-{
-    globjects::Texture * texture = nullptr;
-
-    cppfs::FilePath filePath(filename);
-    if (filePath.extension() == ".glraw")
-        texture = loadGLRawImage(filename);
-    else if (filePath.extension() == ".raw")
-        texture = loadRawImage(filename);
-
-    return texture;
-}
-
-globjects::Texture * GlrawTextureLoader::loadGLRawImage(const std::string & filename) const
+std::unique_ptr<globjects::Texture> TextureLoader::loadGLRawImage(const std::string & filename) const
 {
     cppassist::DescriptiveRawFile rawFile;
 
-    if (!rawFile.load(filename))
+    // Read file
+    if (!rawFile.load(filename)) {
         return nullptr;
+    }
 
+    // Get texture width and height
     const int w = rawFile.intProperty("width");
     const int h = rawFile.intProperty("height");
 
-    globjects::Texture * texture = globjects::Texture::createDefault(gl::GL_TEXTURE_2D).release();
+    // Create texture object
+    auto texture = globjects::Texture::createDefault(gl::GL_TEXTURE_2D);
 
-    if (rawFile.hasIntProperty("format"))
-    {
+    // Get texture format
+    if (rawFile.hasIntProperty("format")) { // Uncompressed
+        // Get format and type
         auto format = static_cast<gl::GLenum>(rawFile.intProperty("format"));
         auto type = static_cast<gl::GLenum>(rawFile.intProperty("type"));
 
+        // Create texture buffer
         texture->image2D(
             0,
             gl::GL_RGBA8,
@@ -205,12 +200,12 @@ globjects::Texture * GlrawTextureLoader::loadGLRawImage(const std::string & file
             type,
             rawFile.data()
         );
-    }
-    else
-    {
+    } else { // Compressed
+        // Get compressed format
         auto compressedFormat = static_cast<gl::GLenum>(rawFile.intProperty("compressedFormat"));
         auto size = rawFile.intProperty("size");
 
+        // Create texture buffer
         texture->compressedImage2D(
             0,
             compressedFormat,
@@ -222,25 +217,32 @@ globjects::Texture * GlrawTextureLoader::loadGLRawImage(const std::string & file
         );
     }
 
-    return texture;
+    // Return texture object
+    return std::move(texture);
 }
 
-globjects::Texture * GlrawTextureLoader::loadRawImage(const std::string & filename) const
+std::unique_ptr<globjects::Texture> TextureLoader::loadRawImage(const std::string & filename) const
 {
+    cppassist::RawFile rawFile;
+
+    // Determine texture format from filename
     auto format = getFormatFromFilename(filename);
     if (!format.valid) {
+        // Invalid format
         return nullptr;
     }
 
     // Read file
-    cppassist::RawFile rawFile;
     if (!rawFile.load(filename)) {
         return nullptr;
     }
 
-    globjects::Texture * texture = globjects::Texture::createDefault(gl::GL_TEXTURE_2D).release();
+    // Create texture object
+    auto texture = globjects::Texture::createDefault(gl::GL_TEXTURE_2D);
 
-    if (!format.compressed) {
+    // Check texture format
+    if (!format.compressed) { // Uncompressed
+        // Create texture buffer
         texture->image2D(
             0,
             gl::GL_RGBA8,
@@ -251,7 +253,8 @@ globjects::Texture * GlrawTextureLoader::loadRawImage(const std::string & filena
             format.type,
             rawFile.data()
         );
-    } else {
+    } else { // Compressed
+        // Create texture buffer
         texture->compressedImage2D(
             0,
             gl::GL_RGBA8,
@@ -263,7 +266,8 @@ globjects::Texture * GlrawTextureLoader::loadRawImage(const std::string & filena
         );
     }
 
-    return texture;
+    // Return texture object
+    return std::move(texture);
 }
 
 

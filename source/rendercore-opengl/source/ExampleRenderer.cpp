@@ -5,12 +5,13 @@
 
 #include <cppassist/memory/make_unique.h>
 
+#include <glbinding/gl/enum.h>
 #include <glbinding/gl/functions.h>
 
 #include <rendercore/rendercore.h>
 
 #include <rendercore-opengl/Box.h>
-#include <rendercore-opengl/GlrawTextureLoader.h>
+#include <rendercore-opengl/TextureLoader.h>
 #include <rendercore-opengl/ShaderLoader.h>
 
 
@@ -28,12 +29,18 @@ ExampleRenderer::ExampleRenderer(Environment * environment)
 
 ExampleRenderer::~ExampleRenderer()
 {
+    // Release GPU objects
+    m_geometry.reset();
+    m_texture.reset();
+    m_program.reset();
+    m_vertShader.reset();
+    m_fragShader.reset();
 }
 
 void ExampleRenderer::onContextInit(AbstractContext *)
 {
-    GlrawTextureLoader textureLoader(environment());
-    ShaderLoader       shaderLoader(environment());
+    TextureLoader textureLoader(environment());
+    ShaderLoader  shaderLoader(environment());
 
     // [DEBUG]
     std::cout << "onContextInit()" << std::endl;
@@ -45,14 +52,11 @@ void ExampleRenderer::onContextInit(AbstractContext *)
     m_geometry = cppassist::make_unique<Box>(2.0f, ShapeOption::IncludeTexCoords);
 
     // Load texture
-    auto * texture = textureLoader.load(rendercore::dataPath() + "/rendercore/textures/brickwall.glraw");
-    m_texture.reset(texture);
+    m_texture = textureLoader.load(rendercore::dataPath() + "/rendercore/textures/brickwall.glraw");
 
     // Load shaders
-    auto * vertShader = shaderLoader.load(rendercore::dataPath() + "/rendercore/shaders/geometry/geometry.vert");
-    m_vertShader.reset(vertShader);
-    auto * fragShader = shaderLoader.load(rendercore::dataPath() + "/rendercore/shaders/geometry/geometry.frag");
-    m_fragShader.reset(fragShader);
+    m_vertShader = shaderLoader.load(rendercore::dataPath() + "/rendercore/shaders/geometry/geometry.vert");
+    m_fragShader = shaderLoader.load(rendercore::dataPath() + "/rendercore/shaders/geometry/geometry.frag");
 
     // Create program
     m_program = cppassist::make_unique<globjects::Program>();

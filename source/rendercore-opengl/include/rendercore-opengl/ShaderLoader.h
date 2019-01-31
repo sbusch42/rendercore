@@ -2,11 +2,8 @@
 #pragma once
 
 
-#include <vector>
+#include <memory>
 #include <string>
-#include <unordered_map>
-
-#include <glbinding/gl/enum.h>
 
 #include <rendercore-opengl/rendercore-opengl_api.h>
 
@@ -31,9 +28,6 @@ namespace opengl
 /**
 *  @brief
 *    Shader loader
-*
-*  Supported options:
-*    none
 */
 class RENDERCORE_OPENGL_API ShaderLoader
 {
@@ -50,16 +44,17 @@ public:
     */
     virtual ~ShaderLoader();
 
-    bool canLoad(const std::string & ext) const;
-    std::vector<std::string> loadingTypes() const;
-    std::string allLoadingTypes() const;
-    globjects::Shader * load(const std::string & filename) const;
-
-protected:
-    std::vector<std::string> m_extensions; ///< List of supported file extensions (e.g., ".bmp")
-    std::vector<std::string> m_types;      ///< List of supported file types (e.g., "bmp image (*.bmp)")
-
-    const std::unordered_map<std::string, gl::GLenum> m_extensionToType; ///< Mapping of file extension to GLenum type
+    /**
+    *  @brief
+    *    Load shader
+    *
+    *  @param[in] filename
+    *    Path to file
+    *
+    *  @return
+    *    Shader (can be null)
+    */
+    std::unique_ptr<globjects::Shader> load(const std::string & filename) const;
 };
 
 

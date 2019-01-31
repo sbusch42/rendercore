@@ -2,7 +2,7 @@
 #pragma once
 
 
-#include <vector>
+#include <memory>
 #include <string>
 
 #include <rendercore-opengl/rendercore-opengl_api.h>
@@ -27,9 +27,9 @@ namespace opengl
 
 /**
 *  @brief
-*    File loader for '.glraw' files
+*    Texture loader from .raw or .glraw files
 */
-class RENDERCORE_OPENGL_API GlrawTextureLoader
+class RENDERCORE_OPENGL_API TextureLoader
 {
 public:
     /**
@@ -39,18 +39,25 @@ public:
     *  @param[in] environment
     *    Environment to which the loader belongs (must NOT be null!)
     */
-    GlrawTextureLoader(Environment * environment);
+    TextureLoader(Environment * environment);
 
     /**
     *  @brief
     *    Destructor
     */
-    virtual ~GlrawTextureLoader();
+    virtual ~TextureLoader();
 
-    bool canLoad(const std::string & ext) const;
-    std::vector<std::string> loadingTypes() const;
-    std::string allLoadingTypes() const;
-    globjects::Texture * load(const std::string & filename) const;
+    /**
+    *  @brief
+    *    Load texture
+    *
+    *  @param[in] filename
+    *    Path to file
+    *
+    *  @return
+    *    Texture (can be null)
+    */
+    std::unique_ptr<globjects::Texture> load(const std::string & filename) const;
 
 protected:
     /**
@@ -63,7 +70,7 @@ protected:
     *  @return
     *    Loaded texture, null on error
     */
-    globjects::Texture * loadGLRawImage(const std::string & filename) const;
+    std::unique_ptr<globjects::Texture> loadGLRawImage(const std::string & filename) const;
 
     /**
     *  @brief
@@ -75,11 +82,7 @@ protected:
     *  @return
     *    Loaded texture, null on error
     */
-    globjects::Texture * loadRawImage(const std::string & filename) const;
-
-protected:
-    std::vector<std::string> m_extensions; ///< List of supported file extensions (e.g., ".bmp")
-    std::vector<std::string> m_types;      ///< List of supported file types (e.g., "bmp image (*.bmp)")
+    std::unique_ptr<globjects::Texture> loadRawImage(const std::string & filename) const;
 };
 
 
