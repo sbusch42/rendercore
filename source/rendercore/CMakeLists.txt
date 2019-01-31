@@ -52,6 +52,7 @@ set(headers
     ${include_path}/ScopedConnection.h
     ${include_path}/Signal.h
     ${include_path}/Signal.inl
+    ${include_path}/Transform.h
 )
 
 set(sources
@@ -68,6 +69,7 @@ set(sources
     ${source_path}/Environment.cpp
     ${source_path}/Renderer.cpp
     ${source_path}/ScopedConnection.cpp
+    ${source_path}/Transform.cpp
 )
 
 # Group source files

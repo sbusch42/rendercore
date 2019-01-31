@@ -11,6 +11,7 @@
 #include <rendercore/AbstractDrawable.h>
 #include <rendercore/Camera.h>
 #include <rendercore/Renderer.h>
+#include <rendercore/Transform.h>
 
 #include <rendercore-opengl/rendercore-opengl_api.h>
 
@@ -57,7 +58,8 @@ protected:
 
 protected:
     // Simulation data
-    unsigned int m_counter; ///< Update counter
+    unsigned int m_counter;   ///< Update counter
+    Transform    m_transform; ///< Transformation of the model
 
     // GPU data
     std::unique_ptr<rendercore::Camera>           m_camera;     ///< Camera in the scene

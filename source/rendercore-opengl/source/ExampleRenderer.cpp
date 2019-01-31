@@ -5,8 +5,7 @@
 
 #include <cppassist/memory/make_unique.h>
 
-#include <glbinding/gl/enum.h>
-#include <glbinding/gl/functions.h>
+#include <glbinding/gl/gl.h>
 
 #include <rendercore/rendercore.h>
 
@@ -25,6 +24,11 @@ ExampleRenderer::ExampleRenderer(Environment * environment)
 : Renderer(environment)
 , m_counter(0)
 {
+    // Initialize object transformation
+    m_transform.setTranslation  ({ 0.0f, 0.0f, 0.0f });
+    m_transform.setScale        ({ 1.0f, 1.0f, 1.0f });
+    m_transform.setRotationAxis ({ 0.0f, 1.0f, 0.0f });
+    m_transform.setRotationAngle(0.0f);
 }
 
 ExampleRenderer::~ExampleRenderer()
@@ -85,6 +89,11 @@ void ExampleRenderer::onUpdate()
 
     // Advance counter
     m_counter++;
+
+    // Rotate model
+    m_transform.setRotationAngle(m_transform.rotationAngle() + m_timeDelta * 1.0f);
+    scheduleRedraw();
+    scheduleUpdate();
 }
 
 void ExampleRenderer::onRender()
@@ -95,12 +104,16 @@ void ExampleRenderer::onRender()
     // Update viewport
     gl::glViewport(m_viewport.x, m_viewport.y, m_viewport.z, m_viewport.w);
 
+    // Clear screen
+    gl::glClear(gl::GL_COLOR_BUFFER_BIT | gl::GL_DEPTH_BUFFER_BIT);
+
     // Update camera
     m_camera->lookAt(glm::vec3(0.0f, 0.0, 9.0f), glm::vec3(0.0f, 0.0f, 0.0f), glm::vec3(0.0f, 1.0f, 0.0f));
     m_camera->perspective(glm::radians(40.0f), glm::ivec2(m_viewport.z, m_viewport.w), 0.1f, 64.0f);
 
     // Update uniforms
-    m_program->setUniform<glm::mat4>("modelViewProjectionMatrix",    m_camera->viewProjectionMatrix());
+    m_program->setUniform<glm::mat4>("modelMatrix",                  m_transform.transform());
+    m_program->setUniform<glm::mat4>("modelViewProjectionMatrix",    m_camera->viewProjectionMatrix() * m_transform.transform());
     m_program->setUniform<glm::mat4>("viewProjectionMatrix",         m_camera->viewProjectionMatrix());
     m_program->setUniform<glm::mat4>("viewProjectionInvertedMatrix", m_camera->viewProjectionInvertedMatrix());
     m_program->setUniform<glm::mat4>("viewMatrix",                   m_camera->viewMatrix());
