@@ -1,5 +1,4 @@
 
-// [TODO] Review
 #include <rendercore-glfw/WindowEvent.h>
 
 #define GLFW_INCLUDE_NONE

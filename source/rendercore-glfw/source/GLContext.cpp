@@ -1,5 +1,4 @@
 
-// [TODO] Review
 #include <rendercore-glfw/GLContext.h>
 
 #include <cassert>
@@ -9,14 +8,12 @@
 #endif
 
 #define GLFW_INCLUDE_NONE
-#include <GLFW/glfw3.h> // specifies APIENTRY, should be after Error.h include,
-                        // which requires APIENTRY in windows..
+#include <GLFW/glfw3.h>
 
-#include <rendercore-opengl/GLContextUtils.h>
 #include <rendercore-opengl/GLContextFormat.h>
+#include <rendercore-opengl/GLContextUtils.h>
 
 
-using namespace rendercore;
 using namespace rendercore::opengl;
 
 
@@ -48,8 +45,7 @@ GLContext::GLContext(GLFWwindow * window)
     use();
 
     // Initialize glbinding and globjects in context (needed for context utils)
-    initializeBindings([](const char * name) -> glbinding::ProcAddress
-    {
+    initializeBindings([](const char * name) -> glbinding::ProcAddress {
         return glfwGetProcAddress(name);
     });
 
@@ -71,16 +67,14 @@ GLFWwindow * GLContext::window() const
 
 void GLContext::use() const
 {
-    if (m_window)
-    {
+    if (m_window) {
         glfwMakeContextCurrent(m_window);
     }
 }
 
 void GLContext::release() const
 {
-    if (m_window && m_window == glfwGetCurrentContext())
-    {
+    if (m_window && m_window == glfwGetCurrentContext()) {
         glfwMakeContextCurrent(nullptr);
     }
 }

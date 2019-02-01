@@ -1,5 +1,4 @@
 
-// [TODO] Review
 #pragma once
 
 
@@ -19,7 +18,7 @@ namespace glfw
 
 /**
 *  @brief
-*    Class representing the main message loop
+*    Class representing the main loop
 *
 *    The Application class is a singleton that has to be instanciated exactly
 *    once in an application. It controls the main message loop for all windows
@@ -125,7 +124,7 @@ protected:
     void processEvents();
 
 protected:
-    static Application * s_app; ///< Pointer to the current application instance, can be nullptr
+    static Application * s_app; ///< Pointer to the current application instance (can be null)
 
 protected:
     rendercore::Environment * m_environment; ///< Environment

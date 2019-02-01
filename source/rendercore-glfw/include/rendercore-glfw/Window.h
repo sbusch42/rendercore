@@ -1,5 +1,4 @@
 
-// [TODO] Review
 #pragma once
 
 
@@ -126,7 +125,7 @@ public:
     *    Get OpenGL context
     *
     *  @return
-    *    OpenGL context (can be nullptr)
+    *    OpenGL context (can be null)
     */
     const GLContext * context() const;
 
@@ -135,7 +134,7 @@ public:
     *    Get OpenGL context
     *
     *  @return
-    *    OpenGL context (can be nullptr)
+    *    OpenGL context (can be null)
     */
     GLContext * context();
 
@@ -241,7 +240,7 @@ public:
     *  @return
     *    Value of input mode
     *
-    *  @notes
+    *  @remarks
     *    Possible values include GLFW_CURSOR, GLFW_STICKY_KEYS,
     *    or GLFW_STICKY_MOUSE_BUTTONS. For more information,
     *    refer to GLFW docs to glfwGetInputMode.
@@ -257,7 +256,7 @@ public:
     *  @param[in] value
     *    Input mode value
     *
-    *  @notes
+    *  @remarks
     *    Possible values include GLFW_CURSOR, GLFW_STICKY_KEYS,
     *    or GLFW_STICKY_MOUSE_BUTTONS. For more information,
     *    refer to GLFW docs to glfwGetInputMode.
@@ -327,7 +326,7 @@ protected:
     *    Get GLFW window handle
     *
     *  @return
-    *    GLFW window, can be nullptr
+    *    GLFW window (can be null)
     */
     GLFWwindow * internalWindow() const;
 
@@ -336,7 +335,7 @@ protected:
     *    Add event to the window's event queue
     *
     *  @param[in] event
-    *    Event (can be nullptr)
+    *    Event (can be null)
     */
     void queueEvent(std::unique_ptr<WindowEvent> && event);
 
@@ -407,7 +406,7 @@ protected:
     *  @param[in] height
     *    Window height (in pixels)
     *  @param[in] monitor
-    *    GLWF monitor handle, can be nullptr
+    *    GLWF monitor handle (can be null)
     *
     *  @return
     *    'true' if context could be created, else 'false'
@@ -450,14 +449,14 @@ protected:
 protected:
     std::string                              m_title;            ///< Window title
     rendercore::opengl::GLContextFormat      m_format;           ///< The desired OpenGL context format
-    GLFWwindow                             * m_window;           ///< GLFW window (can be nullptr)
+    GLFWwindow                             * m_window;           ///< GLFW window (can be null)
     std::queue<std::unique_ptr<WindowEvent>> m_eventQueue;       ///< List of events to be processed by the window
     bool                                     m_fullscreen;       ///< 'true' if window is in fullscreen mode, else 'false'
     glm::ivec2                               m_windowedModeSize; ///< Size of window when returned from fullscreen mode
     bool                                     m_quitOnDestroy;    ///< Quit application when window is closed?
     bool                                     m_needsUpdate;      ///< Has an update be scheduled?
     bool                                     m_needsRepaint;     ///< Has a repaint be scheduled?
-    std::unique_ptr<GLContext>               m_context;          ///< OpenGL context (can be nullptr)
+    std::unique_ptr<GLContext>               m_context;          ///< OpenGL context (can be null)
 };
 
 

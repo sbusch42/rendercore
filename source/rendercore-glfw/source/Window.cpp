@@ -1,5 +1,4 @@
 
-// [TODO] Review
 #include <rendercore-glfw/Window.h>
 
 #include <cassert>
@@ -17,9 +16,6 @@
 #include <rendercore-glfw/Application.h>
 #include <rendercore-glfw/WindowEventDispatcher.h>
 #include <rendercore-glfw/WindowEvent.h>
-
-
-using namespace rendercore;
 
 
 namespace rendercore
@@ -64,8 +60,7 @@ Window::~Window()
 bool Window::setContextFormat(const rendercore::opengl::GLContextFormat & format)
 {
     // If window has already been created, the context format cannot be changed anymore
-    if (m_context)
-    {
+    if (m_context) {
         return false;
     }
 
@@ -77,14 +72,12 @@ bool Window::setContextFormat(const rendercore::opengl::GLContextFormat & format
 bool Window::create()
 {
     // Abort, if the window has already been created
-    if (m_context)
-    {
+    if (m_context) {
         return false;
     }
 
     // Create internal window
-    if (!createInternalWindow(m_format, m_windowedModeSize.x, m_windowedModeSize.y))
-    {
+    if (!createInternalWindow(m_format, m_windowedModeSize.x, m_windowedModeSize.y)) {
         cppassist::critical() << "Creating native window with OpenGL context failed.";
         return false;
     }
@@ -96,14 +89,12 @@ bool Window::create()
 void Window::destroy()
 {
     // Destroy internal window
-    if (m_context)
-    {
+    if (m_context) {
         destroyInternalWindow();
     }
 
     // Quit application?
-    if (m_quitOnDestroy)
-    {
+    if (m_quitOnDestroy) {
         Application::quit(0);
     }
 }
@@ -120,8 +111,7 @@ GLContext * Window::context()
 
 void Window::show()
 {
-    if (!m_window)
-    {
+    if (!m_window) {
         return;
     }
 
@@ -130,8 +120,7 @@ void Window::show()
 
 void Window::hide()
 {
-    if (!m_window)
-    {
+    if (!m_window) {
         return;
     }
 
@@ -140,8 +129,7 @@ void Window::hide()
 
 void Window::close()
 {
-    if (!m_window)
-    {
+    if (!m_window) {
         return;
     }
 
@@ -150,8 +138,7 @@ void Window::close()
 
 bool Window::isFullscreen() const
 {
-    if (!m_window)
-    {
+    if (!m_window) {
         return false;
     }
 
@@ -160,18 +147,15 @@ bool Window::isFullscreen() const
 
 void Window::setFullscreen(bool fullscreen)
 {
-    if (!m_window)
-    {
+    if (!m_window) {
         return;
     }
 
     // Switch to fullscreen-mode
-    if (fullscreen && !m_fullscreen)
-    {
+    if (fullscreen && !m_fullscreen) {
         // Get monitor on which fullscreen mode is requested
         GLFWmonitor * monitor = glfwGetPrimaryMonitor();
-        if (!monitor)
-        {
+        if (!monitor) {
             return;
         }
 
@@ -187,8 +171,7 @@ void Window::setFullscreen(bool fullscreen)
         destroyInternalWindow();
 
         // Create new internal window
-        if (createInternalWindow(m_format, w, h, monitor))
-        {
+        if (createInternalWindow(m_format, w, h, monitor)) {
             // Show window
             show();
 
@@ -198,8 +181,8 @@ void Window::setFullscreen(bool fullscreen)
     }
 
     // Switch to windowed-mode
-    else if (!fullscreen && m_fullscreen)
-    {
+    else if (!fullscreen && m_fullscreen) {
+        // Get window size
         int w = m_windowedModeSize.x;
         int h = m_windowedModeSize.y;
 
@@ -207,8 +190,7 @@ void Window::setFullscreen(bool fullscreen)
         destroyInternalWindow();
 
         // Create new internal window
-        if (createInternalWindow(m_format, w, h, nullptr))
-        {
+        if (createInternalWindow(m_format, w, h, nullptr)) {
             // Show window
             show();
 
@@ -220,8 +202,7 @@ void Window::setFullscreen(bool fullscreen)
 
 glm::ivec2 Window::position() const
 {
-    if (!m_window)
-    {
+    if (!m_window) {
         return glm::ivec2();
     }
 
@@ -233,8 +214,7 @@ glm::ivec2 Window::position() const
 
 glm::ivec2 Window::size() const
 {
-    if (!m_window)
-    {
+    if (!m_window) {
         return glm::ivec2();
     }
 
@@ -248,8 +228,7 @@ void Window::setSize(int width, int height)
 {
     m_windowedModeSize = glm::ivec2(width, height);
 
-    if (!m_window)
-    {
+    if (!m_window) {
         return;
     }
 
@@ -258,8 +237,7 @@ void Window::setSize(int width, int height)
 
 glm::ivec2 Window::framebufferSize() const
 {
-    if (!m_window)
-    {
+    if (!m_window) {
         return glm::ivec2();
     }
 
@@ -278,8 +256,7 @@ void Window::setTitle(const std::string & title)
 {
     m_title = title;
 
-    if (!m_window)
-    {
+    if (!m_window) {
         return;
     }
 
@@ -288,8 +265,7 @@ void Window::setTitle(const std::string & title)
 
 int Window::inputMode(int mode) const
 {
-    if (!m_window)
-    {
+    if (!m_window) {
         return 0;
     }
 
@@ -298,8 +274,7 @@ int Window::inputMode(int mode) const
 
 void Window::setInputMode(int mode, int value)
 {
-    if (!m_window)
-    {
+    if (!m_window) {
         return;
     }
 
@@ -318,8 +293,7 @@ void Window::setQuitOnDestroy(bool quitOnDestroy)
 
 void Window::update()
 {
-    if (!m_window)
-    {
+    if (!m_window) {
         return;
     }
 
@@ -330,8 +304,7 @@ void Window::update()
 
 void Window::repaint()
 {
-    if (!m_window)
-    {
+    if (!m_window) {
         return;
     }
 
@@ -342,8 +315,7 @@ void Window::repaint()
 
 void Window::swap()
 {
-    if (!m_window)
-    {
+    if (!m_window) {
         return;
     }
 
@@ -362,8 +334,7 @@ GLFWwindow * Window::internalWindow() const
 
 void Window::queueEvent(std::unique_ptr<WindowEvent> && event)
 {
-    if (!event)
-    {
+    if (!event) {
         return;
     }
 
@@ -372,8 +343,7 @@ void Window::queueEvent(std::unique_ptr<WindowEvent> && event)
 
 void Window::checkUpdateEvent()
 {
-    if (m_needsUpdate)
-    {
+    if (m_needsUpdate) {
         m_needsUpdate = false;
 
         glfwPostEmptyEvent();
@@ -382,8 +352,7 @@ void Window::checkUpdateEvent()
 
 void Window::checkRepaintEvent()
 {
-    if (m_needsRepaint)
-    {
+    if (m_needsRepaint) {
         m_needsRepaint = false;
 
         queueEvent(cppassist::make_unique<PaintEvent>());
@@ -392,8 +361,7 @@ void Window::checkRepaintEvent()
 
 bool Window::hasPendingEvents()
 {
-    if (!m_window)
-    {
+    if (!m_window) {
         return false;
     }
 
@@ -402,8 +370,7 @@ bool Window::hasPendingEvents()
 
 void Window::processEvents()
 {
-    if (m_eventQueue.empty() || !m_window)
-    {
+    if (m_eventQueue.empty() || !m_window) {
         return;
     }
 
@@ -411,8 +378,7 @@ void Window::processEvents()
 
     bool hasPaintEvent = false;
 
-    while (!m_eventQueue.empty())
-    {
+    while (!m_eventQueue.empty()) {
         m_eventQueue.front()->setWindow(this);
 
         auto event = *m_eventQueue.front();
@@ -427,16 +393,14 @@ void Window::processEvents()
 
         m_eventQueue.pop();
 
-        if (!m_context)
-        {
+        if (!m_context) {
             clearEventQueue();
             return;
         }
     }
 
     // Handle postponed paint event
-    if (hasPaintEvent)
-    {
+    if (hasPaintEvent) {
         PaintEvent event;
         event.setWindow(this);
 
@@ -449,14 +413,12 @@ void Window::processEvents()
 void Window::handleEvent(WindowEvent & event)
 {
     // Check that event is meant for this window
-    if (event.window() != this)
-    {
+    if (event.window() != this) {
         return;
     }
 
     // Dispatch event
-    switch (event.type())
-    {
+    switch (event.type()) {
         case WindowEvent::Type::Resize:
             onResize(static_cast<ResizeEvent &>(event));
             break;
@@ -516,12 +478,9 @@ void Window::handleEvent(WindowEvent & event)
 
         case WindowEvent::Type::Close:
             onClose(static_cast<CloseEvent &>(event));
-
-            if (!event.isAccepted())
-            {
+            if (!event.isAccepted()) {
                 destroy();
             }
-
             break;
 
         default:
@@ -539,8 +498,7 @@ bool Window::createInternalWindow(const rendercore::opengl::GLContextFormat & fo
 {
     // Abort if window is already created
     assert(!m_context);
-    if (m_context)
-    {
+    if (m_context) {
         return false;
     }
 
@@ -549,8 +507,7 @@ bool Window::createInternalWindow(const rendercore::opengl::GLContextFormat & fo
     m_context.reset(static_cast<GLContext*>( factory.createBestContext(format).release() ));
 
     // Check if context has been created
-    if (!m_context)
-    {
+    if (!m_context) {
         return false;
     }
 
@@ -582,8 +539,7 @@ bool Window::createInternalWindow(const rendercore::opengl::GLContextFormat & fo
 void Window::destroyInternalWindow()
 {
     // Abort if window has not been created
-    if (!m_context)
-    {
+    if (!m_context) {
         return;
     }
 

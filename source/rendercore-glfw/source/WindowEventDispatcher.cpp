@@ -1,13 +1,10 @@
 
-// [TODO] Review
 #include <rendercore-glfw/WindowEventDispatcher.h>
 
 #include <cassert>
 #include <cmath>
 
 #include <cppassist/memory/make_unique.h>
-
-#include <glbinding/gl/enum.h>
 
 #include <GLFW/glfw3.h>
 
@@ -27,8 +24,7 @@ void WindowEventDispatcher::registerWindow(Window * window)
 
     // Get GLFW window
     GLFWwindow * glfwWindow = window->internalWindow();
-    if (!glfwWindow)
-    {
+    if (!glfwWindow) {
         return;
     }
 
@@ -58,8 +54,7 @@ void WindowEventDispatcher::deregisterWindow(Window * window)
 
     // Get GLFW window
     GLFWwindow * glfwWindow = window->internalWindow();
-    if (!glfwWindow)
-    {
+    if (!glfwWindow) {
         return;
     }
 
@@ -88,14 +83,12 @@ void WindowEventDispatcher::dispatchEvent(GLFWwindow * glfwWindow, std::unique_p
 void WindowEventDispatcher::dispatchEvent(Window * window, std::unique_ptr<WindowEvent> && event)
 {
     // Check if event is valid
-    if (!event)
-    {
+    if (!event) {
         return;
     }
 
     // Check if window is valid, ignore event otherwise
-    if (!window)
-    {
+    if (!window) {
         return;
     }
 
@@ -105,20 +98,16 @@ void WindowEventDispatcher::dispatchEvent(Window * window, std::unique_ptr<Windo
 
 Window * WindowEventDispatcher::fromGLFW(GLFWwindow * glfwWindow)
 {
-    if (glfwWindow)
-    {
+    if (glfwWindow) {
         return static_cast<Window*>(glfwGetWindowUserPointer(glfwWindow));
-    }
-    else
-    {
+    } else {
         return nullptr;
     }
 }
 
 glm::ivec2 WindowEventDispatcher::mousePosition(GLFWwindow * glfwWindow)
 {
-    if (!glfwWindow)
-    {
+    if (!glfwWindow) {
         return glm::ivec2();
     }
 

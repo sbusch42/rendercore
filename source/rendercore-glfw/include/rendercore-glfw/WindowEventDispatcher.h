@@ -1,5 +1,4 @@
 
-// [TODO] Review
 #pragma once
 
 #include <memory>
@@ -26,8 +25,7 @@ class WindowEvent;
 *  @brief
 *    Event dispatcher
 *
-*    Static class that handles the dispatching of
-*    GLWF events to windows.
+*    Static class that handles the dispatching of GLWF events to windows.
 */
 class RENDERCORE_GLFW_API WindowEventDispatcher
 {
@@ -37,7 +35,7 @@ public:
     *    Register window for event dispatching
     *
     *  @param[in] window
-    *    Window (must be valid!)
+    *    Window (must NOT be null!)
     */
     static void registerWindow(Window * window);
 
@@ -46,7 +44,7 @@ public:
     *    Unregister window from event dispatching
     *
     *  @param[in] window
-    *    Window (must be valid!)
+    *    Window (must NOT be null!)
     */
     static void deregisterWindow(Window * window);
 
@@ -56,38 +54,38 @@ protected:
     *    Dispatch event to window
     *
     *  @param[in] window
-    *    GLFW window (can be nullptr)
+    *    GLFW window (can be null)
     *  @param[in] event
-    *    Event (can be nullptr)
+    *    Event (can be null)
     *
     *  @remarks
     *    The event object will be destroyed after dispatching.
     */
-    static void dispatchEvent(GLFWwindow * glfwWindow, std::unique_ptr<WindowEvent> &&event);
+    static void dispatchEvent(GLFWwindow * glfwWindow, std::unique_ptr<WindowEvent> && event);
 
     /**
     *  @brief
     *    Dispatch event to window
     *
     *  @param[in] window
-    *    Window (can be nullptr)
+    *    Window (can be null)
     *  @param[in] event
-    *    Event (can be nullptr)
+    *    Event (can be null)
     *
     *  @remarks
     *    The event object will be destroyed after dispatching.
     */
-    static void dispatchEvent(Window * window, std::unique_ptr<WindowEvent> &&event);
+    static void dispatchEvent(Window * window, std::unique_ptr<WindowEvent> && event);
 
     /**
     *  @brief
     *    Find window object from GLFW window
     *
     *  @param[in] window
-    *    GLFW window (can be nullptr)
+    *    GLFW window (can be null)
     *
     *  @return
-    *    Window (can be nullptr)
+    *    Window (can be null)
     */
     static Window * fromGLFW(GLFWwindow * glfwWindow);
 
@@ -96,7 +94,7 @@ protected:
     *    Get current mouse position inside the given window
     *
     *  @param[in] window
-    *    GLFW window (can be nullptr)
+    *    GLFW window (can be null)
     *
     *  @return
     *    Position, (0, 0) if mouse is not inside the window or window is invalid
@@ -117,13 +115,6 @@ protected:
     static void handleFocus(GLFWwindow * glfwWindow, int focused);
     static void handleIconify(GLFWwindow * glfwWindow, int iconified);
     static void handleClose(GLFWwindow * glfwWindow);
-
-private:
-    /**
-    *  @brief
-    *    Constructor
-    */
-    WindowEventDispatcher();
 };
 
 

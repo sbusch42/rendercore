@@ -1,5 +1,4 @@
 
-// [TODO] Review
 #include <rendercore-glfw/Application.h>
 
 #include <cassert>

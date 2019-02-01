@@ -1,5 +1,4 @@
 
-// [TODO] Review
 #include <rendercore-glfw/GLContextFactory.h>
 
 #ifdef WIN32
@@ -7,19 +6,13 @@
 #endif
 
 #define GLFW_INCLUDE_NONE
-#include <GLFW/glfw3.h> // specifies APIENTRY, should be after Error.h include,
-                        // which requires APIENTRY in windows..
+#include <GLFW/glfw3.h>
 
 #include <cppassist/memory/make_unique.h>
-
-#include <glbinding/Binding.h>
 
 #include <rendercore-opengl/GLContextFormat.h>
 
 #include <rendercore-glfw/GLContext.h>
-
-
-using namespace rendercore;
 
 
 namespace rendercore
@@ -46,8 +39,7 @@ std::unique_ptr<rendercore::opengl::AbstractGLContext> GLContextFactory::createC
 
     // Create window
     GLFWwindow * window = glfwCreateWindow(m_width, m_height, "", m_monitor, nullptr);
-    if (!window)
-    {
+    if (!window) {
         return nullptr;
     }
 
@@ -67,7 +59,6 @@ void GLContextFactory::initializeGLFWState(const rendercore::opengl::GLContextFo
     // the default values must be set before glfwCreateWindow can be called.
     // cf. http://www.glfw.org/docs/latest/group__window.html#ga4fd9e504bb937e79588a0ffdca9f620b
     glfwDefaultWindowHints();
-
     glfwWindowHint(GLFW_VISIBLE, false);
 
     // Set OpenGL version
@@ -76,15 +67,13 @@ void GLContextFactory::initializeGLFWState(const rendercore::opengl::GLContextFo
     glfwWindowHint(GLFW_DOUBLEBUFFER, int(true));
 
     // Set OpenGL context flags
-    if (format.version() >= glbinding::Version(3, 0))
-    {
+    if (format.version() >= glbinding::Version(3, 0)) {
         glfwWindowHint(GLFW_OPENGL_FORWARD_COMPAT, format.forwardCompatible());
         glfwWindowHint(GLFW_OPENGL_DEBUG_CONTEXT, format.debugContext());
     }
 
     // Set OpenGL profile
-    switch (format.profile())
-    {
+    switch (format.profile()) {
         case rendercore::opengl::GLContextFormat::Profile::Core:
             glfwWindowHint(GLFW_OPENGL_PROFILE, GLFW_OPENGL_CORE_PROFILE);
             break;

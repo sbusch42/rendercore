@@ -208,7 +208,7 @@ public:
     *  @param[in] type
     *    Data type of the indices to use for this specific draw call
     *  @param[in] indices
-    *    Pointer to the index buffer (must NOT be nullptr), containing adjacent values of the type passed in as type parameter
+    *    Pointer to the index buffer (must NOT be null!), containing adjacent values of the type passed in as type parameter
     */
     void drawElements(gl::GLenum mode, gl::GLsizei count, gl::GLenum type, const void * indices) const;
 
@@ -223,7 +223,7 @@ public:
     *  @param[in] type
     *    Data type of the indices to use for this specific draw call
     *  @param[in] indices
-    *    OpenGL buffer containing the index buffer (must NOT be nullptr), containing adjacent values of the type passed in as type parameter
+    *    OpenGL buffer containing the index buffer (must NOT be null!), containing adjacent values of the type passed in as type parameter
     */
     void drawElements(gl::GLenum mode, gl::GLsizei count, gl::GLenum type, globjects::Buffer * indices) const;
 

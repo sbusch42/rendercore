@@ -1,5 +1,4 @@
 
-// [TODO] Review
 #pragma once
 
 
@@ -66,7 +65,7 @@ public:
     virtual void release() const override;
 
 protected:
-    GLFWwindow * m_window;  ///< GLFW window that contains the context (cannot be null)
+    GLFWwindow * m_window; ///< GLFW window that contains the context (cannot be null)
 };
 
 

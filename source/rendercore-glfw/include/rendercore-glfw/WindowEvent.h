@@ -1,5 +1,4 @@
 
-// [TODO] Review
 #pragma once
 
 
@@ -60,7 +59,7 @@ public:
     *    Get event type
     *
     *  @return
-    *    The event type
+    *    Event type
     */
     Type type() const;
 
@@ -69,7 +68,7 @@ public:
     *    Get accepted state
     *
     *  @return
-    *    The accepted state
+    *    'true' if accepted, else 'false'
     */
     bool isAccepted() const;
 
@@ -78,10 +77,10 @@ public:
     *    Get ignored state
     *
     *  @return
-    *    The ignored state
+    *    'true' if ignored, else 'false'
     *
     *  @remarks
-    *    An event is ignored iff it is not accepted
+    *    An event is ignored if it is not accepted
     */
     bool isIgnored() const;
 
@@ -90,7 +89,7 @@ public:
     *    Set accepted state
     *
     *  @param[in] accepted
-    *    The new accepted state
+    *    'true' if accepted, else 'false'
     */
     void setAccepted(bool accepted);
 
@@ -114,10 +113,7 @@ public:
     *    Get associated window
     *
     *  @return
-    *    The associated window
-    *
-    *  @remarks
-    *    May be 'null'
+    *    Window (can be null)
     */
     const Window * window() const;
 
@@ -126,10 +122,7 @@ public:
     *    Get associated window
     *
     *  @return
-    *    The associated window
-    *
-    *  @remarks
-    *    May be 'null'
+    *    Window (can be null)
     */
     Window * window();
 
@@ -138,10 +131,7 @@ public:
     *    Set associated window
     *
     *  @param[in] window
-    *    The associated window
-    *
-    *  @remarks
-    *    window may be 'null'
+    *    Window (can be null)
     */
     void setWindow(Window * window);
 

@@ -1,5 +1,4 @@
 
-// [TODO] Review
 #include <rendercore-glfw/RenderWindow.h>
 
 #define GLFW_INCLUDE_NONE
@@ -12,13 +11,9 @@
 #include <globjects/Framebuffer.h>
 
 #include <rendercore/Canvas.h>
-#include <rendercore/Environment.h>
 
 #include <rendercore-glfw/GLContext.h>
 #include <rendercore-glfw/WindowEvent.h>
-
-
-using namespace rendercore;
 
 
 namespace rendercore
@@ -91,42 +86,42 @@ void RenderWindow::onPaint(PaintEvent &)
     // [TODO] Optimize memory reallocation problem
     auto defaultFBO = globjects::Framebuffer::defaultFBO();
 
+    // Render on canvas
     m_canvas->render();
 }
 
 void RenderWindow::onKeyPress(KeyEvent & event)
 {
     // Skip auto-repeated key events
-    if (event.action() == GLFW_REPEAT)
-    {
+    if (event.action() == GLFW_REPEAT) {
         return;
     }
 
-    /*
     // Promote event to canvas
+    // [TODO]
+    /*
     m_canvas->promoteKeyPress(
         fromGLFWKeyCode(event.key()),
         fromGLFWModifier(event.modifiers())
     );
     */
 
-    // F11/ALT+ENTER: Toogle fullscreen
-    if (event.key() == GLFW_KEY_F11 || (event.key() == GLFW_KEY_ENTER && (event.modifiers() & GLFW_MOD_ALT) != 0) )
-    {
-        setFullscreen(!isFullscreen());
+    // ESC: Close window
+    if (event.key() == GLFW_KEY_ESCAPE) {
+        close();
     }
 
-    // ESC: Close window
-    if (event.key() == GLFW_KEY_ESCAPE)
-    {
-        close();
+    // F11/ALT+ENTER: Toogle fullscreen
+    if (event.key() == GLFW_KEY_F11 || (event.key() == GLFW_KEY_ENTER && (event.modifiers() & GLFW_MOD_ALT) != 0) ) {
+        setFullscreen(!isFullscreen());
     }
 }
 
-void RenderWindow::onKeyRelease(KeyEvent & event)
+void RenderWindow::onKeyRelease(KeyEvent &)
 {
-    /*
     // Promote event to canvas
+    // [TODO]
+    /*
     m_canvas->promoteKeyRelease(
         fromGLFWKeyCode(event.key()),
         fromGLFWModifier(event.modifiers())
@@ -134,10 +129,11 @@ void RenderWindow::onKeyRelease(KeyEvent & event)
     */
 }
 
-void RenderWindow::onMousePress(MouseEvent & event)
+void RenderWindow::onMousePress(MouseEvent &)
 {
-    /*
     // Promote event to canvas
+    // [TODO]
+    /*
     m_canvas->promoteMousePress(
         fromGLFWMouseButton(event.button())
       , event.pos()
@@ -146,10 +142,11 @@ void RenderWindow::onMousePress(MouseEvent & event)
     */
 }
 
-void RenderWindow::onMouseRelease(MouseEvent & event)
+void RenderWindow::onMouseRelease(MouseEvent &)
 {
-    /*
     // Promote event to canvas
+    // [TODO]
+    /*
     m_canvas->promoteMouseRelease(
         fromGLFWMouseButton(event.button())
       , event.pos()
@@ -158,10 +155,11 @@ void RenderWindow::onMouseRelease(MouseEvent & event)
     */
 }
 
-void RenderWindow::onMouseMove(MouseEvent & event)
+void RenderWindow::onMouseMove(MouseEvent &)
 {
-    /*
     // Promote event to canvas
+    // [TODO]
+    /*
     m_canvas->promoteMouseMove(event.pos(), event.modifiers());
     */
 }
@@ -178,10 +176,11 @@ void RenderWindow::onMouseLeave(MouseLeaveEvent &)
     // [TODO]
 }
 
-void RenderWindow::onScroll(MouseEvent & event)
+void RenderWindow::onScroll(MouseEvent &)
 {
-    /*
     // Promote event to canvas
+    // [TODO]
+    /*
     m_canvas->promoteMouseWheel(
         event.delta()
       , event.pos()

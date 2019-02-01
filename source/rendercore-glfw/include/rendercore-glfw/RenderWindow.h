@@ -1,5 +1,4 @@
 
-// [TODO] Review
 #pragma once
 
 
@@ -71,7 +70,6 @@ public:
     */
     rendercore::Canvas * canvas() const;
 
-
 protected:
     // Virtual Window functions
     virtual void onContextInit() override;
@@ -127,7 +125,6 @@ protected:
     *    rendercore key modifier
     */
     // rendercore::KeyModifier fromGLFWModifier(int modifier) const;
-
 
 protected:
     rendercore::Environment           * m_environment; ///< Environment to which the window belongs (must NOT be null)
