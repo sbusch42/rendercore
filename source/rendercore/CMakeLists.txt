@@ -47,6 +47,7 @@ set(headers
     ${include_path}/ChronoTimer.h
     ${include_path}/Connection.h
     ${include_path}/Environment.h
+    ${include_path}/Image.h
     ${include_path}/Renderer.h
     ${include_path}/ScopedConnection.h
     ${include_path}/Signal.h
@@ -65,6 +66,7 @@ set(sources
     ${source_path}/ChronoTimer.cpp
     ${source_path}/Connection.cpp
     ${source_path}/Environment.cpp
+    ${source_path}/Image.cpp
     ${source_path}/Renderer.cpp
     ${source_path}/ScopedConnection.cpp
     ${source_path}/Transform.cpp
