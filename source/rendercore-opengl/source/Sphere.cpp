@@ -1,15 +1,11 @@
 
 #include <rendercore-opengl/Sphere.h>
 
-#include <iostream>
-
 #include <glm/glm.hpp>
 
 #include <cppassist/memory/make_unique.h>
 
 #include <glbinding/gl/enum.h>
-
-#include <globjects/Buffer.h>
 
 
 namespace rendercore
@@ -34,8 +30,7 @@ Sphere::Sphere(float radius, cppassist::Flags<ShapeOption> options)
     // Create vertex buffer
     auto vertices = m_icosahedron->vertices();
 
-    for (auto & vertex : vertices)
-    {
+    for (auto & vertex : vertices) {
         vertex *= radius;
     }
 
@@ -49,8 +44,7 @@ Sphere::Sphere(float radius, cppassist::Flags<ShapeOption> options)
     m_geometry->enableAttributeBinding(0);
 
     // Create texture coordinate buffer
-    if (options & ShapeOption::IncludeTexCoords)
-    {
+    if (options & ShapeOption::IncludeTexCoords) {
         m_icosahedron->generateTextureCoordinates();
 
         m_texCoords = cppassist::make_unique<globjects::Buffer>();

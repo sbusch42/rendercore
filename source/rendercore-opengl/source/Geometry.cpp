@@ -94,19 +94,16 @@ void Geometry::drawElements() const
 
 void Geometry::drawElements(gl::GLenum mode) const
 {
-    if (m_drawMode == DrawMode::ElementsIndices)
-    {
+    if (m_drawMode == DrawMode::ElementsIndices) {
         drawElements(mode, m_size, gl::GL_UNSIGNED_INT, m_indices.data());
-    }
-    else
-    {
+    } else {
         drawElements(mode, m_size, m_indexBufferType, m_indexBuffer);
     }
 }
 
 void Geometry::drawElements(gl::GLenum mode, gl::GLsizei count, gl::GLenum type, const void * indices) const
 {
-    // [TODO]: rethink recorded vao state
+    // [TODO] Rethink recorded vao state
     globjects::Buffer::unbind(gl::GL_ELEMENT_ARRAY_BUFFER);
 
     m_vao->drawElements(mode, count, type, indices);
@@ -114,7 +111,7 @@ void Geometry::drawElements(gl::GLenum mode, gl::GLsizei count, gl::GLenum type,
 
 void Geometry::drawElements(gl::GLenum mode, gl::GLsizei count, gl::GLenum type, globjects::Buffer *) const
 {
-    // [TODO]: rethink recorded vao state
+    // [TODO] Rethink recorded vao state
     m_vao->drawElements(mode, count, type, nullptr);
 }
 
@@ -140,8 +137,7 @@ void Geometry::setPrimitiveMode(gl::GLenum mode)
 
 globjects::Buffer * Geometry::buffer(size_t index)
 {
-    if (m_buffers.count(index) == 0)
-    {
+    if (m_buffers.count(index) == 0) {
         return nullptr;
     }
 
@@ -150,8 +146,7 @@ globjects::Buffer * Geometry::buffer(size_t index)
 
 globjects::Buffer * Geometry::buffer(size_t index) const
 {
-    if (m_buffers.count(index) == 0)
-    {
+    if (m_buffers.count(index) == 0) {
         return nullptr;
     }
 
@@ -236,8 +231,7 @@ void Geometry::bindAttribute(size_t bindingIndex, gl::GLint attributeIndex)
 
 void Geometry::bindAttributes(const std::vector<gl::GLint> & attributeIndices)
 {
-    for (size_t i = 0; i < attributeIndices.size(); ++i)
-    {
+    for (size_t i = 0; i < attributeIndices.size(); ++i) {
         m_vao->binding(i)->setAttribute(attributeIndices.at(i));
     }
 }
@@ -249,8 +243,7 @@ void Geometry::enableAttributeBinding(size_t bindingIndex)
 
 void Geometry::enableAllAttributeBindings()
 {
-    for (const globjects::VertexAttributeBinding * binding : m_vao->bindings())
-    {
+    for (const globjects::VertexAttributeBinding * binding : m_vao->bindings()) {
         m_vao->enable(binding->attributeIndex());
     }
 }

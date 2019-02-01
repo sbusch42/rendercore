@@ -7,8 +7,6 @@
 
 #include <glbinding/gl/enum.h>
 
-#include <globjects/Buffer.h>
-
 
 namespace rendercore
 {
@@ -62,8 +60,7 @@ Quad::Quad(float width, float height, cppassist::Flags<ShapeOption> options)
     m_geometry->enableAttributeBinding(0);
 
     // Create texture coordinate buffer
-    if (options & ShapeOption::IncludeTexCoords)
-    {
+    if (options & ShapeOption::IncludeTexCoords) {
         m_texCoords = cppassist::make_unique<globjects::Buffer>();
         m_texCoords->setData(texcoords, gl::GL_STATIC_DRAW);
 

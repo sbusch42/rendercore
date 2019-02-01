@@ -4,7 +4,6 @@
 
 #include <string>
 
-#include <glbinding/ContextHandle.h>
 #include <glbinding/Version.h>
 
 #include <rendercore-opengl/GLContextFormat.h>

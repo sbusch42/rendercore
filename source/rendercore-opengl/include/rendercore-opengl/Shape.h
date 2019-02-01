@@ -2,8 +2,6 @@
 #pragma once
 
 
-#include <map>
-
 #include <rendercore/AbstractDrawable.h>
 
 #include <rendercore-opengl/rendercore-opengl_api.h>

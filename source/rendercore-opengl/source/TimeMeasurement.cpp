@@ -1,9 +1,5 @@
 
-#include <chrono>
-
 #include <rendercore-opengl/TimeMeasurement.h>
-
-#include <cppassist/logging/logging.h>
 
 #include <glbinding/gl/gl.h>
 

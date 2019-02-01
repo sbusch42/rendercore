@@ -1,10 +1,6 @@
 
 #include <rendercore-opengl/GLContextUtils.h>
 
-#include <cassert>
-
-#include <cppassist/logging/logging.h>
-
 #include <glbinding/gl/gl.h>
 
 #include <glbinding-aux/ContextInfo.h>
@@ -29,11 +25,9 @@ GLContextFormat GLContextUtils::retrieveFormat()
     GLboolean b;
 
     format.setVersion(retrieveVersion());
-
     format.setProfile(retrieveProfile());
 
-    if (format.profile() != GLContextFormat::Profile::Core)
-    {
+    if (format.profile() != GLContextFormat::Profile::Core) {
         i = -1; glGetIntegerv(GLenum::GL_RED_BITS, &i);
         format.setRedBufferSize(i);
 
@@ -72,18 +66,15 @@ GLContextFormat::Profile GLContextUtils::retrieveProfile()
     gl::ContextProfileMask profileMask = gl::GL_NONE_BIT;
     glGetIntegerv(GLenum::GL_CONTEXT_PROFILE_MASK, reinterpret_cast<GLint*>(&profileMask));
 
-    if (static_cast<GLint>(profileMask) <= 0) // probably a context < 3.2 with no support for profiles
-    {
+    if (static_cast<GLint>(profileMask) <= 0) { // probably a context < 3.2 with no support for profiles
         return GLContextFormat::Profile::None;
     }
 
-    if ((profileMask & GL_CONTEXT_CORE_PROFILE_BIT) != gl::GL_NONE_BIT)
-    {
+    if ((profileMask & GL_CONTEXT_CORE_PROFILE_BIT) != gl::GL_NONE_BIT) {
         return GLContextFormat::Profile::Core;
     }
 
-    if ((profileMask & GL_CONTEXT_COMPATIBILITY_PROFILE_BIT) != gl::GL_NONE_BIT)
-    {
+    if ((profileMask & GL_CONTEXT_COMPATIBILITY_PROFILE_BIT) != gl::GL_NONE_BIT) {
         return GLContextFormat::Profile::Compatibility;
     }
 

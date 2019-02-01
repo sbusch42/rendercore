@@ -1,8 +1,6 @@
 
 #include <rendercore-opengl/GLContextFormat.h>
 
-#include <cassert>
-#include <sstream>
 #include <map>
 
 #include <cppassist/string/regex.h>
@@ -299,8 +297,7 @@ bool GLContextFormat::initializeFromString(const std::string &formatString)
 
     auto match = cppassist::string::extract(formatString, reg);
 
-    if(match.empty())
-    {
+    if (match.empty()) {
         cppassist::error("rendercore") << "requested contex string is ill-formed. Exiting";
         return false;
     }
@@ -311,19 +308,17 @@ bool GLContextFormat::initializeFromString(const std::string &formatString)
 
     // set profile
     auto profileString = static_cast<std::string>(match[3]);
-    if (profileString == "Core")
-    {
+    if (profileString == "Core") {
         setProfile(Profile::Core);
     }
-    if (profileString == "Compatibility")
-    {
+    if (profileString == "Compatibility") {
         setProfile(Profile::Compatibility);
     }
-    if (profileString == "")
-    {
+    if (profileString == "") {
         auto defaultProfile = Profile::Compatibility;
-        if(version < glbinding::Version(3,2))
+        if (version < glbinding::Version(3,2)) {
             defaultProfile = Profile::None;
+        }
         setProfile(defaultProfile);
     }
 
@@ -342,14 +337,17 @@ bool GLContextFormat::initializeFromString(const std::string &formatString)
         const auto key = static_cast<std::string>(match[1]);
         const auto value = !match[2].empty() ? static_cast<std::string>(match[3]) : "true";
 
-        if (key == "ForwardCompatiblity")
+        if (key == "ForwardCompatiblity") {
             setForwardCompatible(cppassist::string::fromString<bool>(value));
+        }
 
-        if (key == "Debug")
+        if (key == "Debug") {
             setDebugContext(cppassist::string::fromString<bool>(value));
+        }
 
-        if (key == "NoError")
+        if (key == "NoError") {
             setNoErrorContext(cppassist::string::fromString<bool>(value));
+        }
 
         remainingParams = static_cast<std::string>(match[4]);
     }
@@ -361,21 +359,18 @@ bool GLContextFormat::verifyVersionAndProfile(const GLContextFormat & requested)
 {
     bool sameProfiles = (requested.profile() == profile());
 
-    if (!sameProfiles)
-    {
+    if (!sameProfiles) {
         cppassist::warning() << "Profile mismatch for the current context: "
             << profileString(requested.profile()) << " requested, "
             << profileString(profile())           << " created.";
     }
 
-    if (requested.version() != version())
-    {
+    if (requested.version() != version()) {
         cppassist::warning() << "Version mismatch for the current context: "
             << requested.version().toString() << " requested, "
             << version().toString()           << " created.";
 
-        if (requested.profile() == Profile::Core)
-        {
+        if (requested.profile() == Profile::Core) {
             return false;
         }
     }
@@ -389,74 +384,53 @@ bool GLContextFormat::verifyPixelFormat(const GLContextFormat & requested) const
 
     bool sameSwapBehaviors = (requested.swapBehavior() == swapBehavior());
 
-    if (!sameSwapBehaviors)
-    {
+    if (!sameSwapBehaviors) {
         cppassist::warning() << "Swap behavior mismatch for the current context: "
             << swapBehaviorString(requested.swapBehavior()) << " requested, "
             << swapBehaviorString(swapBehavior())           << " created.";
     }
 
-    if (requested.depthBufferSize())
-    {
-        if (!depthBufferSize())
-        {
+    if (requested.depthBufferSize()) {
+        if (!depthBufferSize()) {
             issues.push_back("- Depth Buffer requested, but none created.");
-        }
-        else
-        {
+        } else {
             verifyBufferSize(requested.depthBufferSize(), depthBufferSize(),
                 "- Depth Buffer", issues
             );
         }
     }
 
-    verifyBufferSize(requested.redBufferSize(),   redBufferSize(),
-        "- Red Buffer", issues);
-    verifyBufferSize(requested.greenBufferSize(), greenBufferSize(),
-        "- Green Buffer", issues);
-    verifyBufferSize(requested.blueBufferSize(),  blueBufferSize(),
-        "- Blue Buffer", issues);
-    verifyBufferSize(requested.alphaBufferSize(), alphaBufferSize(),
-        "- Alpha Buffer", issues);
+    verifyBufferSize(requested.redBufferSize(),   redBufferSize(),   "- Red Buffer",   issues);
+    verifyBufferSize(requested.greenBufferSize(), greenBufferSize(), "- Green Buffer", issues);
+    verifyBufferSize(requested.blueBufferSize(),  blueBufferSize(),  "- Blue Buffer",  issues);
+    verifyBufferSize(requested.alphaBufferSize(), alphaBufferSize(), "- Alpha Buffer", issues);
 
-    if (requested.stencilBufferSize())
-    {
-        if (!stencilBufferSize())
-        {
+    if (requested.stencilBufferSize()) {
+        if (!stencilBufferSize()) {
             issues.push_back("- Stencil Buffer requested, but none created.");
-        }
-        else
-        {
-            verifyBufferSize(requested.stencilBufferSize(), stencilBufferSize(),
-                "- Stencil Buffer", issues);
+        } else {
+            verifyBufferSize(requested.stencilBufferSize(), stencilBufferSize(), "- Stencil Buffer", issues);
         }
     }
 
-    if (requested.stereo() && !stereo())
-    {
+    if (requested.stereo() && !stereo()) {
         issues.push_back("- Stereo Buffering requested, but not initialized.");
     }
 
-    if (requested.samples() > 0)
-    {
-        if (samples() <= 0)
-        {
+    if (requested.samples() > 0) {
+        if (samples() <= 0) {
             issues.push_back("- Sample Buffers requested, but none initialized.");
-        }
-        else
-        {
+        } else {
             verifyBufferSize(requested.samples(), samples(), "- Samples ", issues);
         }
     }
 
-    if (issues.empty())
-    {
+    if (issues.empty()) {
         return true;
     }
 
     cppassist::warning() << "Pixelformat mismatch for the current context:";
-    for (const std::string & issue : issues)
-    {
+    for (const std::string & issue : issues) {
         cppassist::warning() << issue;
     }
 
@@ -469,8 +443,7 @@ void GLContextFormat::verifyBufferSize(
   , const std::string & warning
   , std::vector<std::string> & issues) const
 {
-    if (sizeRequested == sizeInitialized)
-    {
+    if (sizeRequested == sizeInitialized) {
         return;
     }
 

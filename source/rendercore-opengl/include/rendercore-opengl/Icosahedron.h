@@ -6,8 +6,8 @@
 #include <vector>
 #include <unordered_map>
 
-#include <glm/vec3.hpp>
 #include <glm/vec2.hpp>
+#include <glm/vec3.hpp>
 
 #include <glbinding/gl/types.h>
 
@@ -152,9 +152,9 @@ private:
     */
     static gl::GLushort split(
         gl::GLushort a
-    ,   gl::GLushort b
-    ,   std::vector<glm::vec3> & points
-    ,   std::unordered_map<glm::uint, gl::GLushort> & cache);
+      , gl::GLushort b
+      , std::vector<glm::vec3> & points
+      , std::unordered_map<glm::uint, gl::GLushort> & cache);
 
 private:
     std::vector<glm::vec3> m_vertices;  ///< Vertex array

@@ -5,8 +5,6 @@
 #include <array>
 #include <chrono>
 
-#include <glm/vec4.hpp>
-
 #include <rendercore-opengl/rendercore-opengl_api.h>
 
 

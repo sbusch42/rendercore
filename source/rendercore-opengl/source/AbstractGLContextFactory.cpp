@@ -18,13 +18,12 @@ AbstractGLContextFactory::~AbstractGLContextFactory()
 {
 }
 
-std::unique_ptr<AbstractGLContext> AbstractGLContextFactory::createBestContext(const GLContextFormat & f) const
+std::unique_ptr<AbstractGLContext> AbstractGLContextFactory::createBestContext(const GLContextFormat & _format) const
 {
-    GLContextFormat format(f);
+    GLContextFormat format(_format);
 
 #ifdef SYSTEM_DARWIN
-    if (format.version().majorVersion() != 0 && format.version() != glbinding::Version(3, 2))
-    {
+    if (format.version().majorVersion() != 0 && format.version() != glbinding::Version(3, 2)) {
         cppassist::info("rendercore") << "Override OpenGL format to 3.2 Core Forward Compatible on macOS";
     }
 
@@ -34,8 +33,7 @@ std::unique_ptr<AbstractGLContext> AbstractGLContextFactory::createBestContext(c
     format.setProfile(GLContextFormat::Profile::Core);
     format.setForwardCompatible(true);
 #else
-    if (format.majorVersion() < 3)
-    {
+    if (format.majorVersion() < 3) {
         // Detect highest possible context version
         format.setVersion(3, 2);
         format.setForwardCompatible(true);
@@ -44,8 +42,7 @@ std::unique_ptr<AbstractGLContext> AbstractGLContextFactory::createBestContext(c
 
     auto context = createContext(format);
 
-    if (context)
-    {
+    if (context) {
         return context;
     }
 
@@ -60,8 +57,7 @@ std::unique_ptr<AbstractGLContext> AbstractGLContextFactory::createBestContext(c
 
     auto safeContext = createContext(safeFormat);
 
-    if (!safeContext)
-    {
+    if (!safeContext) {
         cppassist::error("rendercore") << "Safe context creation failed";
 
         return nullptr;

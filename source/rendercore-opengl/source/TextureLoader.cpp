@@ -1,7 +1,6 @@
 
 #include <rendercore-opengl/TextureLoader.h>
 
-#include <string>
 #include <map>
 
 #include <cppfs/FilePath.h>
@@ -35,8 +34,7 @@ struct TextureFormat
 };
 
 // Color formats and their names
-static const std::map<std::string, gl::GLenum> formatsBySuffix =
-{
+static const std::map<std::string, gl::GLenum> formatsBySuffix = {
     { "rh",     gl::GL_RED      },
     { "g",      gl::GL_GREEN    },
     { "b",      gl::GL_BLUE     },
@@ -48,8 +46,7 @@ static const std::map<std::string, gl::GLenum> formatsBySuffix =
 };
 
 // Data types and their names
-static const std::map<std::string, gl::GLenum> typesBySuffix =
-{
+static const std::map<std::string, gl::GLenum> typesBySuffix = {
     { "ub",             gl::GL_UNSIGNED_BYTE    },
     { "b",              gl::GL_BYTE             },
     { "us",             gl::GL_UNSIGNED_SHORT   },

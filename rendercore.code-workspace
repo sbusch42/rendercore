@@ -46,7 +46,8 @@
 			"typeinfo": "cpp",
 			"utility": "cpp",
 			"fstream": "cpp",
-			"memory": "cpp"
+			"memory": "cpp",
+			"map": "cpp"
 		}
 	}
 }

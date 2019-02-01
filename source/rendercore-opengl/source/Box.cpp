@@ -148,8 +148,7 @@ Box::Box(float width, float height, float depth, cppassist::Flags<ShapeOption> o
     m_geometry->enableAttributeBinding(0);
 
     // Create texture coordinate buffer
-    if (options & ShapeOption::IncludeTexCoords)
-    {
+    if (options & ShapeOption::IncludeTexCoords) {
         m_texCoords = cppassist::make_unique<globjects::Buffer>();
         m_texCoords->setData(texcoords, gl::GL_STATIC_DRAW);
 
