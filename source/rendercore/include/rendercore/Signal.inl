@@ -81,7 +81,7 @@ void Signal<Arguments...>::fire(Arguments... arguments) const
 }
 
 template <typename... Arguments>
-void Signal<Arguments...>::disconnectId(Connection::Id id) const
+void Signal<Arguments...>::disconnect(Connection::Id id) const
 {
     m_callbacks.erase(id);
 }

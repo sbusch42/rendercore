@@ -14,8 +14,8 @@ namespace rendercore
 *    Abstract base class for contexts
 *
 *    This base class describes a common interface for contexts of any kind.
-*    It is not meant for just OpenGL contexts, but can also be used for other
-*    kind of contexts, such as CUDA, OpenAL, etc.
+*    It is meant especially for rendering contexts, such as OpenGL, but can
+*    also be used for other kinds of contexts, such as CUDA, OpenAL, etc.
 */
 class RENDERCORE_API AbstractContext
 {

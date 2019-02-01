@@ -43,7 +43,6 @@ set(headers
     ${include_path}/Cached.h
     ${include_path}/Cached.inl
     ${include_path}/Camera.h
-    ${include_path}/CameraUtils.h
     ${include_path}/Canvas.h
     ${include_path}/ChronoTimer.h
     ${include_path}/Connection.h
@@ -62,7 +61,6 @@ set(sources
     ${source_path}/AbstractDrawable.cpp
     ${source_path}/AbstractSignal.cpp
     ${source_path}/Camera.cpp
-    ${source_path}/CameraUtils.cpp
     ${source_path}/Canvas.cpp
     ${source_path}/ChronoTimer.cpp
     ${source_path}/Connection.cpp

@@ -21,7 +21,6 @@ namespace rendercore
 *
 *    Typical usage of Cached:
 *    \code{.cpp}
-*
 *        // on update
 *        lazyValue.invalidate();
 *        ...
@@ -83,12 +82,15 @@ public:
 
     /**
     *  @brief
-    *    Get value
-    *
-    *  @return
-    *    The value
+    *    Set valid state to 'true'
     */
-    T & value();
+    void validate() const;
+
+    /**
+    *  @brief
+    *    Set valid state to 'false'
+    */
+    void invalidate() const;
 
     /**
     *  @brief
@@ -98,6 +100,15 @@ public:
     *    The value
     */
     const T & value() const;
+
+    /**
+    *  @brief
+    *    Get value
+    *
+    *  @return
+    *    The value
+    */
+    T & value();
 
     /**
     *  @brief
@@ -120,18 +131,6 @@ public:
     *    The validation status
     */
     void setValue(T && value, bool validate = true) const;
-
-    /**
-    *  @brief
-    *    Set valid state to 'true'
-    */
-    void validate() const;
-
-    /**
-    *  @brief
-    *    Set valid state to 'false'
-    */
-    void invalidate() const;
 
 protected:
     mutable bool m_valid; ///< Valid status

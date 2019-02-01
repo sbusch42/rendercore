@@ -36,7 +36,6 @@ public:
     Signal<> wakeup; ///< Use this to wakeup the main loop to resume continuous simulation or redraw
 
 public:
-    //@{
     /**
     *  @brief
     *    Constructor
@@ -51,9 +50,7 @@ public:
     *    Destructor
     */
     ~Canvas();
-    //@}
 
-    //@{
     /**
     *  @brief
     *    Get environment
@@ -62,10 +59,16 @@ public:
     *    Environment to which the canvas belongs (never null)
     */
     const Environment * environment() const;
-    Environment * environment();
-    //@}
 
-    //@{
+    /**
+    *  @brief
+    *    Get environment
+    *
+    *  @return
+    *    Environment to which the canvas belongs (never null)
+    */
+    Environment * environment();
+
     /**
     *  @brief
     *    Get rendering context
@@ -81,10 +84,23 @@ public:
     *    attached to the canvas.
     */
     const AbstractContext * context() const;
-    AbstractContext * context();
-    //@}
 
-    //@{
+    /**
+    *  @brief
+    *    Get rendering context
+    *
+    *  @return
+    *    Rendering context used for rendering on the canvas (can be null)
+    *
+    *  @remarks
+    *    The returned context can be null if the canvas has not been
+    *    initialized yet, or the method is called between deinitContext()
+    *    and initContext() when the context has been changed.
+    *    Aside from that, there should always be a valid rendering context
+    *    attached to the canvas.
+    */
+    AbstractContext * context();
+
     /**
     *  @brief
     *    Initialize in rendering context
@@ -228,7 +244,6 @@ public:
     *    This will call render on the renderer.
     */
     void render();
-    //@}
 
 protected:
     Environment               * m_environment;   ///< Environment to which the canvas belongs

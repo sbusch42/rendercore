@@ -15,10 +15,8 @@ namespace rendercore
 *  @brief
 *    High performance timer based on std::chrono
 *
-*    This timer class is for time measurement, not for
-*    automated execution of tasks. See Environment
-*    for an interface to automatically trigger events
-*    based on timers.
+*    This timer class is for time measurement,
+*    not for automated execution of tasks.
 */
 class RENDERCORE_API ChronoTimer
 {
@@ -32,12 +30,12 @@ public:
     *  @brief
     *    Constructor
     *
-    *  @param[in] start
+    *  @param[in] startNow
     *    Start time measurement right away?
     *  @param[in] autoUpdate
     *    'true' if auto-update is on, else 'false'
     */
-    ChronoTimer(bool start = true, bool autoUpdate = true);
+    ChronoTimer(bool startNow = true, bool autoUpdate = true);
 
     /**
     *  @brief
@@ -121,16 +119,14 @@ public:
     void reset();
 
 protected:
-    bool m_paused;      ///< Paused state
-    bool m_autoUpdate;  ///< Auto update state
+    bool m_paused;        ///< Paused state
+    bool m_autoUpdate;    ///< Auto update state
 
-    time_point m_t0;    ///< Current time point
-    time_point m_tp;    ///< Time point of last pause
-
-    time_point m_t1;    ///< Ask @cgcostume
-
-    Duration m_offset;  ///< Ask @cgcostume
-    Duration m_elapsed; ///< Ask @cgcostume
+    time_point m_t0;      ///< Time point of last reset
+    time_point m_tp;      ///< Time point of last pause
+    time_point m_t1;      ///< Current time point
+    Duration   m_offset;  ///< Offset between m_t0 and m_t1
+    Duration   m_elapsed; ///< Time between start time and now
 };
 
 

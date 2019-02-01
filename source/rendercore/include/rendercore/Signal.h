@@ -113,7 +113,7 @@ protected:
     void fire(Arguments... arguments) const;
 
     // Virtual AbstractSignal functions
-    virtual void disconnectId(Connection::Id id) const override;
+    virtual void disconnect(Connection::Id id) const override;
 
 protected:
     mutable std::unordered_map<Connection::Id, Callback> m_callbacks; ///< List of registered callbacks

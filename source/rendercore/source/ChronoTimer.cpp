@@ -6,7 +6,7 @@ namespace rendercore
 {
 
 
-ChronoTimer::ChronoTimer(const bool _start, const bool autoUpdate)
+ChronoTimer::ChronoTimer(bool startNow, bool autoUpdate)
 : m_paused(true)
 , m_autoUpdate(autoUpdate)
 , m_t0(clock::now())
@@ -15,8 +15,7 @@ ChronoTimer::ChronoTimer(const bool _start, const bool autoUpdate)
 , m_offset(Duration::zero())
 , m_elapsed(Duration::zero())
 {
-    if (_start)
-    {
+    if (startNow) {
         start();
     }
 }
@@ -40,8 +39,7 @@ bool ChronoTimer::paused() const
 
 void ChronoTimer::start()
 {
-    if (!m_paused)
-    {
+    if (!m_paused) {
         return;
     }
 
@@ -54,8 +52,7 @@ void ChronoTimer::start()
 
 void ChronoTimer::pause()
 {
-    if (m_paused)
-    {
+    if (m_paused) {
         return;
     }
 
@@ -81,8 +78,7 @@ void ChronoTimer::reset()
 
 ChronoTimer::Duration ChronoTimer::elapsed() const
 {
-    if (m_autoUpdate)
-    {
+    if (m_autoUpdate) {
         const_cast<ChronoTimer*>(this)->update();
     }
 

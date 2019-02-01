@@ -13,7 +13,7 @@ namespace rendercore
 
 /**
 *  @brief
-*    Represents a 3D transformation (translation, rotation, and scale)
+*    Representation of a 3D transformation (translation, rotation, and scale)
 */
 class RENDERCORE_API Transform
 {

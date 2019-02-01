@@ -46,7 +46,6 @@ class Environment;
 class RENDERCORE_API Renderer
 {
 public:
-    //@{
     /**
     *  @brief
     *    Constructor
@@ -67,21 +66,25 @@ public:
     *    Destructor
     */
     virtual ~Renderer();
-    //@}
 
-    //@{
     /**
     *  @brief
     *    Get environment
     *
     *  @return
-    *    Environment to which the canvas belongs (never null)
+    *    Environment the renderer belongs to (never null)
     */
     const Environment * environment() const;
-    Environment * environment();
-    //@}
 
-    //@{
+    /**
+    *  @brief
+    *    Get environment
+    *
+    *  @return
+    *    Environment the renderer belongs to (never null)
+    */
+    Environment * environment();
+
     /**
     *  @brief
     *    Get rendering context
@@ -90,8 +93,15 @@ public:
     *    Rendering context used for rendering (can be null)
     */
     const AbstractContext * context() const;
+
+    /**
+    *  @brief
+    *    Get rendering context
+    *
+    *  @return
+    *    Rendering context used for rendering (can be null)
+    */
     AbstractContext * context();
-    //@}
 
     /**
     *  @brief

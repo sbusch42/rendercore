@@ -32,7 +32,7 @@ Connection AbstractSignal::createConnection() const
 void AbstractSignal::disconnect(Connection & connection) const
 {
     m_connections.erase(connection.id());
-    disconnectId(connection.id());
+    disconnect(connection.id());
 }
 
 

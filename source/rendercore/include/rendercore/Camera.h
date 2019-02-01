@@ -129,7 +129,7 @@ public:
     *    Camera position
     *  @param[in] center
     *    Look-at position
-    *  @return
+    *  @param[in] up
     *    Up-vector
     */
     void lookAt(const glm::vec3 & eye, const glm::vec3 & center, const glm::vec3 & up);
@@ -138,23 +138,23 @@ public:
     *  @brief
     *    Set a perspective projection matrix
     *
-    *  @param[in] fovy
-    *    Vertical angle
-    *  @param[in] ratio
+    *  @param[in] fovY
+    *    Vertical field-of-view angle
+    *  @param[in] aspect
     *    Aspect ratio
     *  @param[in] zNear
     *    Near plane
     *  @param[in] zFar
     *    Far plane
     */
-    void perspective(float fovy, float ratio, float zNear, float zFar);
+    void perspective(float fovY, float aspect, float zNear, float zFar);
 
     /**
     *  @brief
     *    Set a perspective projection matrix
     *
-    *  @param[in] fovy
-    *    Vertical angle
+    *  @param[in] fovY
+    *    Vertical field-of-view angle
     *  @param[in] viewport
     *    Target viewport, used to derive the aspect ratio
     *  @param[in] zNear
@@ -162,7 +162,7 @@ public:
     *  @param[in] zFar
     *    Far plane
     */
-    void perspective(float fovy, const glm::ivec2 & viewport, float zNear, float zFar);
+    void perspective(float fovY, const glm::ivec2 & viewport, float zNear, float zFar);
 
     /**
     *  @brief
@@ -172,10 +172,10 @@ public:
     *    Left border of viewbox
     *  @param[in] right
     *    Right border of viewbox
-    *  @param[in] top
-    *    Top border of viewbox
     *  @param[in] bottom
     *    Bottom border of viewbox
+    *  @param[in] top
+    *    Top border of viewbox
     *  @param[in] zNear
     *    Near plane
     *  @param[in] zFar
@@ -187,16 +187,54 @@ public:
     *  @brief
     *    Set a orthogonal projection matrix
     *
-    *  @param[in] fovy
-    *    Vertical angle
-    *  @param[in] ratio
+    *  @param[in] fovY
+    *    Vertical field-of-view angle
+    *  @param[in] aspect
     *    Aspect ratio
     *  @param[in] zNear
     *    Near plane
     *  @param[in] zFar
     *    Far plane
     */
-    void ortho(float fovy, float aspect, float zNear, float zFar);
+    void ortho(float fovY, float aspect, float zNear, float zFar);
+
+    /**
+    *  @brief
+    *    Compute orthographic projection matrix from perspective parameters
+    *
+    *  @param[in] fovY
+    *    Vertical field-of-view angle
+    *  @param[in] aspect
+    *    Aspect ratio
+    *  @param[in] zNear
+    *    Near plane
+    *  @param[in] zFar
+    *    Far plane
+    *  @param[in] syncDist
+    *    Distance of the plane that should keep constant size in both projections ([zNear, zFar])
+    */
+    void orthographicFromPerspective(float fovY, float aspect, float zNear, float zFar, float syncDist);
+
+    /**
+    *  @brief
+    *    Compute perspective projection matrix from orthographic parameters
+    *
+    *  @param[in] left
+    *    Left border of viewbox
+    *  @param[in] right
+    *    Right border of viewbox
+    *  @param[in] bottom
+    *    Bottom border of viewbox
+    *  @param[in] top
+    *    Top border of viewbox
+    *  @param[in] zNear
+    *    Near plane
+    *  @param[in] zFar
+    *    Far plane
+    *  @param[in] syncDist
+    *    Distance of the plane that should keep constant size in both projections ([zNear, zFar])
+    */
+    void perspectiveFromOrthographic(float left, float right, float bottom, float top, float zNear, float zFar, float syncDist);
 
     /**
     *  @brief
@@ -219,18 +257,6 @@ protected:
     *    Emit signal that camera has been modified
     */
     void changed();
-
-    /**
-    *  @brief
-    *    Mark data dirty
-    *
-    *  @param[in] update
-    *    Update matrices immediately (true), or later (false)?
-    *
-    *  @remarks
-    *    After calling this function, the matrices will be recalculated the next time they're accessed.
-    */
-    void dirty(bool update = true);
 
     /**
     *  @brief

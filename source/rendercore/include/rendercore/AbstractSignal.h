@@ -58,7 +58,7 @@ protected:
     *  @param[in] id
     *    Connection ID
     */
-    virtual void disconnectId(Connection::Id id) const = 0;
+    virtual void disconnect(Connection::Id id) const = 0;
 
 protected:
     mutable Connection::Id                                 m_nextId;      ///< Next free connection ID
