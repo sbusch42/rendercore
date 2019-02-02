@@ -6,7 +6,6 @@
 
 #include <globjects/Buffer.h>
 
-#include <rendercore-opengl/Shape.h>
 #include <rendercore-opengl/Geometry.h>
 
 
@@ -20,7 +19,7 @@ namespace opengl
 *  @brief
 *    Quad shape
 */
-class RENDERCORE_OPENGL_API Quad : public Shape
+class RENDERCORE_OPENGL_API Quad : public Geometry
 {
 public:
     /**
@@ -29,10 +28,10 @@ public:
     *
     *  @param[in] size
     *    Edge width and height
-    *  @param[in] options
-    *    Shape options
+    *  @param[in] texCoords
+    *    Generate texture coordinates?
     */
-    Quad(float size = 2.0f, cppassist::Flags<ShapeOption> options = ShapeOption::None);
+    Quad(float size = 2.0f, bool texCoords = false);
 
     /**
     *  @brief
@@ -42,10 +41,10 @@ public:
     *    Edge width
     *  @param[in] height
     *    Edge height
-    *  @param[in] options
-    *    Shape options
+    *  @param[in] texCoords
+    *    Generate texture coordinates?
     */
-    Quad(float width, float height, cppassist::Flags<ShapeOption> options = ShapeOption::None);
+    Quad(float width, float height, bool texCoords = false);
 
     /**
     *  @brief
@@ -53,11 +52,7 @@ public:
     */
     virtual ~Quad();
 
-    // Virtual AbstractDrawable functions
-    virtual void draw() const override;
-
 protected:
-    std::unique_ptr<Geometry>          m_geometry;  ///< Underlying geometry
     std::unique_ptr<globjects::Buffer> m_vertices;  ///< Vertex buffer
     std::unique_ptr<globjects::Buffer> m_texCoords; ///< Texture coordinate buffer
 };

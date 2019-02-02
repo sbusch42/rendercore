@@ -9,6 +9,9 @@
 
 #include <rendercore/rendercore.h>
 
+#include <rendercore-opengl/Quad.h>
+#include <rendercore-opengl/Triangle.h>
+#include <rendercore-opengl/Sphere.h>
 #include <rendercore-opengl/Box.h>
 #include <rendercore-opengl/TextureLoader.h>
 #include <rendercore-opengl/ShaderLoader.h>
@@ -56,7 +59,10 @@ void ExampleRenderer::onContextInit(AbstractContext *)
     m_camera = cppassist::make_unique<Camera>();
 
     // Create geometry
-    m_geometry = cppassist::make_unique<Box>(2.0f, ShapeOption::IncludeTexCoords);
+//  m_geometry = cppassist::make_unique<Quad>(2.0f, true);
+//  m_geometry = cppassist::make_unique<Triangle>(2.0f, true);
+//  m_geometry = cppassist::make_unique<Sphere>(2.0f, true);
+    m_geometry = cppassist::make_unique<Box>(2.0f, true);
 
     // Load texture
     m_texture = textureLoader.load(rendercore::dataPath() + "/rendercore/textures/brickwall.glraw");

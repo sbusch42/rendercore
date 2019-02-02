@@ -48,7 +48,6 @@ set(headers
     ${include_path}/Icosahedron.h
     ${include_path}/Quad.h
     ${include_path}/ShaderLoader.h
-    ${include_path}/Shape.h
     ${include_path}/Sphere.h
     ${include_path}/TextureLoader.h
     ${include_path}/TimeMeasurement.h
@@ -65,7 +64,6 @@ set(sources
     ${source_path}/Icosahedron.cpp
     ${source_path}/Quad.cpp
     ${source_path}/ShaderLoader.cpp
-    ${source_path}/Shape.cpp
     ${source_path}/Sphere.cpp
     ${source_path}/TextureLoader.cpp
     ${source_path}/TimeMeasurement.cpp

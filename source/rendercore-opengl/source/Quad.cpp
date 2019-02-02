@@ -14,13 +14,12 @@ namespace opengl
 {
 
 
-Quad::Quad(float size, cppassist::Flags<ShapeOption> options)
-: Quad(size, size, options)
+Quad::Quad(float size, bool texCoords)
+: Quad(size, size, texCoords)
 {
 }
 
-Quad::Quad(float width, float height, cppassist::Flags<ShapeOption> options)
-: Shape(ShapeType::Quad, options)
+Quad::Quad(float width, float height, bool texCoords)
 {
     // Quad geometry
     static const std::array<glm::vec2, 4> vertices { {
@@ -38,10 +37,9 @@ Quad::Quad(float width, float height, cppassist::Flags<ShapeOption> options)
     } };
 
     // Create drawable
-    m_geometry = cppassist::make_unique<Geometry>();
-    m_geometry->setPrimitiveMode(gl::GL_TRIANGLE_STRIP);
-    m_geometry->setDrawMode(DrawMode::Arrays);
-    m_geometry->setSize(4);
+    setPrimitiveMode(gl::GL_TRIANGLE_STRIP);
+    setDrawMode(DrawMode::Arrays);
+    setSize(4);
 
     // Create vertex buffer
     auto v = vertices;
@@ -53,32 +51,27 @@ Quad::Quad(float width, float height, cppassist::Flags<ShapeOption> options)
     m_vertices = cppassist::make_unique<globjects::Buffer>();
     m_vertices->setData(v, gl::GL_STATIC_DRAW);
 
-    m_geometry->bindAttribute(0, 0);
-    m_geometry->setBuffer(0, m_vertices.get());
-    m_geometry->setAttributeBindingBuffer(0, 0, 0, sizeof(glm::vec2));
-    m_geometry->setAttributeBindingFormat(0, 2, gl::GL_FLOAT, gl::GL_FALSE, 0);
-    m_geometry->enableAttributeBinding(0);
+    bindAttribute(0, 0);
+    setBuffer(0, m_vertices.get());
+    setAttributeBindingBuffer(0, 0, 0, sizeof(glm::vec2));
+    setAttributeBindingFormat(0, 2, gl::GL_FLOAT, gl::GL_FALSE, 0);
+    enableAttributeBinding(0);
 
     // Create texture coordinate buffer
-    if (options & ShapeOption::IncludeTexCoords) {
+    if (texCoords) {
         m_texCoords = cppassist::make_unique<globjects::Buffer>();
         m_texCoords->setData(texcoords, gl::GL_STATIC_DRAW);
 
-        m_geometry->bindAttribute(1, 1);
-        m_geometry->setBuffer(1, m_texCoords.get());
-        m_geometry->setAttributeBindingBuffer(1, 1, 0, sizeof(glm::vec2));
-        m_geometry->setAttributeBindingFormat(1, 2, gl::GL_FLOAT, gl::GL_FALSE, 0);
-        m_geometry->enableAttributeBinding(1);
+        bindAttribute(1, 1);
+        setBuffer(1, m_texCoords.get());
+        setAttributeBindingBuffer(1, 1, 0, sizeof(glm::vec2));
+        setAttributeBindingFormat(1, 2, gl::GL_FLOAT, gl::GL_FALSE, 0);
+        enableAttributeBinding(1);
     }
 }
 
 Quad::~Quad()
 {
-}
-
-void Quad::draw() const
-{
-    m_geometry->draw();
 }
 
 

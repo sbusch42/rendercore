@@ -6,7 +6,6 @@
 
 #include <globjects/Buffer.h>
 
-#include <rendercore-opengl/Shape.h>
 #include <rendercore-opengl/Geometry.h>
 
 
@@ -20,7 +19,7 @@ namespace opengl
 *  @brief
 *    Box shape
 */
-class RENDERCORE_OPENGL_API Box : public Shape
+class RENDERCORE_OPENGL_API Box : public Geometry
 {
 public:
     /**
@@ -29,10 +28,10 @@ public:
     *
     *  @param[in] size
     *    Edge width, height, and depth
-    *  @param[in] options
-    *    Shape options
+    *  @param[in] texCoords
+    *    Generate texture coordinates?
     */
-    Box(float size = 2.0f, cppassist::Flags<ShapeOption> options = ShapeOption::None);
+    Box(float size = 2.0f, bool texCoords = false);
 
     /**
     *  @brief
@@ -44,10 +43,10 @@ public:
     *    Edge height
     *  @param[in] depth
     *    Edge depth
-    *  @param[in] options
-    *    Shape options
+    *  @param[in] texCoords
+    *    Generate texture coordinates?
     */
-    Box(float width, float height, float depth, cppassist::Flags<ShapeOption> options = ShapeOption::None);
+    Box(float width, float height, float depth, bool texCoords = false);
 
     /**
     *  @brief
@@ -55,11 +54,7 @@ public:
     */
     virtual ~Box();
 
-    // Virtual AbstractDrawable functions
-    virtual void draw() const override;
-
 protected:
-    std::unique_ptr<Geometry>          m_geometry;  ///< Underlying geometry
     std::unique_ptr<globjects::Buffer> m_vertices;  ///< Vertex buffer
     std::unique_ptr<globjects::Buffer> m_texCoords; ///< Texture coordinate buffer
 };
