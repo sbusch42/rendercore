@@ -15,9 +15,9 @@ namespace rendercore
 *  @brief
 *    Image formats
 */
-enum class Format : uint32_t
+enum class Format : unsigned int
 {
-    Invalid = 0
+    Unknown = 0
   , Red
   , Green
   , Blue
@@ -46,9 +46,10 @@ enum class Format : uint32_t
 *  @brief
 *    Data types
 */
-enum class DataType : uint32_t
+enum class DataType : unsigned int
 {
-    Invalid = 0
+    Unknown = 0
+
   , Byte
   , Unsigned_Byte
   , Short
@@ -57,13 +58,24 @@ enum class DataType : uint32_t
   , Unsigned_Int
   , Float
   , Double
+
+  , Compressed
+  , Compressed_Red_RGTC1 = Compressed
+  , Compressed_Signed_Red_RGTC1
+  , Compressed_RG_RGTC2
+  , Compressed_Signed_RG_RGTC2
+  , Compressed_RGBA_BPTC_Unorm
+  , Compressed_RGB_BPTC_Signed_Float
+  , Compressed_RGB_BPTC_Unsigned_Float
+  , Compressed_RGB_S3TC_DXT1
+  , Compressed_RGBA_S3TC_DXT1
+  , Compressed_RGBA_S3TC_DXT3
+  , Compressed_RGBA_S3TC_DXT5
 };
 
 /**
 *  @brief
-*    Image class that holds image data and meta information.
-*
-*    Currently supports format RGB24.
+*    Image class that holds image data and meta information about images
 */
 class RENDERCORE_API Image
 {
@@ -78,7 +90,7 @@ public:
     *  @return
     *    Number of color channels
     */
-    static int channels(Format format);
+    static unsigned int channels(Format format);
 
     /**
     *  @brief
@@ -90,12 +102,24 @@ public:
     *  @return
     *    Number of bytes per element
     */
-    static int bytes(DataType type);
+    static unsigned int bytesPerElement(DataType type);
+
+    /**
+    *  @brief
+    *    Check if data type refers to a compressed format
+    *
+    *  @param[in] type
+    *    Data type
+    *
+    *  @return
+    *    'true' if this is a compressed format, else 'false'
+    */
+    static bool isCompressed(DataType type);
 
 public:
     /**
     *  @brief
-    *    Constructor for an empty image
+    *    Constructor (empty image)
     */
     Image();
 
@@ -113,11 +137,11 @@ public:
     *    Data type
     *
     *  @remarks
-    *    Allocates the necessary image data memory.
+    *    Allocates new image memory, unless type specifies a compressed format.
     *
-    *  @see createBuffer
+    *  @see allocate
     */
-    Image(int width, int height, Format format, DataType type);
+    Image(unsigned int width, unsigned int height, Format format, DataType type);
 
     /**
     *  @brief
@@ -132,53 +156,34 @@ public:
     *  @param[in] type
     *    Data type
     *  @param[in] data
-    *    Pointer to image data (must NOT be null!)
+    *    Image data (must NOT be null!)
+    *  @param[in] size
+    *    Image data size
     *
     *  @remarks
-    *    This allocates new image memory and copies the content of data.
+    *    Allocates new image memory and copies the content of data.
     *
-    *  @see createBuffer
+    *  @see setData
     */
-    Image(int width, int height, Format format, DataType type, const char * data);
-
-    /**
-    *  @brief
-    *    Constructor
-    *
-    *  @param[in] width
-    *    Image width
-    *  @param[in] height
-    *    Image height
-    *  @param[in] format
-    *    Image format
-    *  @param[in] type
-    *    Data type
-    *  @param[in] data
-    *    Pointer to image data (must NOT be null!)
-    *
-    *  @remarks
-    *    This does NOT allocate own memory.
-    *    The ownership of data is transferred to the Image object.
-    */
-    Image(int width, int height, Format format, DataType type, std::unique_ptr<char[]> && data);
+    Image(unsigned int width, unsigned int height, Format format, DataType type, const char * data, unsigned int size);
 
     /**
     *  @brief
     *    Copy constructor
     *
-    *  @param[in] other
+    *  @param[in] image
     *    Source image
     */
-    Image(const Image & other);
+    Image(const Image & image);
 
     /**
     *  @brief
     *    Move constructor
     *
-    *  @param[in] other
+    *  @param[in] image
     *    Source image
     */
-    Image(Image && other);
+    Image(Image && image);
 
     /**
     *  @brief
@@ -188,18 +193,27 @@ public:
 
     /**
     *  @brief
-    *    Assignment operator
+    *    Copy operator
     *
-    *  @param[in] other
+    *  @param[in] image
     *    Source image
     *
     *  @return
     *    Reference to this object
-
-    *  @remarks
-    *    https://stackoverflow.com/questions/3279543/what-is-the-copy-and-swap-idiom
     */
-    Image & operator =(Image other);
+    Image & operator =(Image & image);
+
+    /**
+    *  @brief
+    *    Move operator
+    *
+    *  @param[in] image
+    *    Source image
+    *
+    *  @return
+    *    Reference to this object
+    */
+    Image & operator =(Image && image);
 
     /**
     *  @brief
@@ -209,7 +223,7 @@ public:
     *    'true' if the image is empty, else 'false'
     *
     *  @remarks
-    *    An empty image has all parameters set to zero and no allocated data.
+    *    An empty image has no data.
     */
     bool empty() const;
 
@@ -220,7 +234,7 @@ public:
     *  @return
     *    Image width
     */
-    int width() const;
+    unsigned int width() const;
 
     /**
     *  @brief
@@ -229,7 +243,7 @@ public:
     *  @return
     *    Image height
     */
-    int height() const;
+    unsigned int height() const;
 
     /**
     *  @brief
@@ -256,7 +270,7 @@ public:
     *  @return
     *    Number of color channels
     */
-    int channels() const;
+    unsigned int channels() const;
 
     /**
     *  @brief
@@ -265,7 +279,25 @@ public:
     *  @return
     *    Number of bytes per element
     */
-    int bytes() const;
+    unsigned int bytesPerElement() const;
+
+    /**
+    *  @brief
+    *    Check if image has compressed format
+    *
+    *  @return
+    *    'true' if image has a compressed format, else 'false'
+    */
+    bool isCompressed() const;
+
+    /**
+    *  @brief
+    *    Get image size
+    *
+    *  @return
+    *    Image size (in bytes)
+    */
+    unsigned int size() const;
 
     /**
     *  @brief
@@ -312,7 +344,7 @@ public:
     *  @remarks
     *    Any existing image data is deleted.
     */
-    void allocate(int width, int height, Format format, DataType type);
+    void allocate(unsigned int width, unsigned int height, Format format, DataType type);
 
     /**
     *  @brief
@@ -328,49 +360,14 @@ public:
     *    Data type
     *  @param[in] data
     *    Pointer to image data (must NOT be null!)
+    *  @param[in] size
+    *    Image data size
     *
     *  @remarks
     *    This allocates new image memory and copies the content of data.
-    *    The ownership of data remains at the caller.
     *    Any existing image data is deleted.
     */
-    void copyImage(int width, int height, Format format, DataType type, const char * data);
-
-    /**
-    *  @brief
-    *    Set image data
-    *
-    *  @param[in] width
-    *    Image width
-    *  @param[in] height
-    *    Image height
-    *  @param[in] format
-    *    Image format
-    *  @param[in] type
-    *    Data type
-    *  @param[in] data
-    *    Pointer to image data (must NOT be null!)
-    *
-    *  @remarks
-    *    This does NOT allocate own memory.
-    *    The ownership of data is transferred to the Image object.
-    *    Any existing image data is deleted.
-    */
-    void setData(int width, int height, Format format, DataType type, std::unique_ptr<char[]> && data);
-
-    /**
-    *  @brief
-    *    Swap function for copy-and-swap idiom
-    *
-    *  @param[in] first
-    *    Image
-    *  @param[in] second
-    *    Image
-    *
-    *  @remarks
-    *    See https://stackoverflow.com/questions/3279543/what-is-the-copy-and-swap-idiom
-    */
-    friend void swap(Image & first, Image & second) noexcept;
+    void setData(unsigned int width, unsigned int height, Format format, DataType type, const char * data, unsigned int size);
 
 protected:
     /**
@@ -385,22 +382,25 @@ protected:
     *    Image format
     *  @param[in] type
     *    Data type
+    *  @param[in] size
+    *    Image data size (if 0, size is determined automatically)
     *
     *  @remarks
-    *    This function only sets the image information, it does not
-    *    allocate or set the image data.
+    *    This function only sets the image information, it does not allocate
+    *    or set the image data. If size == 0, the size is determined based
+    *    on the format and type.
     */
-    void initializeImage(int width, int height, Format format, DataType type);
+    void initializeImage(unsigned int width, unsigned int height, Format format, DataType type, unsigned int size = 0);
 
 protected:
-    int                     m_width;    ///< Image width (0 if empty)
-    int                     m_height;   ///< Image height (0 if empty)
-    Format                  m_format;   ///< Image format
-    DataType                m_type;     ///< Data type
-    int                     m_channels; ///< Number of color channels (0 if empty)
-    int                     m_bytes;    ///< Bytes per element (0 if empty)
-    int                     m_dataSize; ///< Size of image data (0 if empty)
-    std::unique_ptr<char[]> m_data;     ///< Image data (can be null)
+    unsigned int            m_width;           ///< Image width
+    unsigned int            m_height;          ///< Image height
+    Format                  m_format;          ///< Image format
+    DataType                m_type;            ///< Data type
+    unsigned int            m_channels;        ///< Number of color channels
+    unsigned int            m_bytesPerElement; ///< Bytes per element
+    unsigned int            m_size;            ///< Size of image data (in bytes)
+    std::unique_ptr<char[]> m_data;            ///< Image data (can be null)
 };
 
 

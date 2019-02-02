@@ -35,7 +35,7 @@ struct TextureFormat
 
 // Color formats and their names
 static const std::map<std::string, gl::GLenum> formatsBySuffix = {
-    { "rh",     gl::GL_RED      },
+    { "r",      gl::GL_RED      },
     { "g",      gl::GL_GREEN    },
     { "b",      gl::GL_BLUE     },
     { "rg",     gl::GL_RG       },

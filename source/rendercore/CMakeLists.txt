@@ -5,6 +5,7 @@
 
 find_package(cpplocate REQUIRED)
 find_package(cppassist REQUIRED)
+find_package(cppfs     REQUIRED)
 find_package(glm       REQUIRED)
 
 
@@ -48,6 +49,7 @@ set(headers
     ${include_path}/Connection.h
     ${include_path}/Environment.h
     ${include_path}/Image.h
+    ${include_path}/ImageLoader.h
     ${include_path}/Renderer.h
     ${include_path}/ScopedConnection.h
     ${include_path}/Signal.h
@@ -67,6 +69,7 @@ set(sources
     ${source_path}/Connection.cpp
     ${source_path}/Environment.cpp
     ${source_path}/Image.cpp
+    ${source_path}/ImageLoader.cpp
     ${source_path}/Renderer.cpp
     ${source_path}/ScopedConnection.cpp
     ${source_path}/Transform.cpp
@@ -173,6 +176,7 @@ target_link_libraries(${target}
     ${DEFAULT_LIBRARIES}
     cpplocate::cpplocate
     cppassist::cppassist
+    cppfs::cppfs
     glm
 
     INTERFACE
