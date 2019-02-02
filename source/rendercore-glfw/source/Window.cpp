@@ -528,6 +528,11 @@ bool Window::createInternalWindow(const rendercore::opengl::GLContextFormat & fo
     onContextInit();
     glfwMakeContextCurrent(nullptr);
 
+    // Disregard all previous events from before the context was recreated
+    while (!m_eventQueue.empty()) {
+        m_eventQueue.pop();
+    }
+
     // Promote current size
     queueEvent(cppassist::make_unique<ResizeEvent>(size()));
     queueEvent(cppassist::make_unique<ResizeEvent>(framebufferSize(), true));

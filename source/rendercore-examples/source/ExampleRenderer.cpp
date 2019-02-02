@@ -98,7 +98,11 @@ void ExampleRenderer::onUpdate()
 
     // Rotate model
     m_transform.setRotationAngle(m_transform.rotationAngle() + m_timeDelta * 1.0f);
+
+    // Animation has been update, redraw
     scheduleRedraw();
+
+    // Animation is going on
     scheduleUpdate();
 }
 

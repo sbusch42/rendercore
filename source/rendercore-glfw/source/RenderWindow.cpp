@@ -73,7 +73,7 @@ void RenderWindow::onMove(MoveEvent &)
 void RenderWindow::onPaint(PaintEvent &)
 {
     // [TODO] Optimize memory reallocation problem
-    auto defaultFBO = globjects::Framebuffer::defaultFBO();
+    //auto defaultFBO = globjects::Framebuffer::defaultFBO();
 
     // Render on canvas
     m_canvas->render();
