@@ -10,17 +10,19 @@
 #include <rendercore/Environment.h>
 #include <rendercore/Canvas.h>
 
-#include <rendercore-opengl/GLContextUtils.h>
-#include <rendercore-opengl/ExampleRenderer.h>
-
 #include <rendercore-glfw/Application.h>
 #include <rendercore-glfw/RenderWindow.h>
 #include <rendercore-glfw/GLContext.h>
 
+#include <rendercore-opengl/GLContextUtils.h>
+
+#include <rendercore-examples/ExampleRenderer.h>
+
 
 using namespace rendercore;
-using namespace rendercore::opengl;
 using namespace rendercore::glfw;
+using namespace rendercore::opengl;
+using namespace rendercore::examples;
 
 
 int main(int argc, char * argv[])

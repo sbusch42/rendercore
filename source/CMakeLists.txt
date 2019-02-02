@@ -16,6 +16,7 @@ set(IDE_FOLDER "")
 add_subdirectory(rendercore)
 add_subdirectory(rendercore-opengl)
 add_subdirectory(rendercore-glfw)
+add_subdirectory(rendercore-examples)
 
 # Tools
 set(IDE_FOLDER "Tools")

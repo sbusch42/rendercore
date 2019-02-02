@@ -13,12 +13,12 @@
 #include <rendercore/Renderer.h>
 #include <rendercore/Transform.h>
 
-#include <rendercore-opengl/rendercore-opengl_api.h>
+#include <rendercore-examples/rendercore-examples_api.h>
 
 
 namespace rendercore
 {
-namespace opengl
+namespace examples
 {
 
 
@@ -26,7 +26,7 @@ namespace opengl
 *  @brief
 *    Example renderer that displays a spinning object
 */
-class RENDERCORE_OPENGL_API ExampleRenderer : public Renderer
+class RENDERCORE_EXAMPLES_API ExampleRenderer : public Renderer
 {
 public:
     /**
@@ -71,5 +71,5 @@ protected:
 };
 
 
-} // namespace opengl
+} // namespace examples
 } // namespace rendercore

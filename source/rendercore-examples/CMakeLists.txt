@@ -3,20 +3,13 @@
 # External dependencies
 #
 
-find_package(cpplocate REQUIRED)
-find_package(cppassist REQUIRED)
-find_package(cppfs     REQUIRED)
-find_package(glbinding REQUIRED)
-find_package(globjects REQUIRED)
-find_package(glm       REQUIRED)
-
 
 #
 # Library name and options
 #
 
 # Target name
-set(target rendercore-opengl)
+set(target rendercore-examples)
 
 # Exit here if required dependencies are not met
 message(STATUS "Lib ${target}")
@@ -38,38 +31,11 @@ set(include_path "${CMAKE_CURRENT_SOURCE_DIR}/include/${target}")
 set(source_path  "${CMAKE_CURRENT_SOURCE_DIR}/source")
 
 set(headers
-    ${include_path}/AbstractGLContext.h
-    ${include_path}/AbstractGLContextFactory.h
-    ${include_path}/Box.h
-    ${include_path}/Geometry.h
-    ${include_path}/Geometry.inl
-    ${include_path}/GLContextFormat.h
-    ${include_path}/GLContextUtils.h
-    ${include_path}/Icosahedron.h
-    ${include_path}/Quad.h
-    ${include_path}/ShaderLoader.h
-    ${include_path}/Shape.h
-    ${include_path}/Sphere.h
-    ${include_path}/TextureLoader.h
-    ${include_path}/TimeMeasurement.h
-    ${include_path}/Triangle.h
+    ${include_path}/ExampleRenderer.h
 )
 
 set(sources
-    ${source_path}/AbstractGLContext.cpp
-    ${source_path}/AbstractGLContextFactory.cpp
-    ${source_path}/Box.cpp
-    ${source_path}/Geometry.cpp
-    ${source_path}/GLContextFormat.cpp
-    ${source_path}/GLContextUtils.cpp
-    ${source_path}/Icosahedron.cpp
-    ${source_path}/Quad.cpp
-    ${source_path}/ShaderLoader.cpp
-    ${source_path}/Shape.cpp
-    ${source_path}/Sphere.cpp
-    ${source_path}/TextureLoader.cpp
-    ${source_path}/TimeMeasurement.cpp
-    ${source_path}/Triangle.cpp
+    ${source_path}/ExampleRenderer.cpp
 )
 
 # Group source files
@@ -171,14 +137,8 @@ target_link_libraries(${target}
 
     PUBLIC
     ${DEFAULT_LIBRARIES}
-    cpplocate::cpplocate
-    cppassist::cppassist
-    cppfs::cppfs
-    glbinding::glbinding
-    glbinding::glbinding-aux
-    globjects::globjects
-    glm
     ${META_PROJECT_NAME}::rendercore
+    ${META_PROJECT_NAME}::rendercore-opengl
 
     INTERFACE
 )

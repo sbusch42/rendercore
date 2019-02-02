@@ -1,5 +1,5 @@
 
-#include <rendercore-opengl/ExampleRenderer.h>
+#include <rendercore-examples/ExampleRenderer.h>
 
 #include <iostream>
 
@@ -14,9 +14,12 @@
 #include <rendercore-opengl/ShaderLoader.h>
 
 
+using namespace rendercore::opengl;
+
+
 namespace rendercore
 {
-namespace opengl
+namespace examples
 {
 
 
@@ -143,5 +146,5 @@ void ExampleRenderer::onRender()
 }
 
 
-} // namespace opengl
+} // namespace examples
 } // namespace rendercore

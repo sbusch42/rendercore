@@ -85,6 +85,8 @@ target_link_libraries(${target}
     globjects::globjects
     rendercore::rendercore
     rendercore::rendercore-glfw
+    rendercore::rendercore-opengl
+    rendercore::rendercore-examples
 )
 
 
