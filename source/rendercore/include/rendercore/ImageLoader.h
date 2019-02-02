@@ -25,11 +25,8 @@ public:
     /**
     *  @brief
     *    Constructor
-    *
-    *  @param[in] environment
-    *    Environment to which the loader belongs (must NOT be null!)
     */
-    ImageLoader(Environment * environment);
+    ImageLoader();
 
     /**
     *  @brief

@@ -13,7 +13,6 @@
 #include <rendercore-opengl/Triangle.h>
 #include <rendercore-opengl/Sphere.h>
 #include <rendercore-opengl/Box.h>
-#include <rendercore-opengl/TextureLoader.h>
 #include <rendercore-opengl/ShaderLoader.h>
 
 
@@ -49,9 +48,6 @@ ExampleRenderer::~ExampleRenderer()
 
 void ExampleRenderer::onContextInit(AbstractContext *)
 {
-    TextureLoader textureLoader(environment());
-    ShaderLoader  shaderLoader(environment());
-
     // [DEBUG]
     std::cout << "onContextInit()" << std::endl;
 
@@ -65,9 +61,11 @@ void ExampleRenderer::onContextInit(AbstractContext *)
     m_geometry = cppassist::make_unique<Box>(2.0f, true);
 
     // Load texture
-    m_texture = textureLoader.load(rendercore::dataPath() + "/rendercore/textures/brickwall.glraw");
+    m_texture = cppassist::make_unique<Texture>();
+    m_texture->load(rendercore::dataPath() + "/rendercore/textures/brickwall.glraw");
 
     // Load shaders
+    ShaderLoader shaderLoader(environment());
     m_vertShader = shaderLoader.load(rendercore::dataPath() + "/rendercore/shaders/geometry/geometry.vert");
     m_fragShader = shaderLoader.load(rendercore::dataPath() + "/rendercore/shaders/geometry/geometry.frag");
 
@@ -94,7 +92,7 @@ void ExampleRenderer::onContextDeinit(AbstractContext *)
 void ExampleRenderer::onUpdate()
 {
     // [DEBUG]
-    std::cout << "onUpdate(" << m_counter << ")" << std::endl;
+    //std::cout << "onUpdate(" << m_counter << ")" << std::endl;
 
     // Advance counter
     m_counter++;
@@ -108,7 +106,7 @@ void ExampleRenderer::onUpdate()
 void ExampleRenderer::onRender()
 {
     // [DEBUG]
-    std::cout << "onRender()" << std::endl;
+    //std::cout << "onRender()" << std::endl;
 
     // Update viewport
     gl::glViewport(m_viewport.x, m_viewport.y, m_viewport.z, m_viewport.w);
@@ -133,7 +131,7 @@ void ExampleRenderer::onRender()
     m_program->setUniform<int>      ("tex0",                         0);
 
     // Bind texture
-    m_texture->bindActive(0);
+    m_texture->texture()->bindActive(0);
 
     // Bind program
     m_program->use();
@@ -148,7 +146,7 @@ void ExampleRenderer::onRender()
     m_program->release();
 
     // Release program
-    m_texture->unbindActive(0);
+    m_texture->texture()->unbindActive(0);
 }
 
 

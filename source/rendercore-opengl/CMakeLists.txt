@@ -49,7 +49,7 @@ set(headers
     ${include_path}/Quad.h
     ${include_path}/ShaderLoader.h
     ${include_path}/Sphere.h
-    ${include_path}/TextureLoader.h
+    ${include_path}/Texture.h
     ${include_path}/TimeMeasurement.h
     ${include_path}/Triangle.h
 )
@@ -65,7 +65,7 @@ set(sources
     ${source_path}/Quad.cpp
     ${source_path}/ShaderLoader.cpp
     ${source_path}/Sphere.cpp
-    ${source_path}/TextureLoader.cpp
+    ${source_path}/Texture.cpp
     ${source_path}/TimeMeasurement.cpp
     ${source_path}/Triangle.cpp
 )

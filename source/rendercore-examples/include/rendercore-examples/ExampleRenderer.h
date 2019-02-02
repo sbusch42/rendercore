@@ -13,6 +13,8 @@
 #include <rendercore/Renderer.h>
 #include <rendercore/Transform.h>
 
+#include <rendercore-opengl/Texture.h>
+
 #include <rendercore-examples/rendercore-examples_api.h>
 
 
@@ -64,7 +66,7 @@ protected:
     // GPU data
     std::unique_ptr<rendercore::Camera>           m_camera;     ///< Camera in the scene
     std::unique_ptr<rendercore::AbstractDrawable> m_geometry;   ///< Geometry that is rasterized
-    std::unique_ptr<globjects::Texture>           m_texture;    ///< Texture
+    std::unique_ptr<rendercore::opengl::Texture>  m_texture;    ///< Texture
     std::unique_ptr<globjects::Program>           m_program;    ///< Program used for rendering
     std::unique_ptr<globjects::Shader>            m_vertShader; ///< Vertex shader
     std::unique_ptr<globjects::Shader>            m_fragShader; ///< Fragment shader
