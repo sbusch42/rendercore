@@ -16,7 +16,6 @@ namespace rendercore
 {
 
 
-class Environment;
 class AbstractContext;
 class Renderer;
 
@@ -39,35 +38,14 @@ public:
     /**
     *  @brief
     *    Constructor
-    *
-    *  @param[in] environment
-    *    Environment to which the canvas belongs (must NOT be null!)
     */
-    Canvas(Environment * environment);
+    Canvas();
 
     /**
     *  @brief
     *    Destructor
     */
-    ~Canvas();
-
-    /**
-    *  @brief
-    *    Get environment
-    *
-    *  @return
-    *    Environment to which the canvas belongs (never null)
-    */
-    const Environment * environment() const;
-
-    /**
-    *  @brief
-    *    Get environment
-    *
-    *  @return
-    *    Environment to which the canvas belongs (never null)
-    */
-    Environment * environment();
+    virtual ~Canvas();
 
     /**
     *  @brief
@@ -246,7 +224,6 @@ public:
     void render();
 
 protected:
-    Environment               * m_environment;   ///< Environment to which the canvas belongs
     AbstractContext           * m_context;       ///< Rendering context used for rendering onto the canvas
     std::unique_ptr<Renderer>   m_renderer;      ///< Renderer that renders into the canvas
     std::unique_ptr<Renderer>   m_newRenderer;   ///< Renderer that is scheduled to replace the current renderer

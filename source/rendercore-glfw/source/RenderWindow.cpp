@@ -22,9 +22,8 @@ namespace glfw
 {
 
 
-RenderWindow::RenderWindow(Environment * environment)
-: m_environment(environment)
-, m_canvas(cppassist::make_unique<Canvas>(environment))
+RenderWindow::RenderWindow()
+: m_canvas(cppassist::make_unique<Canvas>())
 {
     // Connect to wakeup-signal
     m_canvas->wakeup.connect([this] ()
@@ -36,16 +35,6 @@ RenderWindow::RenderWindow(Environment * environment)
 
 RenderWindow::~RenderWindow()
 {
-}
-
-const Environment * RenderWindow::environment() const
-{
-    return m_environment;
-}
-
-Environment * RenderWindow::environment()
-{
-    return m_environment;
 }
 
 Canvas * RenderWindow::canvas() const

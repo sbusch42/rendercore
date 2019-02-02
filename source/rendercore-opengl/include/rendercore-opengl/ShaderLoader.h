@@ -18,9 +18,6 @@ namespace rendercore
 {
 
 
-class Environment;
-
-
 namespace opengl
 {
 
@@ -36,7 +33,7 @@ public:
     *  @brief
     *    Constructor
     */
-    ShaderLoader(Environment * environment);
+    ShaderLoader();
 
     /**
     *  @brief

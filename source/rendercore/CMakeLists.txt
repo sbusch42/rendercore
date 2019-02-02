@@ -47,7 +47,6 @@ set(headers
     ${include_path}/Canvas.h
     ${include_path}/ChronoTimer.h
     ${include_path}/Connection.h
-    ${include_path}/Environment.h
     ${include_path}/Image.h
     ${include_path}/ImageLoader.h
     ${include_path}/Renderer.h
@@ -67,7 +66,6 @@ set(sources
     ${source_path}/Canvas.cpp
     ${source_path}/ChronoTimer.cpp
     ${source_path}/Connection.cpp
-    ${source_path}/Environment.cpp
     ${source_path}/Image.cpp
     ${source_path}/ImageLoader.cpp
     ${source_path}/Renderer.cpp

@@ -13,7 +13,6 @@ namespace rendercore
 {
 
 
-class Environment;
 class Canvas;
 
 
@@ -31,35 +30,14 @@ public:
     /**
     *  @brief
     *    Constructor
-    *
-    *  @param[in] environment
-    *    Environment to which the window belongs (must NOT be null)
     */
-    RenderWindow(rendercore::Environment * environment);
+    RenderWindow();
 
     /**
     *  @brief
     *    Destructor
     */
     virtual ~RenderWindow();
-
-    /**
-    *  @brief
-    *    Get environment
-    *
-    *  @return
-    *    Environment (cannot be null)
-    */
-    const rendercore::Environment * environment() const;
-
-    /**
-    *  @brief
-    *    Get environment
-    *
-    *  @return
-    *    Environment (cannot be null)
-    */
-    rendercore::Environment * environment();
 
     /**
     *  @brief
@@ -127,7 +105,6 @@ protected:
     // rendercore::KeyModifier fromGLFWModifier(int modifier) const;
 
 protected:
-    rendercore::Environment           * m_environment; ///< Environment to which the window belongs (must NOT be null)
     std::unique_ptr<rendercore::Canvas> m_canvas;      ///< Canvas that controls the rendering onto the window (must NOT be null)
     glm::ivec2                          m_deviceSize;  ///< Window size (real device pixels)
     glm::ivec2                          m_virtualSize; ///< Window size (virtual pixel size)

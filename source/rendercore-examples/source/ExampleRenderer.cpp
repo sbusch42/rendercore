@@ -25,9 +25,8 @@ namespace examples
 {
 
 
-ExampleRenderer::ExampleRenderer(Environment * environment)
-: Renderer(environment)
-, m_counter(0)
+ExampleRenderer::ExampleRenderer()
+: m_counter(0)
 {
     // Initialize object transformation
     m_transform.setTranslation  ({ 0.0f, 0.0f, 0.0f });
@@ -65,7 +64,7 @@ void ExampleRenderer::onContextInit(AbstractContext *)
     m_texture->load(rendercore::dataPath() + "/rendercore/textures/brickwall.glraw");
 
     // Load shaders
-    ShaderLoader shaderLoader(environment());
+    ShaderLoader shaderLoader;
     m_vertShader = shaderLoader.load(rendercore::dataPath() + "/rendercore/shaders/geometry/geometry.vert");
     m_fragShader = shaderLoader.load(rendercore::dataPath() + "/rendercore/shaders/geometry/geometry.frag");
 

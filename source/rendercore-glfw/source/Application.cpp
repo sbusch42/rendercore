@@ -6,8 +6,6 @@
 #define GLFW_INCLUDE_NONE
 #include <GLFW/glfw3.h>
 
-#include <rendercore/Environment.h>
-
 #include <rendercore-glfw/Window.h>
 
 
@@ -40,20 +38,13 @@ void Application::wakeup()
     glfwPostEmptyEvent();
 }
 
-Application::Application(rendercore::Environment * environment, int &, char **)
-: m_environment(environment)
-, m_running(false)
+Application::Application(int &, char **)
+: m_running(false)
 , m_exitCode(0)
 {
     // Make sure that no application object has already been instanciated
     assert(!s_app);
     s_app = this;
-
-    // Connect to exit-signal
-    environment->exitApplication.connect([] (int exitCode)
-    {
-        Application::quit(exitCode);
-    });
 }
 
 Application::~Application()

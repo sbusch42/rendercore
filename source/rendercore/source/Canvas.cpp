@@ -3,7 +3,6 @@
 
 #include <cppassist/logging/logging.h>
 
-#include <rendercore/Environment.h>
 #include <rendercore/Renderer.h>
 
 
@@ -11,25 +10,14 @@ namespace rendercore
 {
 
 
-Canvas::Canvas(Environment * environment)
-: m_environment(environment)
-, m_context(nullptr)
+Canvas::Canvas()
+: m_context(nullptr)
 , m_timeDelta(0.0f)
 {
 }
 
 Canvas::~Canvas()
 {
-}
-
-const Environment * Canvas::environment() const
-{
-    return m_environment;
-}
-
-Environment * Canvas::environment()
-{
-    return m_environment;
 }
 
 const AbstractContext * Canvas::context() const

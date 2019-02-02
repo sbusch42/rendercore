@@ -9,9 +9,6 @@ namespace rendercore
 {
 
 
-class Environment;
-
-
 namespace glfw
 {
 
@@ -60,14 +57,12 @@ public:
     *  @brief
     *    Constructor
     *
-    *  @param[in] environment
-    *    Environment (must NOT be null!)
     *  @param[in] argc
     *    Argument count (pass on parameter from the main function)
     *  @param[in] argv
     *    Argument list (pass on parameter from the main function)
     */
-    Application(rendercore::Environment * environment, int & argc, char ** argv);
+    Application(int & argc, char ** argv);
 
     /**
     *  @brief
@@ -127,9 +122,8 @@ protected:
     static Application * s_app; ///< Pointer to the current application instance (can be null)
 
 protected:
-    rendercore::Environment * m_environment; ///< Environment
-    bool                      m_running;     ///< 'true' if application is currently running, else 'false'
-    int                       m_exitCode;    ///< Exit code (0 for no error, > 0 for error)
+    bool m_running;  ///< 'true' if application is currently running, else 'false'
+    int  m_exitCode; ///< Exit code (0 for no error, > 0 for error)
 };
 
 

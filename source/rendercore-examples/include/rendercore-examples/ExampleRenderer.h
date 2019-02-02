@@ -34,11 +34,8 @@ public:
     /**
     *  @brief
     *    Constructor
-    *
-    *  @param[in] environment
-    *    Environment to which the renderer belongs (must NOT be null!)
     */
-    ExampleRenderer(Environment * environment);
+    ExampleRenderer();
 
     // Copying a renderer is not allowed
     ExampleRenderer(const ExampleRenderer &) = delete;

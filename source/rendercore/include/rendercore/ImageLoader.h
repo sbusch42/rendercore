@@ -12,9 +12,6 @@ namespace rendercore
 {
 
 
-class Environment;
-
-
 /**
 *  @brief
 *    Image loader from .raw or .glraw files

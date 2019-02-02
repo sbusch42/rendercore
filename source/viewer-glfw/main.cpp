@@ -7,7 +7,6 @@
 #include <cppassist/cmdline/ArgumentParser.h>
 
 #include <rendercore/rendercore.h>
-#include <rendercore/Environment.h>
 #include <rendercore/Canvas.h>
 
 #include <rendercore-glfw/Application.h>
@@ -33,15 +32,12 @@ int main(int argc, char * argv[])
 
     const auto contextString = argumentParser.value("--context");
 
-    // Create environment
-    Environment environment;
-
     // Initialize GLFW
     Application::init();
-    Application app(&environment, argc, argv);
+    Application app(argc, argv);
 
     // Create render window
-    RenderWindow window(&environment);
+    RenderWindow window;
 
     // Specify desired context format
     rendercore::opengl::GLContextFormat format;
@@ -67,7 +63,7 @@ int main(int argc, char * argv[])
     }
 
     // Create renderer
-    window.canvas()->setRenderer(cppassist::make_unique<ExampleRenderer>(&environment));
+    window.canvas()->setRenderer(cppassist::make_unique<ExampleRenderer>());
 
     // Initialize context, print context info
     window.context()->use();

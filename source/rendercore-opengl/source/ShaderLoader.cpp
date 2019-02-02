@@ -37,7 +37,7 @@ namespace opengl
 {
 
 
-ShaderLoader::ShaderLoader(Environment *)
+ShaderLoader::ShaderLoader()
 {
 }
 

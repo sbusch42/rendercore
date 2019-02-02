@@ -10,9 +10,8 @@ namespace rendercore
 {
 
 
-Renderer::Renderer(Environment * environment)
-: m_environment(environment)
-, m_context(nullptr)
+Renderer::Renderer()
+: m_context(nullptr)
 , m_viewport(0, 0, 0, 0)
 , m_timeDelta(0.0f)
 , m_needsUpdate(false)
@@ -22,16 +21,6 @@ Renderer::Renderer(Environment * environment)
 
 Renderer::~Renderer()
 {
-}
-
-const Environment * Renderer::environment() const
-{
-    return m_environment;
-}
-
-Environment * Renderer::environment()
-{
-    return m_environment;
 }
 
 const AbstractContext * Renderer::context() const

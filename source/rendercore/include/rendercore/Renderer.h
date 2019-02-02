@@ -12,7 +12,6 @@ namespace rendercore
 
 
 class AbstractContext;
-class Environment;
 
 
 /**
@@ -49,11 +48,8 @@ public:
     /**
     *  @brief
     *    Constructor
-    *
-    *  @param[in] environment
-    *    Environment to which the renderer belongs (must NOT be null!)
     */
-    Renderer(Environment * environment);
+    Renderer();
 
     // Copying a renderer is not allowed
     Renderer(const Renderer &) = delete;
@@ -66,24 +62,6 @@ public:
     *    Destructor
     */
     virtual ~Renderer();
-
-    /**
-    *  @brief
-    *    Get environment
-    *
-    *  @return
-    *    Environment the renderer belongs to (never null)
-    */
-    const Environment * environment() const;
-
-    /**
-    *  @brief
-    *    Get environment
-    *
-    *  @return
-    *    Environment the renderer belongs to (never null)
-    */
-    Environment * environment();
 
     /**
     *  @brief
@@ -288,7 +266,6 @@ protected:
     virtual void onRender();
 
 protected:
-    Environment     * m_environment; ///< Environment to which the renderer belongs
     AbstractContext * m_context;     ///< Rendering context used for rendering
     glm::vec4         m_viewport;    ///< Viewport in device coordinates (x, y, w, h)
     float             m_timeDelta;   ///< Time delta (in seconds)
