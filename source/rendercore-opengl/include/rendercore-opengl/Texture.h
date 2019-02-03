@@ -6,6 +6,7 @@
 
 #include <globjects/Texture.h>
 
+#include <rendercore/GpuObject.h>
 #include <rendercore/Image.h>
 
 #include <rendercore-opengl/rendercore-opengl_api.h>
@@ -21,14 +22,17 @@ namespace opengl
 *  @brief
 *    Texture
 */
-class RENDERCORE_OPENGL_API Texture
+class RENDERCORE_OPENGL_API Texture : public rendercore::GpuObject
 {
 public:
     /**
     *  @brief
     *    Constructor
+    *
+    *  @param[in] parent
+    *    Parent object (can be null)
     */
-    Texture();
+    Texture(GpuObject * parent);
 
     /**
     *  @brief
@@ -101,6 +105,10 @@ public:
     void load(const std::string & filename);
 
 protected:
+    // Virtual GpuObject functions
+    virtual void onContextInit(AbstractContext * context) override;
+    virtual void onContextDeinit(AbstractContext * context) override;
+
     /**
     *  @brief
     *    Create texture from image

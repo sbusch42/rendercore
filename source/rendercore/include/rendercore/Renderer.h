@@ -4,14 +4,11 @@
 
 #include <glm/vec4.hpp>
 
-#include <rendercore/rendercore_api.h>
+#include <rendercore/GpuObject.h>
 
 
 namespace rendercore
 {
-
-
-class AbstractContext;
 
 
 /**
@@ -42,14 +39,17 @@ class AbstractContext;
 *    it needs to be redrawn, by calling scheduleRedraw(). The canvas will
 *    then issue a redraw.
 */
-class RENDERCORE_API Renderer
+class RENDERCORE_API Renderer : public GpuObject
 {
 public:
     /**
     *  @brief
     *    Constructor
+    *
+    *  @param[in] parent
+    *    Parent object (can be null)
     */
-    Renderer();
+    Renderer(GpuObject * parent = nullptr);
 
     // Copying a renderer is not allowed
     Renderer(const Renderer &) = delete;
@@ -62,46 +62,6 @@ public:
     *    Destructor
     */
     virtual ~Renderer();
-
-    /**
-    *  @brief
-    *    Get rendering context
-    *
-    *  @return
-    *    Rendering context used for rendering (can be null)
-    */
-    const AbstractContext * context() const;
-
-    /**
-    *  @brief
-    *    Get rendering context
-    *
-    *  @return
-    *    Rendering context used for rendering (can be null)
-    */
-    AbstractContext * context();
-
-    /**
-    *  @brief
-    *    Initialize in rendering context
-    *
-    *  @param[in] context
-    *    Rendering context used for rendering (must NOT null!)
-    *
-    *  @see onContextInit
-    */
-    void initContext(AbstractContext * context);
-
-    /**
-    *  @brief
-    *    De-Initialize in rendering context
-    *
-    *  @param[in] context
-    *    Rendering context used for rendering (must NOT null!)
-    *
-    *  @see onContextDeinit
-    */
-    void deinitContext(AbstractContext * context);
 
     /**
     *  @brief
@@ -155,6 +115,15 @@ public:
     *    Schedule update on renderer
     *
     *  @see update
+    *
+    *  @remarks
+    *    Call this function will ensure that an update will be issued
+    *    in the next main loop iteration. Note however that onUpdate()
+    *    may not *only* be called after you used scheduleUpdate(), it
+    *    will also be called automatically whenever one or more events
+    *    on the main loop have been processed. This ensures that the
+    *    update process will not fall to a permanent halt, event if
+    *    some messages are lost.
     */
     void scheduleUpdate();
 
@@ -188,6 +157,11 @@ public:
     *    Schedule redraw on renderer
     *
     *  @see render
+    *
+    *  @remarks
+    *    Will in most UI backends also trigger an update.
+    *    But if you want to make sure that an update happens,
+    *    call scheduleUpdate() as well.
     */
     void scheduleRedraw();
 
@@ -205,39 +179,9 @@ public:
     void render();
 
 protected:
-    /**
-    *  @brief
-    *    Called when the renderer is initialized in a new rendering context
-    *
-    *  @param[in] context
-    *    Rendering context (never null)
-    *
-    *  @remarks
-    *    Use this function to initialize all GPU objects, or use lazy
-    *    initialization and initialize them on the first rendering call.
-    *    Do not store them as direct members of the class, as they must
-    *    be de-initialized in onContextDeinit(), not on the call of the
-    *    destructor. This method can also be used to restore GPU objects
-    *    from CPU data, when a context switch has occured.
-    */
-    virtual void onContextInit(AbstractContext * context);
-
-    /**
-    *  @brief
-    *    Called when the renderer is de-initialized in its rendering context
-    *
-    *  @param[in] context
-    *    Rendering context (never null)
-    *
-    *  @remarks
-    *    Use this function to de-initialize all GPU objects. It is
-    *    important to do it here instead of the destructor, because
-    *    this needs the context to still be active, which is guaranteed
-    *    only in this function. This method can also be used to backup
-    *    data from GPU objects into CPU data, which can later be restored
-    *    when a context switch has occured.
-    */
-    virtual void onContextDeinit(AbstractContext * context);
+    // Virtual GpuObject functions
+    virtual void onContextInit(AbstractContext * context) override;
+    virtual void onContextDeinit(AbstractContext * context) override;
 
     /**
     *  @brief
@@ -250,7 +194,11 @@ protected:
     *    Do not use any GPU function or objects in this function, as no
     *    rendering context is active. To schedule a redraw as a result of
     *    the update, call scheduleRedraw(). To continuously update the
-    *    simulation, call scheduleUpdate().
+    *    simulation, call scheduleUpdate(). Keep in minde that onUpdate()
+    *    may be called an arbitrary number of times, and not only when
+    *    you scheduled an update. So implement this function to always use
+    *    m_timeDelta to determine the amount of time that has passed since
+    *    the last call, and also expect m_timeDelta to be very small.
     */
     virtual void onUpdate();
 
@@ -266,11 +214,10 @@ protected:
     virtual void onRender();
 
 protected:
-    AbstractContext * m_context;     ///< Rendering context used for rendering
-    glm::vec4         m_viewport;    ///< Viewport in device coordinates (x, y, w, h)
-    float             m_timeDelta;   ///< Time delta (in seconds)
-    bool              m_needsUpdate; ///< Is an update needed?
-    bool              m_needsRedraw; ///< Is a redraw needed?
+    glm::vec4 m_viewport;    ///< Viewport in device coordinates (x, y, w, h)
+    float     m_timeDelta;   ///< Time delta (in seconds)
+    bool      m_needsUpdate; ///< Is an update needed?
+    bool      m_needsRedraw; ///< Is a redraw needed?
 };
 
 

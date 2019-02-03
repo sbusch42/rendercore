@@ -52,7 +52,7 @@ public:
     *    Get rendering context
     *
     *  @return
-    *    Rendering context used for rendering on the canvas (can be null)
+    *    Rendering context (can be null)
     *
     *  @remarks
     *    The returned context can be null if the canvas has not been
@@ -68,7 +68,7 @@ public:
     *    Get rendering context
     *
     *  @return
-    *    Rendering context used for rendering on the canvas (can be null)
+    *    Rendering context (can be null)
     *
     *  @remarks
     *    The returned context can be null if the canvas has not been
@@ -84,7 +84,7 @@ public:
     *    Initialize in rendering context
     *
     *  @param[in] context
-    *    Rendering context used for rendering on the canvas (must NOT be null)
+    *    Rendering context (must NOT be null)
     *
     *  @remarks
     *    This function needs to be called by the windowing backend after
@@ -102,7 +102,7 @@ public:
     *    De-initialize in rendering context
     *
     *  @param[in] context
-    *    Rendering context used for rendering on the canvas (must NOT be null)
+    *    Rendering context (must NOT be null)
     *
     *  @remarks
     *    This function needs to be called by the windowing backend
@@ -224,7 +224,7 @@ public:
     void render();
 
 protected:
-    AbstractContext           * m_context;       ///< Rendering context used for rendering onto the canvas
+    AbstractContext           * m_context;       ///< Rendering context (can be null)
     std::unique_ptr<Renderer>   m_renderer;      ///< Renderer that renders into the canvas
     std::unique_ptr<Renderer>   m_newRenderer;   ///< Renderer that is scheduled to replace the current renderer
     Cached<glm::vec4>           m_viewport;      ///< Viewport (in real device coordinates)

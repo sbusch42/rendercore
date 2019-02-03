@@ -73,7 +73,7 @@ void RenderWindow::onMove(MoveEvent &)
 void RenderWindow::onPaint(PaintEvent &)
 {
     // [TODO] Optimize memory reallocation problem
-    //auto defaultFBO = globjects::Framebuffer::defaultFBO();
+    // auto defaultFBO = globjects::Framebuffer::defaultFBO();
 
     // Render on canvas
     m_canvas->render();
@@ -191,7 +191,7 @@ void RenderWindow::onIdle()
     // Update time delta
     m_canvas->updateTime();
 
-    // Update simulation
+    // Update simulation (regardless of whether it wants to or not - ensures to wakeup the update loop when one event is lost)
     m_canvas->update();
 
     // Is another simulation update needed?

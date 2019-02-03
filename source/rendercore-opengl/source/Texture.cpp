@@ -14,7 +14,8 @@ namespace opengl
 {
 
 
-Texture::Texture()
+Texture::Texture(GpuObject * parent)
+: GpuObject(parent)
 {
 }
 
@@ -47,8 +48,9 @@ void Texture::setImage(std::unique_ptr<rendercore::Image> image)
     // Store image
     m_image = std::move(image);
 
-    // Create texture from image
-    createFromImage();
+    // Do not create the texture right away, as there
+    // might be currently no rendering context active.
+    // The texture will be created in onContextInit().
 }
 
 void Texture::load(const std::string & filename)
@@ -56,6 +58,20 @@ void Texture::load(const std::string & filename)
     // Load image
     ImageLoader loader;
     setImage(loader.load(filename));
+}
+
+void Texture::onContextInit(AbstractContext *)
+{
+    // If texture was lost, try to restore it from image
+    if (!m_texture.get()) {
+        createFromImage();
+    }
+}
+
+void Texture::onContextDeinit(AbstractContext *)
+{
+    // Make texture invalid
+    m_texture.reset();
 }
 
 void Texture::createFromImage()

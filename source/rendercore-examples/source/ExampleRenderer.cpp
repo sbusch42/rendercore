@@ -9,9 +9,6 @@
 
 #include <rendercore/rendercore.h>
 
-#include <rendercore-opengl/Quad.h>
-#include <rendercore-opengl/Triangle.h>
-#include <rendercore-opengl/Sphere.h>
 #include <rendercore-opengl/Box.h>
 #include <rendercore-opengl/ShaderLoader.h>
 
@@ -33,16 +30,17 @@ ExampleRenderer::ExampleRenderer()
     m_transform.setScale        ({ 1.0f, 1.0f, 1.0f });
     m_transform.setRotationAxis ({ 0.0f, 1.0f, 0.0f });
     m_transform.setRotationAngle(0.0f);
+
+    // Load texture
+    m_texture = cppassist::make_unique<Texture>(this);
+    m_texture->load(rendercore::dataPath() + "/rendercore/textures/brickwall.glraw");
+
+    // Create camera
+    m_camera = cppassist::make_unique<Camera>();
 }
 
 ExampleRenderer::~ExampleRenderer()
 {
-    // Release GPU objects
-    m_geometry.reset();
-    m_texture.reset();
-    m_program.reset();
-    m_vertShader.reset();
-    m_fragShader.reset();
 }
 
 void ExampleRenderer::onContextInit(AbstractContext *)
@@ -50,18 +48,8 @@ void ExampleRenderer::onContextInit(AbstractContext *)
     // [DEBUG]
     std::cout << "onContextInit()" << std::endl;
 
-    // Create camera
-    m_camera = cppassist::make_unique<Camera>();
-
     // Create geometry
-//  m_geometry = cppassist::make_unique<Quad>(2.0f, true);
-//  m_geometry = cppassist::make_unique<Triangle>(2.0f, true);
-//  m_geometry = cppassist::make_unique<Sphere>(2.0f, true);
     m_geometry = cppassist::make_unique<Box>(2.0f, true);
-
-    // Load texture
-    m_texture = cppassist::make_unique<Texture>();
-    m_texture->load(rendercore::dataPath() + "/rendercore/textures/brickwall.glraw");
 
     // Load shaders
     ShaderLoader shaderLoader;
@@ -83,15 +71,13 @@ void ExampleRenderer::onContextDeinit(AbstractContext *)
     m_program.reset();
     m_vertShader.reset();
     m_fragShader.reset();
-    m_texture.reset();
     m_geometry.reset();
-    m_camera.reset();
 }
 
 void ExampleRenderer::onUpdate()
 {
     // [DEBUG]
-    //std::cout << "onUpdate(" << m_counter << ")" << std::endl;
+    // std::cout << "onUpdate(" << m_counter << ")" << std::endl;
 
     // Advance counter
     m_counter++;
@@ -99,17 +85,14 @@ void ExampleRenderer::onUpdate()
     // Rotate model
     m_transform.setRotationAngle(m_transform.rotationAngle() + m_timeDelta * 1.0f);
 
-    // Animation has been update, redraw
+    // Animation has been updated, redraw the scene (will also issue another update)
     scheduleRedraw();
-
-    // Animation is going on
-    scheduleUpdate();
 }
 
 void ExampleRenderer::onRender()
 {
     // [DEBUG]
-    //std::cout << "onRender()" << std::endl;
+    // std::cout << "onRender()" << std::endl;
 
     // Update viewport
     gl::glViewport(m_viewport.x, m_viewport.y, m_viewport.z, m_viewport.w);
