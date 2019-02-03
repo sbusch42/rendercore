@@ -11,25 +11,38 @@ namespace rendercore
 
 GpuObject::GpuObject(GpuObject * parent)
 : m_context(nullptr)
-, m_parent(parent)
+, m_parent(nullptr)
 {
     // Register at parent
-    if (m_parent) {
-        m_parent->registerObject(this);
-    }
+    setParent(parent);
 }
 
 GpuObject::~GpuObject()
 {
     // Unregister from parent
-    if (m_parent) {
-        m_parent->unregisterObject(this);
-    }
+    setParent(nullptr);
 }
 
 const GpuObject * GpuObject::parent() const
 {
     return m_parent;
+}
+
+void GpuObject::setParent(GpuObject * parent)
+{
+    // Unregister from format parent
+    if (m_parent) {
+        m_parent->unregisterObject(this);
+        m_parent = nullptr;
+    }
+
+    // Set new parent
+    m_parent = parent;
+
+    // Register at new parent
+    if (m_parent) {
+        m_parent->registerObject(this);
+    }
 }
 
 const std::vector<GpuObject *> & GpuObject::children() const

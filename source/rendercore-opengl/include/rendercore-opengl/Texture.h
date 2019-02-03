@@ -32,7 +32,7 @@ public:
     *  @param[in] parent
     *    Parent object (can be null)
     */
-    Texture(GpuObject * parent);
+    Texture(GpuObject * parent = nullptr);
 
     /**
     *  @brief

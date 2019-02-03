@@ -53,6 +53,21 @@ public:
 
     /**
     *  @brief
+    *    Set parent object
+    *
+    *  @param[in]
+    *    Parent object (can be null)
+    *
+    *  @remarks
+    *    When the former parent of this object is not null,
+    *    the object will unregister itself from that parent.
+    *    If new new parent is not null, the object will
+    *    register itself at the new parent.
+    */
+    void setParent(GpuObject * parent);
+
+    /**
+    *  @brief
     *    Get child objects
     *
     *  @return

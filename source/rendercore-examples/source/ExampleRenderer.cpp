@@ -41,13 +41,13 @@ ExampleRenderer::ExampleRenderer()
     m_program = cppassist::make_unique<Program>(this);
 
     // Load vertex shader
-    auto vertShader = cppassist::make_unique<Shader>(m_program.get(), gl::GL_VERTEX_SHADER);
-    vertShader->load(rendercore::dataPath() + "/rendercore/shaders/geometry/geometry.vert");
+    auto vertShader = cppassist::make_unique<Shader>(this);
+    vertShader->load(gl::GL_VERTEX_SHADER, rendercore::dataPath() + "/rendercore/shaders/geometry/geometry.vert");
     m_program->attach(std::move(vertShader));
 
     // Load fragment shader
-    auto fragShader = cppassist::make_unique<Shader>(m_program.get(), gl::GL_FRAGMENT_SHADER);
-    fragShader->load(rendercore::dataPath() + "/rendercore/shaders/geometry/geometry.frag");
+    auto fragShader = cppassist::make_unique<Shader>(this);
+    fragShader->load(gl::GL_FRAGMENT_SHADER, rendercore::dataPath() + "/rendercore/shaders/geometry/geometry.frag");
     m_program->attach(std::move(fragShader));
 }
 

@@ -34,7 +34,14 @@ globjects::Program * Program::program()
 
 void Program::attach(std::unique_ptr<Shader> shader)
 {
-    m_shaders.push_back(std::move(shader));
+    // Check if shader is not empty
+    if (shader) {
+        // Make program the parent of the shader
+        shader->setParent(this);
+
+        // Add shader to program
+        m_shaders.push_back(std::move(shader));
+    }
 }
 
 void Program::onContextInit(AbstractContext *)

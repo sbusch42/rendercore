@@ -25,12 +25,6 @@ Shader::Shader(GpuObject * parent)
 {
 }
 
-Shader::Shader(GpuObject * parent, gl::GLenum type)
-: GpuObject(parent)
-, m_type(type)
-{
-}
-
 Shader::~Shader()
 {
 }
@@ -55,12 +49,13 @@ void Shader::setType(gl::GLenum type)
     m_type = type;
 }
 
-void Shader::setCode(const std::string & code)
+void Shader::setCode(gl::GLenum type, const std::string & code)
 {
+    m_type = type;
     m_code = code;
 }
 
-void Shader::load(const std::string & filename)
+void Shader::load(gl::GLenum type, const std::string & filename)
 {
     std::string code = "";
 
@@ -71,7 +66,7 @@ void Shader::load(const std::string & filename)
     }
 
     // Set shader code
-    setCode(code);
+    setCode(type, code);
 }
 
 void Shader::onContextInit(AbstractContext *)

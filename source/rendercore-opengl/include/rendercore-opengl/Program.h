@@ -32,7 +32,7 @@ public:
     *  @param[in] parent
     *    Parent object (can be null)
     */
-    Program(GpuObject * parent);
+    Program(GpuObject * parent = nullptr);
 
     /**
     *  @brief
@@ -64,6 +64,9 @@ public:
     *
     *  @param[in] shader
     *    Shader (must NOT be null!)
+    *
+    *  @remarks
+    *    This will also make program the parent of the shader object.
     */
     void attach(std::unique_ptr<Shader> shader);
 

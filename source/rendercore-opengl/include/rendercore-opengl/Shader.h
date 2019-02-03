@@ -32,18 +32,7 @@ public:
     *  @param[in] parent
     *    Parent object (can be null)
     */
-    Shader(GpuObject * parent);
-
-    /**
-    *  @brief
-    *    Constructor
-    *
-    *  @param[in] parent
-    *    Parent object (can be null)
-    *  @param[in] type
-    *    Shader type
-    */
-    Shader(GpuObject * parent, gl::GLenum type);
+    Shader(GpuObject * parent = nullptr);
 
     /**
     *  @brief
@@ -91,6 +80,8 @@ public:
     *  @brief
     *    Set shader code
     *
+    *  @param[in] type
+    *    Shader type
     *  @param[in] code
     *    Shader code
     *
@@ -99,12 +90,14 @@ public:
     *    It will also be used to restore the shader when needed
     *    (e.g., after a context switch).
     */
-    void setCode(const std::string & code);
+    void setCode(gl::GLenum type, const std::string & code);
 
     /**
     *  @brief
     *    Load shader from file
     *
+    *  @param[in] type
+    *    Shader type
     *  @param[in] filename
     *    Path to shader file
     *
@@ -112,7 +105,7 @@ public:
     *    This function will load the given file and set it as
     *    the source for this shader program (see setCode).
     */
-    void load(const std::string & filename);
+    void load(gl::GLenum type, const std::string & filename);
 
 protected:
     // Virtual GpuObject functions
