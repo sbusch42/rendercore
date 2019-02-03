@@ -11,8 +11,11 @@
 
 #include <rendercore-opengl/Box.h>
 
+#include <rendercore-gltf/GltfLoader.h>
+
 
 using namespace rendercore::opengl;
+using namespace rendercore::gltf;
 
 
 namespace rendercore
@@ -24,6 +27,10 @@ namespace examples
 ExampleRenderer::ExampleRenderer()
 : m_counter(0)
 {
+    // [DEBUG]
+    GltfLoader loader;
+    loader.load(rendercore::dataPath() + "/rendercore/gltf/BoxAnimated/BoxAnimated.gltf");
+
     // Initialize object transformation
     m_transform.setTranslation  ({ 0.0f, 0.0f, 0.0f });
     m_transform.setScale        ({ 1.0f, 1.0f, 1.0f });

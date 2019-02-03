@@ -139,6 +139,7 @@ target_link_libraries(${target}
     ${DEFAULT_LIBRARIES}
     ${META_PROJECT_NAME}::rendercore
     ${META_PROJECT_NAME}::rendercore-opengl
+    ${META_PROJECT_NAME}::rendercore-gltf
 
     INTERFACE
 )
