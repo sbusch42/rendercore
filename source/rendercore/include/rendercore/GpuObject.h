@@ -137,12 +137,19 @@ protected:
     *    Rendering context (never null)
     *
     *  @remarks
-    *    Use this function to initialize all GPU objects, or use lazy
-    *    initialization and initialize them on the first rendering call.
-    *    Do not store them as direct members of the class, as they must
-    *    be de-initialized in onContextDeinit(), not on the call of the
-    *    destructor. This method can also be used to restore GPU objects
+    *    This function must be used to initialize all GPU objects,
+    *    as they can only be used when a context is active,
+    *    and become invalid when a context switch has occured.
+    *    This method can also be used to restore GPU objects
     *    from CPU data, when a context switch has occured.
+    *    When using wrapper classes derived from GpuObject, it is made
+    *    sure that these objects are initialized before their parent
+    *    object, so you can instanciate them directly as class members,
+    *    passing the this-pointer to their constructor to make them
+    *    a child of this object. All other direct representations of
+    *    GPU objects however must NOT be stored as direct class members,
+    *    instead, they have to be created in onContextInit and released
+    *    in onContextDeinit.
     */
     virtual void onContextInit(AbstractContext * context) = 0;
 
@@ -160,6 +167,9 @@ protected:
     *    only in this function. This method can also be used to backup
     *    data from GPU objects into CPU data, which can later be restored
     *    when a context switch has occured.
+    *    When using wrapper classes derived from GpuObject, it is made
+    *    sure that these objects are deinitialized before their parent.
+    *    Therefore, they can be used as direct members of the class.
     */
     virtual void onContextDeinit(AbstractContext * context) = 0;
 
