@@ -46,8 +46,9 @@ set(headers
     ${include_path}/GLContextFormat.h
     ${include_path}/GLContextUtils.h
     ${include_path}/Icosahedron.h
+    ${include_path}/Program.h
     ${include_path}/Quad.h
-    ${include_path}/ShaderLoader.h
+    ${include_path}/Shader.h
     ${include_path}/Sphere.h
     ${include_path}/Texture.h
     ${include_path}/TimeMeasurement.h
@@ -62,8 +63,9 @@ set(sources
     ${source_path}/GLContextFormat.cpp
     ${source_path}/GLContextUtils.cpp
     ${source_path}/Icosahedron.cpp
+    ${source_path}/Program.cpp
     ${source_path}/Quad.cpp
-    ${source_path}/ShaderLoader.cpp
+    ${source_path}/Shader.cpp
     ${source_path}/Sphere.cpp
     ${source_path}/Texture.cpp
     ${source_path}/TimeMeasurement.cpp

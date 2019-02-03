@@ -70,7 +70,7 @@ void Texture::onContextInit(AbstractContext *)
 
 void Texture::onContextDeinit(AbstractContext *)
 {
-    // Make texture invalid
+    // Release texture
     m_texture.reset();
 }
 

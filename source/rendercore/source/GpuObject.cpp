@@ -59,6 +59,11 @@ void GpuObject::initContext(AbstractContext * context)
         return;
     }
 
+    // Initialize child objects
+    for (GpuObject * object : m_children) {
+        object->initContext(context);
+    }
+
     // Initialize new context
     if (context) {
         // Save context
@@ -66,11 +71,6 @@ void GpuObject::initContext(AbstractContext * context)
 
         // Initialize object in context
         onContextInit(context);
-    }
-
-    // Initialize child objects
-    for (GpuObject * object : m_children) {
-        object->initContext(context);
     }
 }
 

@@ -4,15 +4,12 @@
 
 #include <memory>
 
-#include <globjects/Program.h>
-#include <globjects/Shader.h>
-#include <globjects/Texture.h>
-
 #include <rendercore/AbstractDrawable.h>
 #include <rendercore/Camera.h>
 #include <rendercore/Renderer.h>
 #include <rendercore/Transform.h>
 
+#include <rendercore-opengl/Program.h>
 #include <rendercore-opengl/Texture.h>
 
 #include <rendercore-examples/rendercore-examples_api.h>
@@ -61,12 +58,10 @@ protected:
     Transform    m_transform; ///< Transformation of the model
 
     // GPU data
-    std::unique_ptr<rendercore::Camera>           m_camera;     ///< Camera in the scene
-    std::unique_ptr<rendercore::AbstractDrawable> m_geometry;   ///< Geometry that is rasterized
-    std::unique_ptr<rendercore::opengl::Texture>  m_texture;    ///< Texture
-    std::unique_ptr<globjects::Program>           m_program;    ///< Program used for rendering
-    std::unique_ptr<globjects::Shader>            m_vertShader; ///< Vertex shader
-    std::unique_ptr<globjects::Shader>            m_fragShader; ///< Fragment shader
+    std::unique_ptr<rendercore::Camera>           m_camera;   ///< Camera in the scene
+    std::unique_ptr<rendercore::AbstractDrawable> m_geometry; ///< Geometry that is rasterized
+    std::unique_ptr<rendercore::opengl::Texture>  m_texture;  ///< Texture
+    std::unique_ptr<rendercore::opengl::Program>  m_program;  ///< Program used for rendering
 };
 
 

@@ -113,7 +113,7 @@ protected:
     *  @brief
     *    Create texture from image
     */
-   void createFromImage();
+    void createFromImage();
 
 protected:
     std::unique_ptr<globjects::Texture> m_texture; ///< OpenGL texture (can be null)
