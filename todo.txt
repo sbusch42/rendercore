@@ -1,0 +1,31 @@
+
+- Geometry: derive from GpuObject, store CPU representation of geometry and derive GPU data from it
+- Mesh
+- Material
+- Lights
+
+- Input (mouse, keyboard)
+- Camera navigations
+  - Orbiter
+  - Flight
+
+- FrameBuffer/RenderTarget
+- ScreenAlignedQuad
+- Picking/ID-buffer
+
+- Transform: use quaternion
+- BoundingBox
+- Scene
+- Object manipulators
+
+- MultiFrameRenderer
+- MultiRenderer
+- DebugRenderer
+
+- Offscreen contexts
+- Shared contexts
+- Screenshot-Capturing
+- Video-Capturing
+
+- rendercore-qt
+- rendercore-qtquick
