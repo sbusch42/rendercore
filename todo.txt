@@ -4,6 +4,8 @@
 - Material
 - Lights
 
+- GLTF
+
 - Input (mouse, keyboard)
 - Camera navigations
   - Orbiter

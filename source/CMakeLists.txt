@@ -15,6 +15,7 @@ configure_file(version.h.in ${CMAKE_CURRENT_BINARY_DIR}/include/${META_PROJECT_N
 set(IDE_FOLDER "")
 add_subdirectory(rendercore)
 add_subdirectory(rendercore-opengl)
+add_subdirectory(rendercore-gltf)
 add_subdirectory(rendercore-glfw)
 add_subdirectory(rendercore-examples)
 
