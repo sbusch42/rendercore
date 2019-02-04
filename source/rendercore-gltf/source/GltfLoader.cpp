@@ -27,7 +27,7 @@ GltfLoader::~GltfLoader()
 {
 }
 
-bool GltfLoader::load(const std::string & path)
+std::unique_ptr<Asset> GltfLoader::load(const std::string & path)
 {
     Object root;
 
@@ -40,12 +40,12 @@ bool GltfLoader::load(const std::string & path)
     return parseFile(root);
 }
 
-bool GltfLoader::parseFile(const cppexpose::Object & root)
+std::unique_ptr<Asset> GltfLoader::parseFile(const cppexpose::Object & root)
 {
     bool res = true;
 
     // Create asset
-    Asset asset;
+    std::unique_ptr<Asset> asset = cppassist::make_unique<Asset>();
 
     // Get object properties
     const auto & properties = root.properties();
@@ -53,7 +53,7 @@ bool GltfLoader::parseFile(const cppexpose::Object & root)
     // Check if mandatory data is present
     if (!root.propertyExists("asset")) {
         // Error, 'asset' is mandatory
-        return false;
+        return nullptr;
     }
 
     // Parse properties
@@ -64,30 +64,34 @@ bool GltfLoader::parseFile(const cppexpose::Object & root)
 
         // Parse element
         if (key == "asset") {
-            res &= parseAsset(asset, value);
+            res &= parseAsset(*asset.get(), value);
         } else if (key == "scene") {
-            res &= parseDefaultScene(asset, value);
+            res &= parseDefaultScene(*asset.get(), value);
         } else if (key == "scenes") {
-            res &= parseScenes(asset, value);
+            res &= parseScenes(*asset.get(), value);
         } else if (key == "nodes") {
-            res &= parseNodes(asset, value);
+            res &= parseNodes(*asset.get(), value);
         } else if (key == "meshes") {
-            res &= parseMeshes(asset, value);
+            res &= parseMeshes(*asset.get(), value);
         } else if (key == "animations") {
-            res &= parseAnimations(asset, value);
+            res &= parseAnimations(*asset.get(), value);
         } else if (key == "accessors") {
-            res &= parseAccessors(asset, value);
+            res &= parseAccessors(*asset.get(), value);
         } else if (key == "materials") {
-            res &= parseMaterials(asset, value);
+            res &= parseMaterials(*asset.get(), value);
         } else if (key == "buffers") {
-            res &= parseBuffers(asset, value);
+            res &= parseBuffers(*asset.get(), value);
         } else if (key == "bufferViews") {
-            res &= parseBufferViews(asset, value);
+            res &= parseBufferViews(*asset.get(), value);
         }
     }
 
-    // Done
-    return res;
+    // Check for errors
+    if (res) {
+        return std::move(asset);
+    } else {
+        return nullptr;
+    }
 }
 
 bool GltfLoader::parseAsset(Asset & asset, const cppexpose::AbstractVar * value)

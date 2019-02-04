@@ -49,12 +49,15 @@ public:
     *
     *  @param[in] path
     *    Path to file
+    *
+    *  @return
+    *    Loaded asset (can be null)
     */
-    bool load(const std::string & path);
+    std::unique_ptr<Asset> load(const std::string & path);
 
 protected:
     // GLTF parsing
-    bool parseFile(const cppexpose::Object & root);
+    std::unique_ptr<Asset> parseFile(const cppexpose::Object & root);
     bool parseAsset(Asset & asset, const cppexpose::AbstractVar * value);
     bool parseDefaultScene(Asset & asset, const cppexpose::AbstractVar * value);
     bool parseScenes(Asset & asset, const cppexpose::AbstractVar * value);
