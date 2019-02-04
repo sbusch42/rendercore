@@ -8,7 +8,8 @@
 
 #include <glm/glm.hpp>
 
-#include <rendercore-gltf/rendercore-gltf_api.h>
+#include <rendercore-gltf/Asset.h>
+#include <rendercore-gltf/Mesh.h>
 
 
 namespace cppexpose {
@@ -52,72 +53,10 @@ public:
     bool load(const std::string & path);
 
 protected:
-    struct Scene {
-        std::string name;
-        std::vector<unsigned int> nodes;
-    };
-
-    struct Node {
-        std::string name;
-        int attachedCamera;
-        bool hasMatrix;
-        glm::mat4 matrix;
-        glm::vec3 translation;
-        glm::vec4 rotation;
-        glm::vec3 scale;
-        std::vector<unsigned int> children;
-    };
-
-    struct Buffer {
-        unsigned int byteLength;
-        std::string uri;
-    };
-
-    struct BufferView {
-        unsigned int buffer;
-        unsigned int byteOffset;
-        unsigned int byteLength;
-        unsigned int byteStride;
-        unsigned int target;
-    };
-
-    struct Accessor {
-        unsigned int       bufferView;
-        unsigned int       byteOffset;
-        unsigned int       count;
-        unsigned int       componentType;
-        std::string        type;
-        std::vector<float> min;
-        std::vector<float> max;
-    };
-
-    struct Primitive {
-        unsigned int mode;
-        unsigned int material;
-        unsigned int indices;
-        std::map<std::string, unsigned int> attributes;
-    };
-
-    struct Mesh {
-        std::vector<Primitive> primitives;
-    };
-
-    struct Asset {
-        float                   version;
-        float                   minVersion;
-        int                     initialScene;
-        std::vector<Scene>      scenes;
-        std::vector<Node>       nodes;
-        std::vector<Buffer>     buffers;
-        std::vector<BufferView> bufferViews;
-        std::vector<Accessor>   accessors;
-        std::vector<Mesh>       meshes;
-    };
-
-protected:
+    // GLTF parsing
     bool parseFile(const cppexpose::Object & root);
     bool parseAsset(Asset & asset, const cppexpose::AbstractVar * value);
-    bool parseInitialScene(Asset & asset, const cppexpose::AbstractVar * value);
+    bool parseDefaultScene(Asset & asset, const cppexpose::AbstractVar * value);
     bool parseScenes(Asset & asset, const cppexpose::AbstractVar * value);
     bool parseScene(Asset & asset, const cppexpose::AbstractVar * value);
     bool parseNodes(Asset & asset, const cppexpose::AbstractVar * value);
@@ -135,6 +74,7 @@ protected:
     bool parseBufferViews(Asset & asset, const cppexpose::AbstractVar * value);
     bool parseBufferView(Asset & asset, const cppexpose::AbstractVar * value);
 
+    // General parsing functions
     std::map<std::string, unsigned int> parseIntMap(const cppexpose::AbstractVar * value);
     std::vector<unsigned int> parseIntArray(const cppexpose::AbstractVar * value);
     std::vector<float> parseFloatArray(const cppexpose::AbstractVar * value);

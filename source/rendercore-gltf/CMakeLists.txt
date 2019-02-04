@@ -38,10 +38,26 @@ set(source_path  "${CMAKE_CURRENT_SOURCE_DIR}/source")
 
 set(headers
     ${include_path}/GltfLoader.h
+    ${include_path}/Accessor.h
+    ${include_path}/Asset.h
+    ${include_path}/Buffer.h
+    ${include_path}/BufferView.h
+    ${include_path}/Mesh.h
+    ${include_path}/Node.h
+    ${include_path}/Primitive.h
+    ${include_path}/Scene.h
 )
 
 set(sources
     ${source_path}/GltfLoader.cpp
+    ${source_path}/Accessor.cpp
+    ${source_path}/Asset.cpp
+    ${source_path}/Buffer.cpp
+    ${source_path}/BufferView.cpp
+    ${source_path}/Mesh.cpp
+    ${source_path}/Node.cpp
+    ${source_path}/Primitive.cpp
+    ${source_path}/Scene.cpp
 )
 
 # Group source files

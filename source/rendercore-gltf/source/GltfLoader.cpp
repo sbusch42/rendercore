@@ -4,6 +4,8 @@
 #include <algorithm>
 #include <iostream>
 
+#include <cppassist/memory/make_unique.h>
+
 #include <cppexpose/JSON.h>
 #include <cppexpose/Object.h>
 
@@ -64,7 +66,7 @@ bool GltfLoader::parseFile(const cppexpose::Object & root)
         if (key == "asset") {
             res &= parseAsset(asset, value);
         } else if (key == "scene") {
-            res &= parseInitialScene(asset, value);
+            res &= parseDefaultScene(asset, value);
         } else if (key == "scenes") {
             res &= parseScenes(asset, value);
         } else if (key == "nodes") {
@@ -95,37 +97,32 @@ bool GltfLoader::parseAsset(Asset & asset, const cppexpose::AbstractVar * value)
         return false;
     }
 
-    // Initialize asset
-    asset.initialScene = -1;
-    asset.version      = 0.0f;
-    asset.minVersion   = 0.0f;
-
     // Get object
     const cppexpose::Object & obj = *value->asObject();
 
     // 'version' (mandatory)
     if (obj.propertyExists("version")) {
-        asset.version = obj.property("version")->convert<float>();
+        asset.setVersion(obj.property("version")->convert<float>());
     } else return false;
 
     // 'minVersion'
     if (obj.propertyExists("minVersion")) {
-        asset.minVersion = obj.property("minVersion")->convert<float>();
+        asset.setMinimumVersion(obj.property("minVersion")->convert<float>());
     }
 
     // Done
     return true;
 }
 
-bool GltfLoader::parseInitialScene(Asset & asset, const cppexpose::AbstractVar * value)
+bool GltfLoader::parseDefaultScene(Asset & asset, const cppexpose::AbstractVar * value)
 {
     // Value must be an unsigned int
     if (!value->canConvert<unsigned int>()) {
         return false;
     }
 
-    // Get initialize scene
-    asset.initialScene = value->convert<int>();
+    // Get default scene
+    asset.setDefaultScene(value->convert<int>());
 
     // Done
     return true;
@@ -159,25 +156,25 @@ bool GltfLoader::parseScene(Asset & asset, const cppexpose::AbstractVar * value)
         return false;
     }
 
-    // Initialize scene
-    Scene scene;
+    // Create scene
+    auto scene = cppassist::make_unique<Scene>();
 
     // Get object
     const cppexpose::Object & obj = *value->asObject();
 
     // 'name'
     if (obj.propertyExists("name")) {
-        scene.name = obj.property("name")->convert<std::string>();
+        scene->setName(obj.property("name")->convert<std::string>());
     }
 
     // 'nodes'
     if (obj.propertyExists("nodes")) {
         // Get node indices
-        scene.nodes = parseIntArray(obj.property("nodes"));
+        scene->setRootNodes(parseIntArray(obj.property("nodes")));
     }
 
     // Add scene
-    asset.scenes.push_back(scene);
+    asset.addScene(std::move(scene));
 
     // Done
     return true;
@@ -211,53 +208,50 @@ bool GltfLoader::parseNode(Asset & asset, const cppexpose::AbstractVar * value)
         return false;
     }
 
-    // Initialize node
-    Node node;
-    node.attachedCamera = -1;
-    node.hasMatrix      = false;
+    // Create node
+    auto node = cppassist::make_unique<Node>();
 
     // Get object
     const cppexpose::Object & obj = *value->asObject();
 
     // 'name'
     if (obj.propertyExists("name")) {
-        node.name = obj.property("name")->convert<std::string>();
+        node->setName(obj.property("name")->convert<std::string>());
     }
 
     // 'matrix'
     if (obj.propertyExists("matrix")) {
-        node.matrix = parseMat4(obj.property("matrix"));
-        node.hasMatrix = true;
+        node->setMatrix(parseMat4(obj.property("matrix")));
     }
 
     // 'translation'
     if (obj.propertyExists("translation")) {
-        node.translation = parseVec3(obj.property("translation"));
+        node->setTranslation(parseVec3(obj.property("translation")));
     }
 
     // 'rotation'
     if (obj.propertyExists("rotation")) {
-        node.rotation = parseVec4(obj.property("rotation"));
+        node->setRotation(parseVec4(obj.property("rotation")));
     }
 
     // 'scale'
     if (obj.propertyExists("scale")) {
-        node.scale = parseVec3(obj.property("scale"));
+        node->setScale(parseVec3(obj.property("scale")));
     }
 
     // 'children'
     if (obj.propertyExists("children")) {
-        node.children = parseIntArray(obj.property("children"));
+        node->setChildren(parseIntArray(obj.property("children")));
     }
 
     // 'camera'
     if (obj.propertyExists("camera")) {
         // Get attached camera index
-        node.attachedCamera = obj.property("camera")->convert<int>();
+        node->setCamera(obj.property("camera")->convert<int>());
     }
 
     // Add node
-    asset.nodes.push_back(node);
+    asset.addNode(std::move(node));
 
     // Done
     return true;
@@ -291,19 +285,19 @@ bool GltfLoader::parseMesh(Asset & asset, const cppexpose::AbstractVar * value)
         return false;
     }
 
-    // Initialize mesh
-    Mesh mesh;
+    // Create mesh
+    auto mesh = cppassist::make_unique<Mesh>();
 
     // Get object
     const cppexpose::Object & obj = *value->asObject();
 
     // 'primitives' (mandatory)
     if (obj.propertyExists("primitives")) {
-        parsePrimitives(mesh, obj.property("primitives"));
+        parsePrimitives(*mesh.get(), obj.property("primitives"));
     } else return false;
 
     // Add mesh
-    asset.meshes.push_back(mesh);
+    asset.addMesh(std::move(mesh));
 
     // Done
     return true;
@@ -337,30 +331,30 @@ bool GltfLoader::parsePrimitive(Mesh & mesh, const cppexpose::AbstractVar * valu
         return false;
     }
 
-    // Initialize primitive
-    Primitive primitive;
+    // Create primitive
+    auto primitive = cppassist::make_unique<Primitive>();
 
     // Get object
     const cppexpose::Object & obj = *value->asObject();
 
     // 'mode'
     if (obj.propertyExists("mode")) {
-        primitive.mode = obj.property("mode")->convert<unsigned int>();
+        primitive->setMode(obj.property("mode")->convert<unsigned int>());
     } else return false;
 
     // 'material'
     if (obj.propertyExists("material")) {
-        primitive.material = obj.property("material")->convert<unsigned int>();
+        primitive->setMaterial(obj.property("material")->convert<unsigned int>());
     }
 
     // 'indices'
     if (obj.propertyExists("indices")) {
-        primitive.indices = obj.property("indices")->convert<unsigned int>();
+        primitive->setIndices(obj.property("indices")->convert<int>());
     }
 
     // 'attributes'
     if (obj.propertyExists("attributes")) {
-        primitive.attributes = parseIntMap(obj.property("attributes"));
+        primitive->setAttributes(parseIntMap(obj.property("attributes")));
     } else return false;
 
     // 'targets'
@@ -370,7 +364,7 @@ bool GltfLoader::parsePrimitive(Mesh & mesh, const cppexpose::AbstractVar * valu
     }
 
     // Add primitive
-    mesh.primitives.push_back(primitive);
+    mesh.addPrimitive(std::move(primitive));
 
     // Done
     return true;
@@ -418,49 +412,45 @@ bool GltfLoader::parseAccessor(Asset & asset, const cppexpose::AbstractVar * val
         return false;
     }
 
-    // Initialize accessor
-    Accessor accessor;
-    accessor.bufferView    = 0;
-    accessor.byteOffset    = 0;
-    accessor.count         = 0;
-    accessor.componentType = 0;
+    // Create accessor
+    auto accessor = cppassist::make_unique<Accessor>();
 
     // Get object
     const cppexpose::Object & obj = *value->asObject();
 
     // 'bufferView'
     if (obj.propertyExists("bufferView")) {
-        accessor.bufferView = obj.property("bufferView")->convert<unsigned int>();
+        accessor->setBufferView(obj.property("bufferView")->convert<unsigned int>());
     } else return false;
 
     // 'byteOffset'
     if (obj.propertyExists("byteOffset")) {
-        accessor.byteOffset = obj.property("byteOffset")->convert<unsigned int>();
+        accessor->setOffset(obj.property("byteOffset")->convert<unsigned int>());
     } else return false;
 
     // 'count'
     if (obj.propertyExists("count")) {
-        accessor.count = obj.property("count")->convert<unsigned int>();
+        accessor->setCount(obj.property("count")->convert<unsigned int>());
     } else return false;
 
     // 'componentType'
     if (obj.propertyExists("componentType")) {
-        accessor.componentType = obj.property("componentType")->convert<unsigned int>();
+        accessor->setComponentType(obj.property("componentType")->convert<unsigned int>());
     }
 
     // 'type'
     if (obj.propertyExists("type")) {
-        accessor.type = obj.property("type")->convert<std::string>();
+        accessor->setDataType(obj.property("type")->convert<std::string>());
     }
 
     // 'min'
     if (obj.propertyExists("min")) {
-        accessor.min = parseFloatArray(obj.property("min"));
+        accessor->setMinValue(parseFloatArray(obj.property("min")));
     }
 
     // 'max'
     if (obj.propertyExists("max")) {
-        accessor.max = parseFloatArray(obj.property("max"));
+        accessor->setMaxValue(parseFloatArray(obj.property("max")));
     }
 
     // 'sparse'
@@ -470,7 +460,7 @@ bool GltfLoader::parseAccessor(Asset & asset, const cppexpose::AbstractVar * val
     }
 
     // Add buffer view
-    asset.accessors.push_back(accessor);
+    asset.addAccessor(std::move(accessor));
 
     // Done
     return true;
@@ -518,25 +508,24 @@ bool GltfLoader::parseBuffer(Asset & asset, const cppexpose::AbstractVar * value
         return false;
     }
 
-    // Initialize buffer
-    Buffer buffer;
-    buffer.byteLength = 0;
+    // Create buffer
+    auto buffer = cppassist::make_unique<Buffer>();
 
     // Get object
     const cppexpose::Object & obj = *value->asObject();
 
     // 'byteLength'
     if (obj.propertyExists("byteLength")) {
-        buffer.byteLength = obj.property("byteLength")->convert<unsigned int>();
+        buffer->setSize(obj.property("byteLength")->convert<unsigned int>());
     } else return false;
 
     // 'uri'
     if (obj.propertyExists("uri")) {
-        buffer.uri = obj.property("uri")->convert<std::string>();
+        buffer->setUri(obj.property("uri")->convert<std::string>());
     } else return false;
 
     // Add buffer
-    asset.buffers.push_back(buffer);
+    asset.addBuffer(std::move(buffer));
 
     // Done
     return true;
@@ -570,44 +559,39 @@ bool GltfLoader::parseBufferView(Asset & asset, const cppexpose::AbstractVar * v
         return false;
     }
 
-    // Initialize buffer view
-    BufferView bufferView;
-    bufferView.buffer     = 0;
-    bufferView.byteOffset = 0;
-    bufferView.byteLength = 0;
-    bufferView.byteStride = 0;
-    bufferView.target     = 0;
+    // Create buffer view
+    auto bufferView = cppassist::make_unique<BufferView>();
 
     // Get object
     const cppexpose::Object & obj = *value->asObject();
 
     // 'buffer'
     if (obj.propertyExists("buffer")) {
-        bufferView.buffer = obj.property("buffer")->convert<unsigned int>();
+        bufferView->setBuffer(obj.property("buffer")->convert<unsigned int>());
     } else return false;
 
     // 'byteOffset'
     if (obj.propertyExists("byteOffset")) {
-        bufferView.byteOffset = obj.property("byteOffset")->convert<unsigned int>();
+        bufferView->setOffset(obj.property("byteOffset")->convert<unsigned int>());
     } else return false;
 
     // 'byteLength'
     if (obj.propertyExists("byteLength")) {
-        bufferView.byteLength = obj.property("byteLength")->convert<unsigned int>();
+        bufferView->setSize(obj.property("byteLength")->convert<unsigned int>());
     } else return false;
 
     // 'byteStride'
     if (obj.propertyExists("byteStride")) {
-        bufferView.byteStride = obj.property("byteStride")->convert<unsigned int>();
+        bufferView->setStride(obj.property("byteStride")->convert<unsigned int>());
     }
 
     // 'target'
     if (obj.propertyExists("target")) {
-        bufferView.target = obj.property("target")->convert<unsigned int>();
+        bufferView->setTarget(obj.property("target")->convert<unsigned int>());
     }
 
     // Add buffer view
-    asset.bufferViews.push_back(bufferView);
+    asset.addBufferView(std::move(bufferView));
 
     // Done
     return true;
