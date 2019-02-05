@@ -24,28 +24,9 @@ Buffer::~Buffer()
 {
 }
 
-const globjects::Buffer * Buffer::buffer() const
-{
-    return m_buffer.get();
-}
-
-globjects::Buffer * Buffer::buffer()
-{
-    return m_buffer.get();
-}
-
 unsigned int Buffer::size() const
 {
     return m_data.size();
-}
-
-void Buffer::allocate(unsigned int size)
-{
-    // Clear old data
-    m_data.clear();
-
-    // Set new size
-    m_data.resize(size);
 }
 
 const char * Buffer::data() const
@@ -56,6 +37,18 @@ const char * Buffer::data() const
 char * Buffer::data()
 {
     return m_data.data();
+}
+
+void Buffer::allocate(unsigned int size)
+{
+    // Clear old data
+    m_data.clear();
+
+    // Set new size
+    m_data.resize(size);
+
+    // Flag buffer invalid
+    setValid(false);
 }
 
 void Buffer::setData(char * data, unsigned int size)
@@ -71,14 +64,20 @@ void Buffer::setData(char * data, unsigned int size)
         // Copy data
         std::copy_n(data, size, m_data.data());
     }
+
+    // Flag buffer invalid
+    setValid(false);
 }
 
-void Buffer::onInit()
+globjects::Buffer * Buffer::buffer()
 {
-    // If buffer was lost, try to restore it from data
-    if (!m_buffer.get()) {
+    // Check if buffer needs to be updated or restored
+    if (!m_buffer.get() || !valid()) {
         createFromData();
     }
+
+    // Return buffer
+    return m_buffer.get();
 }
 
 void Buffer::onDeinit()
@@ -99,6 +98,9 @@ void Buffer::createFromData()
 
     // Set buffer data
     m_buffer->setData(m_data.size(), m_data.data(), gl::GL_STATIC_DRAW);
+
+    // Flag buffer valid
+    setValid(true);
 }
 
 

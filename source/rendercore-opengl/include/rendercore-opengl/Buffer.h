@@ -41,39 +41,12 @@ public:
 
     /**
     *  @brief
-    *    Get OpenGL buffer
-    *
-    *  @return
-    *    OpenGL buffer (can be null)
-    */
-    const globjects::Buffer * buffer() const;
-
-    /**
-    *  @brief
-    *    Get OpenGL buffer
-    *
-    *  @return
-    *    OpenGL buffer (can be null)
-    */
-    globjects::Buffer * buffer();
-
-    /**
-    *  @brief
     *    Get data size
     *
     *  @return
     *    Data size
     */
     unsigned int size() const;
-
-    /**
-    *  @brief
-    *    Allocate data
-    *
-    *  @param[in] sue
-    *    Data size
-    */
-    void allocate(unsigned int size);
 
     /**
     *  @brief
@@ -95,6 +68,15 @@ public:
 
     /**
     *  @brief
+    *    Allocate data
+    *
+    *  @param[in] sue
+    *    Data size
+    */
+    void allocate(unsigned int size);
+
+    /**
+    *  @brief
     *    Set data
     *
     *  @param[in] data
@@ -104,9 +86,20 @@ public:
     */
     void setData(char * data, unsigned int size);
 
+    /**
+    *  @brief
+    *    Get OpenGL buffer
+    *
+    *  @return
+    *    OpenGL buffer (can be null)
+    *
+    *  @notes
+    *    - Requires an active rendering context
+    */
+    globjects::Buffer * buffer();
+
 protected:
     // Virtual GpuObject functions
-    virtual void onInit() override;
     virtual void onDeinit() override;
 
     /**
