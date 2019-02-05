@@ -8,8 +8,8 @@ namespace opengl
 {
 
 
-Material::Material(GpuObject * parent)
-: GpuObject(parent)
+Material::Material(GpuContainer * container)
+: GpuObject(container)
 {
 }
 
@@ -17,11 +17,11 @@ Material::~Material()
 {
 }
 
-void Material::onContextInit(AbstractContext *)
+void Material::onInit()
 {
 }
 
-void Material::onContextDeinit(AbstractContext *)
+void Material::onDeinit()
 {
 }
 

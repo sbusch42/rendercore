@@ -29,34 +29,16 @@ public:
     *  @brief
     *    Constructor
     *
-    *  @param[in] parent
-    *    Parent object (can be null)
+    *  @param[in] container
+    *    GPU container (can be null)
     */
-    Texture(GpuObject * parent = nullptr);
+    Texture(GpuContainer * container = nullptr);
 
     /**
     *  @brief
     *    Destructor
     */
     virtual ~Texture();
-
-    /**
-    *  @brief
-    *    Get OpenGL texture
-    *
-    *  @return
-    *    OpenGL texture (can be null)
-    */
-    const globjects::Texture * texture() const;
-
-    /**
-    *  @brief
-    *    Get OpenGL texture
-    *
-    *  @return
-    *    OpenGL texture (can be null)
-    */
-    globjects::Texture * texture();
 
     /**
     *  @brief
@@ -104,14 +86,28 @@ public:
     */
     void load(const std::string & filename);
 
+    /**
+    *  @brief
+    *    Get OpenGL texture
+    *
+    *  @return
+    *    OpenGL texture (can be null)
+    *
+    *  @notes
+    *    - Requires an active rendering context
+    */
+    globjects::Texture * texture();
+
 protected:
     // Virtual GpuObject functions
-    virtual void onContextInit(AbstractContext * context) override;
-    virtual void onContextDeinit(AbstractContext * context) override;
+    virtual void onDeinit() override;
 
     /**
     *  @brief
     *    Create texture from image
+    *
+    *  @notes
+    *    - Requires an active rendering context
     */
     void createFromImage();
 

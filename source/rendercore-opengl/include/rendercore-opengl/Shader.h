@@ -29,34 +29,16 @@ public:
     *  @brief
     *    Constructor
     *
-    *  @param[in] parent
-    *    Parent object (can be null)
+    *  @param[in] container
+    *    GPU container (can be null)
     */
-    Shader(GpuObject * parent = nullptr);
+    Shader(GpuContainer * container = nullptr);
 
     /**
     *  @brief
     *    Destructor
     */
     virtual ~Shader();
-
-    /**
-    *  @brief
-    *    Get OpenGL shader
-    *
-    *  @return
-    *    OpenGL shader (can be null)
-    */
-    const globjects::Shader * shader() const;
-
-    /**
-    *  @brief
-    *    Get OpenGL shader
-    *
-    *  @return
-    *    OpenGL shader (can be null)
-    */
-    globjects::Shader * shader();
 
     /**
     *  @brief
@@ -107,10 +89,21 @@ public:
     */
     void load(gl::GLenum type, const std::string & filename);
 
+    /**
+    *  @brief
+    *    Get OpenGL shader
+    *
+    *  @return
+    *    OpenGL shader (can be null)
+    *
+    *  @notes
+    *    - Requires an active rendering context
+    */
+    globjects::Shader * shader();
+
 protected:
     // Virtual GpuObject functions
-    virtual void onContextInit(AbstractContext * context) override;
-    virtual void onContextDeinit(AbstractContext * context) override;
+    virtual void onDeinit() override;
 
 protected:
     gl::GLenum                                     m_type;   ///< Shader type

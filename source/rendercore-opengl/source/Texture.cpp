@@ -14,23 +14,13 @@ namespace opengl
 {
 
 
-Texture::Texture(GpuObject * parent)
-: GpuObject(parent)
+Texture::Texture(GpuContainer * container)
+: GpuObject(container)
 {
 }
 
 Texture::~Texture()
 {
-}
-
-const globjects::Texture * Texture::texture() const
-{
-    return m_texture.get();
-}
-
-globjects::Texture * Texture::texture()
-{
-    return m_texture.get();
 }
 
 const rendercore::Image * Texture::image() const
@@ -48,9 +38,8 @@ void Texture::setImage(std::unique_ptr<rendercore::Image> image)
     // Store image
     m_image = std::move(image);
 
-    // Do not create the texture right away, as there
-    // might be currently no rendering context active.
-    // The texture will be created in onContextInit().
+    // Flag texture invalid
+    setValid(false);
 }
 
 void Texture::load(const std::string & filename)
@@ -60,15 +49,18 @@ void Texture::load(const std::string & filename)
     setImage(loader.load(filename));
 }
 
-void Texture::onContextInit(AbstractContext *)
+globjects::Texture * Texture::texture()
 {
-    // If texture was lost, try to restore it from image
-    if (!m_texture.get()) {
+    // Check if texture needs to be updated or restored
+    if (!m_texture.get() || !valid()) {
         createFromImage();
     }
+
+    // Return texture
+    return m_texture.get();
 }
 
-void Texture::onContextDeinit(AbstractContext *)
+void Texture::onDeinit()
 {
     // Release texture
     m_texture.reset();
@@ -95,6 +87,9 @@ void Texture::createFromImage()
         static_cast<gl::GLenum>(m_image->dataType()),
         m_image->data()
     );
+
+    // Flag texture valid
+    setValid(true);
 }
 
 

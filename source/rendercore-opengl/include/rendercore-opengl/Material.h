@@ -24,10 +24,10 @@ public:
     *  @brief
     *    Constructor
     *
-    *  @param[in] parent
-    *    Parent object (can be null)
+    *  @param[in] container
+    *    GPU container (can be null)
     */
-    Material(GpuObject * parent = nullptr);
+    Material(GpuContainer * container = nullptr);
 
     /**
     *  @brief
@@ -37,8 +37,8 @@ public:
 
 protected:
     // Virtual GpuObject functions
-    virtual void onContextInit(AbstractContext * context) override;
-    virtual void onContextDeinit(AbstractContext * context) override;
+    virtual void onInit() override;
+    virtual void onDeinit() override;
 };
 
 

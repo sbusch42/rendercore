@@ -4,7 +4,7 @@
 
 #include <glm/vec4.hpp>
 
-#include <rendercore/GpuObject.h>
+#include <rendercore/GpuContainer.h>
 
 
 namespace rendercore
@@ -39,17 +39,17 @@ namespace rendercore
 *    it needs to be redrawn, by calling scheduleRedraw(). The canvas will
 *    then issue a redraw.
 */
-class RENDERCORE_API Renderer : public GpuObject
+class RENDERCORE_API Renderer : public GpuContainer
 {
 public:
     /**
     *  @brief
     *    Constructor
     *
-    *  @param[in] parent
-    *    Parent object (can be null)
+    *  @param[in] container
+    *    GPU container (must NOT be null!)
     */
-    Renderer(GpuObject * parent = nullptr);
+    Renderer(GpuContainer * container);
 
     // Copying a renderer is not allowed
     Renderer(const Renderer &) = delete;
@@ -174,15 +174,14 @@ public:
     *    In this method, the rendering code must be executed to
     *    produce a new frame for the output.
     *
+    *  @notes
+    *    - Requires an active rendering context
+    *
     *  @see onRender
     */
     void render();
 
 protected:
-    // Virtual GpuObject functions
-    virtual void onContextInit(AbstractContext * context) override;
-    virtual void onContextDeinit(AbstractContext * context) override;
-
     /**
     *  @brief
     *    Called when the renderer is updated

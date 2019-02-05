@@ -1,130 +1,79 @@
 
+#include <rendercore/GpuObject.h>
+
 #include <algorithm>
 #include <chrono>
 
-#include <rendercore/GpuObject.h>
+#include <rendercore/GpuContainer.h>
 
 
 namespace rendercore
 {
 
 
-GpuObject::GpuObject(GpuObject * parent)
-: m_context(nullptr)
-, m_parent(nullptr)
+GpuObject::GpuObject(GpuContainer * container)
+: m_container(container)
+, m_initialized(false)
+, m_valid(false)
 {
-    // Register at parent
-    setParent(parent);
+    // Register at container
+    if (m_container) {
+        m_container->registerObject(this);
+    }
 }
 
 GpuObject::~GpuObject()
 {
-    // Unregister from parent
-    setParent(nullptr);
-}
-
-const GpuObject * GpuObject::parent() const
-{
-    return m_parent;
-}
-
-void GpuObject::setParent(GpuObject * parent)
-{
-    // Unregister from format parent
-    if (m_parent) {
-        m_parent->unregisterObject(this);
-        m_parent = nullptr;
-    }
-
-    // Set new parent
-    m_parent = parent;
-
-    // Register at new parent
-    if (m_parent) {
-        m_parent->registerObject(this);
+    // Unregister from container
+    if (m_container) {
+        m_container->unregisterObject(this);
     }
 }
 
-const std::vector<GpuObject *> & GpuObject::children() const
+const GpuContainer * GpuObject::container() const
 {
-    return m_children;
+    return m_container;
 }
 
-const AbstractContext * GpuObject::context() const
+bool GpuObject::initialized() const
 {
-    return m_context;
+    return m_initialized;
 }
 
-AbstractContext * GpuObject::context()
+bool GpuObject::valid() const
 {
-    return m_context;
+    return m_valid;
 }
 
-void GpuObject::initContext(AbstractContext * context)
+void GpuObject::init()
 {
-    // Check if object is already attached to this context
-    if (m_context == context) {
-        return;
+    if (!m_initialized) {
+        onInit();
     }
 
-    // Check if object is attached to another context
-    if (m_context != nullptr) {
-        return;
-    }
-
-    // Initialize child objects
-    for (GpuObject * object : m_children) {
-        object->initContext(context);
-    }
-
-    // Initialize new context
-    if (context) {
-        // Save context
-        m_context = context;
-
-        // Initialize object in context
-        onContextInit(context);
-    }
+    m_initialized = true;
 }
 
-void GpuObject::deinitContext(AbstractContext * context)
+void GpuObject::deinit()
 {
-    // De-initialize child objects
-    for (GpuObject * object : m_children) {
-        object->deinitContext(context);
+    if (m_initialized) {
+        onDeinit();
     }
 
-    // Check if object is attached to the context
-    if (m_context != context) {
-        return;
-    }
-
-    // Deinitialize context
-    if (m_context) {
-        // Deinitialize object in context
-        onContextDeinit(context);
-
-        // Reset context
-        m_context = nullptr;
-    }
+    m_initialized = false;
 }
 
-void GpuObject::registerObject(GpuObject * object)
+void GpuObject::setValid(bool valid)
 {
-    // Check that object is not already registered
-    if (std::find(m_children.begin(), m_children.end(), object) == m_children.end()) {
-        m_children.push_back(object);
-    }
+    m_valid = valid;
 }
 
-void GpuObject::unregisterObject(GpuObject * object)
+void GpuObject::onInit()
 {
-    // Find object in list
-    auto it = std::find(m_children.begin(), m_children.end(), object);
-    if (it != m_children.end()) {
-        // Remove object from list
-        m_children.erase(it);
-    }
+}
+
+void GpuObject::onDeinit()
+{
 }
 
 

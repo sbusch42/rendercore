@@ -15,8 +15,8 @@ namespace opengl
 {
 
 
-Buffer::Buffer(GpuObject * parent)
-: GpuObject(parent)
+Buffer::Buffer(GpuContainer * container)
+: GpuObject(container)
 {
 }
 
@@ -73,7 +73,7 @@ void Buffer::setData(char * data, unsigned int size)
     }
 }
 
-void Buffer::onContextInit(AbstractContext *)
+void Buffer::onInit()
 {
     // If buffer was lost, try to restore it from data
     if (!m_buffer.get()) {
@@ -81,7 +81,7 @@ void Buffer::onContextInit(AbstractContext *)
     }
 }
 
-void Buffer::onContextDeinit(AbstractContext *)
+void Buffer::onDeinit()
 {
     // Release buffer
     m_buffer.reset();

@@ -37,17 +37,17 @@ void Canvas::initContext(AbstractContext * context)
 
     // Check if canvas is already attached to this context
     if (m_context == context) {
-        cppassist::error("rendercore") << "Canvas::initContext(): Canvas is already attached to this context.";
+        cppassist::error("rendercore") << "Canvas::initContext(): Already attached to this context.";
         return;
     }
 
     // Check if canvas is attached to another context
     if (m_context != nullptr) {
-        cppassist::error("rendercore") << "Canvas::initContext(): Canvas is already attached to another context.";
+        cppassist::error("rendercore") << "Canvas::initContext(): Already attached to another context.";
         return;
     }
 
-    // Initialize context
+    // Initialize new context
     if (context) {
         // Save context
         m_context = context;
@@ -64,7 +64,7 @@ void Canvas::deinitContext(AbstractContext * context)
 
     // Check if canvas is attached to the context
     if (m_context != context) {
-        cppassist::error("rendercore") << "Canvas::deinitContext(): Canvas is not attached to this context.";
+        cppassist::error("rendercore") << "Canvas::deinitContext(): Not attached to this context.";
         return;
     }
 
@@ -72,7 +72,7 @@ void Canvas::deinitContext(AbstractContext * context)
     if (m_context) {
         // Deinitialize renderer in context
         if (m_renderer) {
-            m_renderer->deinitContext(m_context);
+            m_renderer->deinit();
         }
 
         // Reset context
@@ -184,11 +184,16 @@ void Canvas::render()
     // [DEBUG]
     cppassist::debug(0, "rendercore") << "Canvas::render()";
 
+    // Check for a valid context
+    if (!m_context) {
+        return;
+    }
+
     // Check if the renderer must be replaced
     if (m_newRenderer) {
         // Deinitialize old renderer
-        if (m_renderer && m_renderer->context()) {
-            m_renderer->deinitContext(m_context);
+        if (m_renderer && m_renderer->initialized()) {
+            m_renderer->deinit();
         }
 
         // Replace renderer
@@ -200,10 +205,10 @@ void Canvas::render()
         return;
     }
 
-    // Check if renderer needs to be initialized in context
-    if (m_renderer->context() != m_context) {
+    // Check if renderer has to be initialized in this context
+    if (!m_renderer->initialized()) {
         // Initialize renderer
-        m_renderer->initContext(m_context);
+        m_renderer->init();
 
         // Promote viewport information
         m_renderer->setViewport(m_viewport.value());

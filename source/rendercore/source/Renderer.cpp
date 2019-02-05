@@ -10,8 +10,8 @@ namespace rendercore
 {
 
 
-Renderer::Renderer(GpuObject * parent)
-: GpuObject(parent)
+Renderer::Renderer(GpuContainer * container)
+: GpuContainer(container)
 , m_viewport(0, 0, 0, 0)
 , m_timeDelta(0.0f)
 , m_needsUpdate(false)
@@ -83,14 +83,6 @@ void Renderer::render()
 
     // Render frame
     onRender();
-}
-
-void Renderer::onContextInit(AbstractContext *)
-{
-}
-
-void Renderer::onContextDeinit(AbstractContext *)
-{
 }
 
 void Renderer::onUpdate()

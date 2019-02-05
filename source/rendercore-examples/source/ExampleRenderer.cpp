@@ -26,15 +26,18 @@ namespace examples
 {
 
 
-ExampleRenderer::ExampleRenderer()
-: m_counter(0)
+ExampleRenderer::ExampleRenderer(GpuContainer * container)
+: Renderer(container)
+, m_counter(0)
 {
-    // [DEBUG] Load mesh
+    // [TODO] Load mesh
+    /*
     GltfLoader loader;
     auto asset = loader.load(rendercore::dataPath() + "/rendercore/gltf/BoxAnimated/BoxAnimated.gltf");
 
     GltfConverter converter;
     converter.convert(*asset.get());
+    */
 
     // Initialize object transformation
     m_transform.setTranslation  ({ 0.0f, 0.0f, 0.0f });
@@ -53,33 +56,33 @@ ExampleRenderer::ExampleRenderer()
     m_program = cppassist::make_unique<Program>(this);
 
     // Load vertex shader
-    auto vertShader = cppassist::make_unique<Shader>(this);
-    vertShader->load(gl::GL_VERTEX_SHADER, rendercore::dataPath() + "/rendercore/shaders/geometry/geometry.vert");
-    m_program->attach(std::move(vertShader));
+    m_vertShader = cppassist::make_unique<Shader>(this);
+    m_vertShader->load(gl::GL_VERTEX_SHADER, rendercore::dataPath() + "/rendercore/shaders/geometry/geometry.vert");
+    m_program->attach(m_vertShader.get());
 
     // Load fragment shader
-    auto fragShader = cppassist::make_unique<Shader>(this);
-    fragShader->load(gl::GL_FRAGMENT_SHADER, rendercore::dataPath() + "/rendercore/shaders/geometry/geometry.frag");
-    m_program->attach(std::move(fragShader));
+    m_fragShader = cppassist::make_unique<Shader>(this);
+    m_fragShader->load(gl::GL_FRAGMENT_SHADER, rendercore::dataPath() + "/rendercore/shaders/geometry/geometry.frag");
+    m_program->attach(m_fragShader.get());
 }
 
 ExampleRenderer::~ExampleRenderer()
 {
 }
 
-void ExampleRenderer::onContextInit(AbstractContext *)
+void ExampleRenderer::onInit()
 {
     // [DEBUG]
-    std::cout << "onContextInit()" << std::endl;
+    std::cout << "onInit()" << std::endl;
 
     // Create geometry
     m_geometry = cppassist::make_unique<Box>(2.0f, true);
 }
 
-void ExampleRenderer::onContextDeinit(AbstractContext *)
+void ExampleRenderer::onDeinit()
 {
     // [DEBUG]
-    std::cout << "onContextDeinit()" << std::endl;
+    std::cout << "onDeinit()" << std::endl;
 
     // Destroy OpenGL objects
     m_geometry.reset();

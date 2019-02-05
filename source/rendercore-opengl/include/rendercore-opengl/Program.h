@@ -9,13 +9,16 @@
 
 #include <rendercore/GpuObject.h>
 
-#include <rendercore-opengl/Shader.h>
+#include <rendercore-opengl/rendercore-opengl_api.h>
 
 
 namespace rendercore
 {
 namespace opengl
 {
+
+
+class Shader;
 
 
 /**
@@ -29,10 +32,10 @@ public:
     *  @brief
     *    Constructor
     *
-    *  @param[in] parent
-    *    Parent object (can be null)
+    *  @param[in] container
+    *    GPU container (can be null)
     */
-    Program(GpuObject * parent = nullptr);
+    Program(GpuContainer * container = nullptr);
 
     /**
     *  @brief
@@ -42,42 +45,32 @@ public:
 
     /**
     *  @brief
-    *    Get OpenGL program
-    *
-    *  @return
-    *    OpenGL program (can be null)
-    */
-    const globjects::Program * program() const;
-
-    /**
-    *  @brief
-    *    Get OpenGL program
-    *
-    *  @return
-    *    OpenGL program (can be null)
-    */
-    globjects::Program * program();
-
-    /**
-    *  @brief
     *    Attach shader to program
     *
     *  @param[in] shader
     *    Shader (must NOT be null!)
-    *
-    *  @remarks
-    *    This will also make program the parent of the shader object.
     */
-    void attach(std::unique_ptr<Shader> shader);
+    void attach(Shader * shader);
+
+    /**
+    *  @brief
+    *    Get OpenGL program
+    *
+    *  @return
+    *    OpenGL program (can be null)
+    *
+    *  @notes
+    *    - Requires an active rendering context
+    */
+    globjects::Program * program();
 
 protected:
     // Virtual GpuObject functions
-    virtual void onContextInit(AbstractContext * context) override;
-    virtual void onContextDeinit(AbstractContext * context) override;
+    virtual void onDeinit() override;
 
 protected:
-    std::unique_ptr<globjects::Program>    m_program; ///< OpenGL program (can be null)
-    std::vector< std::unique_ptr<Shader> > m_shaders; ///< Shaders attached to the program
+    std::unique_ptr<globjects::Program> m_program; ///< OpenGL program (can be null)
+    std::vector<Shader *>               m_shaders; ///< Shaders attached to the program
 };
 
 

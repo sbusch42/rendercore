@@ -41,6 +41,12 @@ public:
     */
     Canvas();
 
+    // Copying a Canvas is not allowed
+    Canvas(const Canvas &) = delete;
+
+    // Copying a Canvas is not allowed
+    Canvas & operator=(const Canvas &) = delete;
+
     /**
     *  @brief
     *    Destructor
@@ -94,6 +100,9 @@ public:
     *    in that context using contextDeinit(), before calling this
     *    function. If another context is still set for this canvas,
     *    the function will fail with an error.
+    *
+    *  @notes
+    *    - Requires an active rendering context
     */
     void initContext(AbstractContext * context);
 
@@ -110,6 +119,9 @@ public:
     *    The context must be active when this function is called.
     *    If the canvas has not been initialized for this context,
     *    the function will fail with an error.
+    *
+    *  @notes
+    *    - Requires an active rendering context
     */
     void deinitContext(AbstractContext * context);
 
@@ -220,17 +232,20 @@ public:
     *
     *  @remarks
     *    This will call render on the renderer.
+    *
+    *  @notes
+    *    - Requires an active rendering context
     */
     void render();
 
 protected:
-    AbstractContext           * m_context;       ///< Rendering context (can be null)
-    std::unique_ptr<Renderer>   m_renderer;      ///< Renderer that renders into the canvas
-    std::unique_ptr<Renderer>   m_newRenderer;   ///< Renderer that is scheduled to replace the current renderer
-    Cached<glm::vec4>           m_viewport;      ///< Viewport (in real device coordinates)
-    float                       m_timeDelta;     ///< Time delta since the last update (in seconds)
-    ChronoTimer                 m_clock;         ///< Time measurement
-    std::recursive_mutex        m_mutex;         ///< Mutex for separating main and render thread
+    AbstractContext           * m_context;     ///< Rendering context (can be null)
+    std::unique_ptr<Renderer>   m_renderer;    ///< Renderer that renders into the canvas
+    std::unique_ptr<Renderer>   m_newRenderer; ///< Renderer that is scheduled to replace the current renderer
+    Cached<glm::vec4>           m_viewport;    ///< Viewport (in real device coordinates)
+    float                       m_timeDelta;   ///< Time delta since the last update (in seconds)
+    ChronoTimer                 m_clock;       ///< Time measurement
+    std::recursive_mutex        m_mutex;       ///< Mutex for separating main and render thread
 };
 
 

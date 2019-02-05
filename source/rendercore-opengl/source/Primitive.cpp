@@ -8,8 +8,8 @@ namespace opengl
 {
 
 
-Primitive::Primitive(GpuObject * parent)
-: GpuObject(parent)
+Primitive::Primitive(GpuContainer * container)
+: GpuObject(container)
 {
 }
 
@@ -17,11 +17,11 @@ Primitive::~Primitive()
 {
 }
 
-void Primitive::onContextInit(AbstractContext *)
+void Primitive::onInit()
 {
 }
 
-void Primitive::onContextDeinit(AbstractContext *)
+void Primitive::onDeinit()
 {
 }
 

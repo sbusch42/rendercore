@@ -8,8 +8,8 @@ namespace opengl
 {
 
 
-Geometry2::Geometry2(GpuObject * parent)
-: GpuObject(parent)
+Geometry2::Geometry2(GpuContainer * container)
+: GpuObject(container)
 {
 }
 
@@ -43,7 +43,6 @@ Buffer * Geometry2::buffer(size_t index)
 void Geometry2::setBuffer(size_t index, std::unique_ptr<Buffer> && buffer)
 {
     m_buffers[index] = std::move(buffer);
-    m_buffers[index]->setParent(this);
 }
 
 const std::vector< std::unique_ptr<Primitive> > & Geometry2::primitives() const
@@ -65,11 +64,11 @@ void Geometry2::add(std::unique_ptr<Primitive> && primitive)
     m_primitives.push_back(std::move(primitive));
 }
 
-void Geometry2::onContextInit(AbstractContext *)
+void Geometry2::onInit()
 {
 }
 
-void Geometry2::onContextDeinit(AbstractContext *)
+void Geometry2::onDeinit()
 {
 }
 

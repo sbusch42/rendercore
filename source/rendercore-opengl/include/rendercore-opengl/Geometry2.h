@@ -28,10 +28,10 @@ public:
     *  @brief
     *    Constructor
     *
-    *  @param[in] parent
-    *    Parent object (can be null)
+    *  @param[in] container
+    *    GPU container (can be null)
     */
-    Geometry2(GpuObject * parent = nullptr);
+    Geometry2(GpuContainer * container = nullptr);
 
     /**
     *  @brief
@@ -115,8 +115,8 @@ public:
 
 protected:
     // Virtual GpuObject functions
-    virtual void onContextInit(AbstractContext * context) override;
-    virtual void onContextDeinit(AbstractContext * context) override;
+    virtual void onInit() override;
+    virtual void onDeinit() override;
 
 protected:
     std::unordered_map< size_t, std::unique_ptr<Buffer> > m_buffers;    ///< Buffers associated with this geometry
