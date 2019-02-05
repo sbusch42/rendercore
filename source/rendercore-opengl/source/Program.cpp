@@ -24,6 +24,15 @@ Program::~Program()
 {
 }
 
+void Program::attach(std::unique_ptr<Shader> && shader)
+{
+    // Attach shader
+    attach(shader.get());
+
+    // Transfer ownership of shader
+    m_owned.push_back(std::move(shader));
+}
+
 void Program::attach(Shader * shader)
 {
     // Check if shader is not empty

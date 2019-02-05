@@ -10,6 +10,7 @@
 #include <rendercore/rendercore.h>
 
 #include <rendercore-opengl/Box.h>
+#include <rendercore-opengl/Shader.h>
 
 #include <rendercore-gltf/GltfConverter.h>
 #include <rendercore-gltf/GltfLoader.h>
@@ -56,14 +57,14 @@ ExampleRenderer::ExampleRenderer(GpuContainer * container)
     m_program = cppassist::make_unique<Program>(this);
 
     // Load vertex shader
-    m_vertShader = cppassist::make_unique<Shader>(this);
-    m_vertShader->load(gl::GL_VERTEX_SHADER, rendercore::dataPath() + "/rendercore/shaders/geometry/geometry.vert");
-    m_program->attach(m_vertShader.get());
+    auto vertShader = cppassist::make_unique<Shader>(this);
+    vertShader->load(gl::GL_VERTEX_SHADER, rendercore::dataPath() + "/rendercore/shaders/geometry/geometry.vert");
+    m_program->attach(std::move(vertShader));
 
     // Load fragment shader
-    m_fragShader = cppassist::make_unique<Shader>(this);
-    m_fragShader->load(gl::GL_FRAGMENT_SHADER, rendercore::dataPath() + "/rendercore/shaders/geometry/geometry.frag");
-    m_program->attach(m_fragShader.get());
+    auto fragShader = cppassist::make_unique<Shader>(this);
+    fragShader->load(gl::GL_FRAGMENT_SHADER, rendercore::dataPath() + "/rendercore/shaders/geometry/geometry.frag");
+    m_program->attach(std::move(fragShader));
 }
 
 ExampleRenderer::~ExampleRenderer()
