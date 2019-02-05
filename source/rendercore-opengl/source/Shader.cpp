@@ -88,7 +88,6 @@ void Shader::onContextDeinit(AbstractContext *)
 {
     // Release shader
     m_shader.reset();
-//    m_source.reset();
 }
 
 

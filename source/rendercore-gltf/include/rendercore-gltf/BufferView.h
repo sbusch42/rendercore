@@ -107,7 +107,7 @@ public:
     *    Get target
     *
     *  @return
-    *    Target
+    *    Bind target (OpenGL enum, e.g., GL_ARRAY_BUFFER, or GL_ELEMENT_ARRAY_BUFFER)
     */
     unsigned int target() const;
 
@@ -116,7 +116,7 @@ public:
     *    Set target
     *
     *  @param[in] target
-    *    Target
+    *    Bind target (OpenGL enum, e.g., GL_ARRAY_BUFFER, or GL_ELEMENT_ARRAY_BUFFER)
     */
     void setTarget(unsigned int target);
 
@@ -125,7 +125,7 @@ protected:
     unsigned int m_size;   ///< Size (in bytes)
     unsigned int m_offset; ///< Offset (in bytes)
     unsigned int m_stride; ///< Stride (in bytes)
-    unsigned int m_target; ///< Target
+    unsigned int m_target; ///< Bind target (OpenGL enum, e.g., GL_ARRAY_BUFFER, or GL_ELEMENT_ARRAY_BUFFER)
 };
 
 

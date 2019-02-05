@@ -37,6 +37,7 @@ set(include_path "${CMAKE_CURRENT_SOURCE_DIR}/include/${target}")
 set(source_path  "${CMAKE_CURRENT_SOURCE_DIR}/source")
 
 set(headers
+    ${include_path}/GltfConverter.h
     ${include_path}/GltfLoader.h
     ${include_path}/Accessor.h
     ${include_path}/Asset.h
@@ -49,6 +50,7 @@ set(headers
 )
 
 set(sources
+    ${source_path}/GltfConverter.cpp
     ${source_path}/GltfLoader.cpp
     ${source_path}/Accessor.cpp
     ${source_path}/Asset.cpp

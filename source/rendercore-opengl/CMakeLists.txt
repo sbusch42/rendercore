@@ -41,11 +41,15 @@ set(headers
     ${include_path}/AbstractGLContext.h
     ${include_path}/AbstractGLContextFactory.h
     ${include_path}/Box.h
+    ${include_path}/Buffer.h
     ${include_path}/Geometry.h
     ${include_path}/Geometry.inl
+    ${include_path}/Geometry2.h
     ${include_path}/GLContextFormat.h
     ${include_path}/GLContextUtils.h
     ${include_path}/Icosahedron.h
+    ${include_path}/Material.h
+    ${include_path}/Primitive.h
     ${include_path}/Program.h
     ${include_path}/Quad.h
     ${include_path}/Shader.h
@@ -59,10 +63,14 @@ set(sources
     ${source_path}/AbstractGLContext.cpp
     ${source_path}/AbstractGLContextFactory.cpp
     ${source_path}/Box.cpp
+    ${source_path}/Buffer.cpp
     ${source_path}/Geometry.cpp
+    ${source_path}/Geometry2.cpp
     ${source_path}/GLContextFormat.cpp
     ${source_path}/GLContextUtils.cpp
     ${source_path}/Icosahedron.cpp
+    ${source_path}/Material.cpp
+    ${source_path}/Primitive.cpp
     ${source_path}/Program.cpp
     ${source_path}/Quad.cpp
     ${source_path}/Shader.cpp

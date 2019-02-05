@@ -11,7 +11,9 @@
 
 #include <rendercore-opengl/Box.h>
 
+#include <rendercore-gltf/GltfConverter.h>
 #include <rendercore-gltf/GltfLoader.h>
+#include <rendercore-gltf/Asset.h>
 
 
 using namespace rendercore::opengl;
@@ -27,9 +29,12 @@ namespace examples
 ExampleRenderer::ExampleRenderer()
 : m_counter(0)
 {
-    // [DEBUG]
+    // [DEBUG] Load mesh
     GltfLoader loader;
-    loader.load(rendercore::dataPath() + "/rendercore/gltf/BoxAnimated/BoxAnimated.gltf");
+    auto asset = loader.load(rendercore::dataPath() + "/rendercore/gltf/BoxAnimated/BoxAnimated.gltf");
+
+    GltfConverter converter;
+    converter.convert(*asset.get());
 
     // Initialize object transformation
     m_transform.setTranslation  ({ 0.0f, 0.0f, 0.0f });
