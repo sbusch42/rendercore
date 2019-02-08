@@ -2,10 +2,6 @@
 #pragma once
 
 
-#include <memory>
-
-#include <globjects/Buffer.h>
-
 #include <rendercore-opengl/Geometry.h>
 #include <rendercore-opengl/Icosahedron.h>
 
@@ -27,12 +23,14 @@ public:
     *  @brief
     *    Constructor
     *
+    *  @param[in] container
+    *    GPU container (can be null)
     *  @param[in] radius
     *    Sphere radius
     *  @param[in] texCoords
     *    Generate texture coordinates?
     */
-    Sphere(float radius = 1.0f, bool texCoords = false);
+    Sphere(GpuContainer * container = nullptr, float radius = 1.0f, bool texCoords = false);
 
     /**
     *  @brief
@@ -41,10 +39,7 @@ public:
     virtual ~Sphere();
 
 protected:
-    std::unique_ptr<Icosahedron>       m_icosahedron; ///< Refinable icosahedron
-    std::unique_ptr<globjects::Buffer> m_vertices;    ///< Vertex buffer
-    std::unique_ptr<globjects::Buffer> m_texCoords;   ///< Texture coordinate buffer
-    std::unique_ptr<globjects::Buffer> m_indices;     ///< Index buffer
+    std::unique_ptr<Icosahedron> m_icosahedron; ///< Refinable icosahedron
 };
 
 

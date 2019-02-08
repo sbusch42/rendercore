@@ -14,12 +14,13 @@ namespace opengl
 {
 
 
-Box::Box(float size, bool texCoords)
-: Box(size, size, size, texCoords)
+Box::Box(GpuContainer * container, float size, bool texCoords)
+: Box(container, size, size, size, texCoords)
 {
 }
 
-Box::Box(float width, float height, float depth, bool texCoords)
+Box::Box(GpuContainer * container, float width, float height, float depth, bool)
+: Geometry(container)
 {
     // Box geometry
     static const std::array<glm::vec3, 36> vertices { {
@@ -122,38 +123,45 @@ Box::Box(float width, float height, float depth, bool texCoords)
         , glm::vec2(1.0f, 1.0f)
     } };
 
-    // Create drawable
-    setPrimitiveMode(gl::GL_TRIANGLES);
-    setDrawMode(DrawMode::Arrays);
-    setSize(36);
-
-    // Create vertex buffer
-    auto v = vertices;
-
-    for (auto & vertex : v) {
+    // Create scaled vertices
+    auto scaledVertices = vertices;
+    for (auto & vertex : scaledVertices) {
         vertex *= glm::vec3(width, height, depth);
     }
 
-    m_vertices = cppassist::make_unique<globjects::Buffer>();
-    m_vertices->setData(v, gl::GL_STATIC_DRAW);
+    // Create buffers
+    auto * vertexBuffer   = createBuffer(scaledVertices);
+    auto * texCoordBuffer = createBuffer(texcoords);
 
-    bindAttribute(0, 0);
-    setBuffer(0, m_vertices.get());
-    setAttributeBindingBuffer(0, 0, 0, sizeof(glm::vec3));
-    setAttributeBindingFormat(0, 3, gl::GL_FLOAT, gl::GL_FALSE, 0);
-    enableAttributeBinding(0);
+    // Create vertex attribute for positions
+    auto * positionAttribute = addVertexAttribute(
+        vertexBuffer,
+        0,
+        0,
+        sizeof(glm::vec3),
+        gl::GL_FLOAT,
+        3,
+        false
+    );
 
-    // Create texture coordinate buffer
-    if (texCoords) {
-        m_texCoords = cppassist::make_unique<globjects::Buffer>();
-        m_texCoords->setData(texcoords, gl::GL_STATIC_DRAW);
+    // Create vertex attribute for texture coordinates
+    auto * texCoordAttribute = addVertexAttribute(
+        texCoordBuffer,
+        0,
+        0,
+        sizeof(glm::vec2),
+        gl::GL_FLOAT,
+        2,
+        false
+    );
 
-        bindAttribute(1, 1);
-        setBuffer(1, m_texCoords.get());
-        setAttributeBindingBuffer(1, 1, 0, sizeof(glm::vec2));
-        setAttributeBindingFormat(1, 2, gl::GL_FLOAT, gl::GL_FALSE, 0);
-        enableAttributeBinding(1);
-    }
+    // Add primitive
+    auto prim = cppassist::make_unique<opengl::Primitive>();
+    prim->setMode(gl::GL_TRIANGLES);
+    prim->setNumElements(vertices.size());
+    prim->bindAttribute(0, positionAttribute);
+    prim->bindAttribute(1, texCoordAttribute);
+    addPrimitive(std::move(prim));
 }
 
 Box::~Box()

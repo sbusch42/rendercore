@@ -64,7 +64,7 @@ int main(int argc, char * argv[])
     }
 
     // Create renderer
-    window.canvas()->setRenderer(cppassist::make_unique<GeometryExample>());
+    window.canvas()->setRenderer(cppassist::make_unique<ExampleRenderer>());
 
     // Initialize context, print context info
     window.context()->use();

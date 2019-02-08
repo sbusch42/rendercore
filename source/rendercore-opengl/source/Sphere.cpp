@@ -14,52 +14,70 @@ namespace opengl
 {
 
 
-Sphere::Sphere(float radius, bool texCoords)
+Sphere::Sphere(GpuContainer * container, float radius, bool texCoords)
+: Geometry(container)
 {
     // Create icosahedron
     m_icosahedron = cppassist::make_unique<Icosahedron>();
     m_icosahedron->generateGeometry(5);
 
-    // Create drawable
-    setPrimitiveMode(gl::GL_TRIANGLES);
-    setDrawMode(rendercore::opengl::DrawMode::ElementsIndexBuffer);
-    setSize(m_icosahedron->indices().size() * std::tuple_size<Icosahedron::Face>::value);
-
-    // Create vertex buffer
-    auto vertices = m_icosahedron->vertices();
-
-    for (auto & vertex : vertices) {
+    // Create scaled vertices
+    auto scaledVertices = m_icosahedron->vertices();
+    for (auto & vertex : scaledVertices) {
         vertex *= radius;
     }
 
-    m_vertices = cppassist::make_unique<globjects::Buffer>();
-    m_vertices->setData(vertices, gl::GL_STATIC_DRAW);
+    // Create primitive
+    auto prim = cppassist::make_unique<opengl::Primitive>();
+    prim->setMode(gl::GL_TRIANGLES);
+    prim->setNumElements(m_icosahedron->indices().size() * std::tuple_size<Icosahedron::Face>::value);
 
-    bindAttribute(0, 0);
-    setBuffer(0, m_vertices.get());
-    setAttributeBindingBuffer(0, 0, 0, sizeof(glm::vec3));
-    setAttributeBindingFormat(0, 3, gl::GL_FLOAT, gl::GL_FALSE, 0);
-    enableAttributeBinding(0);
+    // Create vertex buffer
+    auto * vertexBuffer = createBuffer(scaledVertices);
 
-    // Create texture coordinate buffer
+    // Create vertex attribute for positions
+    auto * positionAttribute = addVertexAttribute(
+        vertexBuffer,
+        0,
+        0,
+        sizeof(glm::vec3),
+        gl::GL_FLOAT,
+        3,
+        false
+    );
+
+    // Bind attribute
+    prim->bindAttribute(0, positionAttribute);
+
+    // Add texture coordinates?
     if (texCoords) {
+        // Generate texture coordinates
         m_icosahedron->generateTextureCoordinates();
 
-        m_texCoords = cppassist::make_unique<globjects::Buffer>();
-        m_texCoords->setData(m_icosahedron->texcoords(), gl::GL_STATIC_DRAW);
+        // Create texture coordinate buffer
+        auto * texCoordBuffer = createBuffer(m_icosahedron->texcoords());
 
-        bindAttribute(1, 1);
-        setBuffer(1, m_texCoords.get());
-        setAttributeBindingBuffer(1, 1, 0, sizeof(glm::vec2));
-        setAttributeBindingFormat(1, 2, gl::GL_FLOAT, gl::GL_FALSE, 0);
-        enableAttributeBinding(1);
+        // Create vertex attribute for texture coordinates
+        auto * texCoordAttribute = addVertexAttribute(
+            texCoordBuffer,
+            0,
+            0,
+            sizeof(glm::vec2),
+            gl::GL_FLOAT,
+            2,
+            false
+        );
+
+        // Bind attribute
+        prim->bindAttribute(1, texCoordAttribute);
     }
 
     // Create index buffer
-    m_indices = cppassist::make_unique<globjects::Buffer>();
-    m_indices->setData(m_icosahedron->indices(), gl::GL_STATIC_DRAW);
+    auto * indexBuffer = createBuffer(m_icosahedron->indices());
+    prim->setIndexBuffer(indexBuffer, gl::GL_UNSIGNED_SHORT);
 
-    setIndexBuffer(m_indices.get(), gl::GL_UNSIGNED_SHORT);
+    // Add primitive to geometry
+    addPrimitive(std::move(prim));
 }
 
 Sphere::~Sphere()

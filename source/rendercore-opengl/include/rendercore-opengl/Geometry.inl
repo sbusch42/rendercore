@@ -8,16 +8,16 @@ namespace opengl
 {
 
 
-template <typename VectorType>
-void Geometry::setData(size_t index, const std::vector<VectorType> & data, gl::GLenum usage)
+template <typename Type>
+Buffer * Geometry::createBuffer(const std::vector<Type> & data)
 {
-    buffer(index)->setData(data, usage);
+    return this->createBuffer(static_cast<const void *>(data.data()), sizeof(Type) * data.size());
 }
 
-template <typename ArrayType, size_t ArraySize>
-void Geometry::setData(size_t index, const std::array<ArrayType, ArraySize> & data, gl::GLenum usage)
+template <typename Type, std::size_t Count>
+Buffer * Geometry::createBuffer(const std::array<Type, Count> & data)
 {
-    buffer(index)->setData(data, usage);
+    return this->createBuffer(static_cast<const void *>(data.data()), sizeof(Type) * Count);
 }
 
 

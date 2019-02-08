@@ -104,7 +104,7 @@ void GeometryExample::createPoints()
     } };
 
     // Create geometry
-    m_geometry = cppassist::make_unique<Geometry2>(this);
+    m_geometry = cppassist::make_unique<Geometry>(this);
 
     // Create buffers
     auto * positionBuffer = m_geometry->createBuffer(positions);
@@ -138,7 +138,7 @@ void GeometryExample::createPoints()
     // Add primitive
     auto points = cppassist::make_unique<opengl::Primitive>();
     points->setMode(gl::GL_POINTS);
-    points->setIndexBuffer(indexBuffer);
+    points->setIndexBuffer(indexBuffer, gl::GL_UNSIGNED_INT);
     points->setNumElements(indices.size());
     points->setMaterial(0);
     points->bindAttribute(0, positionAttribute);
@@ -167,7 +167,7 @@ void GeometryExample::createPointsInterleaved()
     } };
 
     // Create geometry
-    m_geometry = cppassist::make_unique<Geometry2>(this);
+    m_geometry = cppassist::make_unique<Geometry>(this);
 
     // Create vertex buffer
     auto * vertexBuffer = m_geometry->createBuffer(vertices);
@@ -200,7 +200,7 @@ void GeometryExample::createPointsInterleaved()
     // Add primitive
     auto points = cppassist::make_unique<opengl::Primitive>();
     points->setMode(gl::GL_POINTS);
-    points->setIndexBuffer(indexBuffer);
+    points->setIndexBuffer(indexBuffer, gl::GL_UNSIGNED_INT);
     points->setNumElements(indices.size());
     points->setMaterial(0);
     points->bindAttribute(0, positionAttribute);

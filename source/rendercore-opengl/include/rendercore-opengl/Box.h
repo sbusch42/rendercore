@@ -2,10 +2,6 @@
 #pragma once
 
 
-#include <memory>
-
-#include <globjects/Buffer.h>
-
 #include <rendercore-opengl/Geometry.h>
 
 
@@ -26,17 +22,21 @@ public:
     *  @brief
     *    Constructor
     *
+    *  @param[in] container
+    *    GPU container (can be null)
     *  @param[in] size
     *    Edge width, height, and depth
     *  @param[in] texCoords
     *    Generate texture coordinates?
     */
-    Box(float size = 2.0f, bool texCoords = false);
+    Box(GpuContainer * container = nullptr, float size = 2.0f, bool texCoords = false);
 
     /**
     *  @brief
     *    Constructor
     *
+    *  @param[in] container
+    *    GPU container (can be null)
     *  @param[in] width
     *    Edge width
     *  @param[in] height
@@ -46,17 +46,13 @@ public:
     *  @param[in] texCoords
     *    Generate texture coordinates?
     */
-    Box(float width, float height, float depth, bool texCoords = false);
+    Box(GpuContainer * container, float width, float height, float depth, bool texCoords = false);
 
     /**
     *  @brief
     *    Destructor
     */
     virtual ~Box();
-
-protected:
-    std::unique_ptr<globjects::Buffer> m_vertices;  ///< Vertex buffer
-    std::unique_ptr<globjects::Buffer> m_texCoords; ///< Texture coordinate buffer
 };
 
 

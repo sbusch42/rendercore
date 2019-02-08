@@ -45,8 +45,6 @@ set(headers
     ${include_path}/Buffer.inl
     ${include_path}/Geometry.h
     ${include_path}/Geometry.inl
-    ${include_path}/Geometry2.h
-    ${include_path}/Geometry2.inl
     ${include_path}/GLContextFormat.h
     ${include_path}/GLContextUtils.h
     ${include_path}/Icosahedron.h
@@ -68,7 +66,6 @@ set(sources
     ${source_path}/Box.cpp
     ${source_path}/Buffer.cpp
     ${source_path}/Geometry.cpp
-    ${source_path}/Geometry2.cpp
     ${source_path}/GLContextFormat.cpp
     ${source_path}/GLContextUtils.cpp
     ${source_path}/Icosahedron.cpp

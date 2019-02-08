@@ -9,7 +9,7 @@
 
 #include <rendercore/rendercore.h>
 
-#include <rendercore-opengl/Box.h>
+#include <rendercore-opengl/Sphere.h>
 #include <rendercore-opengl/Shader.h>
 
 #include <rendercore-gltf/GltfConverter.h>
@@ -63,6 +63,9 @@ ExampleRenderer::ExampleRenderer(GpuContainer * container)
     auto fragShader = cppassist::make_unique<Shader>(this);
     fragShader->load(gl::GL_FRAGMENT_SHADER, rendercore::dataPath() + "/rendercore/shaders/geometry/geometry.frag");
     m_program->attach(std::move(fragShader));
+
+    // Create geometry
+    m_geometry = cppassist::make_unique<Sphere>(this, 2.0f, true);
 }
 
 ExampleRenderer::~ExampleRenderer()
@@ -73,18 +76,12 @@ void ExampleRenderer::onInit()
 {
     // [DEBUG]
     std::cout << "onInit()" << std::endl;
-
-    // Create geometry
-    m_geometry = cppassist::make_unique<Box>(2.0f, true);
 }
 
 void ExampleRenderer::onDeinit()
 {
     // [DEBUG]
     std::cout << "onDeinit()" << std::endl;
-
-    // Destroy OpenGL objects
-    m_geometry.reset();
 }
 
 void ExampleRenderer::onUpdate()

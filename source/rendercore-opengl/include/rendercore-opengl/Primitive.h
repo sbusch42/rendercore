@@ -70,12 +70,23 @@ public:
 
     /**
     *  @brief
+    *    Get index buffer type
+    *
+    *  @return
+    *    Data type of index buffer (e.g., GL_UNSIGNED_INT)
+    */
+    gl::GLenum indexBufferType() const;
+
+    /**
+    *  @brief
     *    Set index buffer
     *
     *  @param[in] buffer
     *    Index buffer (can be null)
+    *  @param[in] type
+    *    Data type of index buffer (e.g., GL_UNSIGNED_INT)
     */
-    void setIndexBuffer(Buffer * buffer);
+    void setIndexBuffer(Buffer * buffer, gl::GLenum type);
 
     /**
     *  @brief
@@ -186,6 +197,7 @@ protected:
     // Geometry configuration
     gl::GLenum     m_mode;        ///< Primitive mode (e.g., GL_TRIANGLES)
     Buffer       * m_indexBuffer; ///< Index buffer (can be null)
+    gl::GLenum     m_indexType;   ///< Data type of index buffer (e.g., GL_UNSIGNED_INT)
     unsigned int   m_numElements; ///< Number of elements to render
     unsigned int   m_material;    ///< Material index
 

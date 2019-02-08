@@ -10,7 +10,7 @@
 
 #include <rendercore-opengl/Program.h>
 #include <rendercore-opengl/Texture.h>
-#include <rendercore-opengl/Geometry2.h>
+#include <rendercore-opengl/Geometry.h>
 
 #include <rendercore-examples/rendercore-examples_api.h>
 
@@ -66,10 +66,10 @@ protected:
     Transform    m_transform; ///< Transformation of the model
 
     // GPU data
-    std::unique_ptr<rendercore::Camera>            m_camera;   ///< Camera in the scene
-    std::unique_ptr<rendercore::opengl::Geometry2> m_geometry; ///< Geometry that is rasterized
-    std::unique_ptr<rendercore::opengl::Texture>   m_texture;  ///< Texture
-    std::unique_ptr<rendercore::opengl::Program>   m_program;  ///< Program used for rendering
+    std::unique_ptr<rendercore::Camera>           m_camera;   ///< Camera in the scene
+    std::unique_ptr<rendercore::opengl::Geometry> m_geometry; ///< Geometry that is rasterized
+    std::unique_ptr<rendercore::opengl::Texture>  m_texture;  ///< Texture
+    std::unique_ptr<rendercore::opengl::Program>  m_program;  ///< Program used for rendering
 };
 
 

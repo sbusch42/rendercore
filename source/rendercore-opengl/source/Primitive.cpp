@@ -20,6 +20,7 @@ namespace opengl
 Primitive::Primitive()
 : m_mode(gl::GL_NONE)
 , m_indexBuffer(nullptr)
+, m_indexType(gl::GL_UNSIGNED_INT)
 , m_numElements(0)
 , m_material(0)
 {
@@ -44,9 +45,15 @@ Buffer * Primitive::indexBuffer() const
     return m_indexBuffer;
 }
 
-void Primitive::setIndexBuffer(Buffer * buffer)
+gl::GLenum Primitive::indexBufferType() const
+{
+    return m_indexType;
+}
+
+void Primitive::setIndexBuffer(Buffer * buffer, gl::GLenum type)
 {
     m_indexBuffer = buffer;
+    m_indexType   = type;
 }
 
 unsigned int Primitive::numElements() const
@@ -101,7 +108,7 @@ void Primitive::draw()
     // Draw with index buffer (DrawElements)
     if (m_indexBuffer) {
         m_indexBuffer->buffer()->bind(gl::GL_ELEMENT_ARRAY_BUFFER);
-        m_vao->drawElements(m_mode, m_numElements, gl::GL_UNSIGNED_INT, nullptr);
+        m_vao->drawElements(m_mode, m_numElements, m_indexType, nullptr);
     }
 
     // Draw without buffer (DrawArrays)

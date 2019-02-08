@@ -9,7 +9,7 @@
 #include <cppfs/fs.h>
 #include <cppfs/FileHandle.h>
 
-#include <rendercore-opengl/Geometry2.h>
+#include <rendercore-opengl/Geometry.h>
 
 #include <rendercore-gltf/Asset.h>
 #include <rendercore-gltf/Buffer.h>
@@ -87,7 +87,7 @@ void GltfConverter::createMesh(const Asset &, const Mesh &)
     // Process primitives
     for (auto * primitive : mesh.primitives()) {
         // Create primitive
-        auto prim = cppassist::make_unique<rendercore::opengl::Geometry2>();
+        auto prim = cppassist::make_unique<rendercore::opengl::Geometry>();
         prim->setMode((gl::GLenum)primitive->mode());
         prim->setMaterial(primitive->material());
 
