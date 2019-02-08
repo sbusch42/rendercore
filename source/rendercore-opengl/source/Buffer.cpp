@@ -2,6 +2,7 @@
 #include <rendercore-opengl/Buffer.h>
 
 #include <algorithm>
+#include <cstring>
 
 #include <cppassist/memory/make_unique.h>
 
@@ -39,6 +40,26 @@ char * Buffer::data()
     return m_data.data();
 }
 
+void Buffer::setData(const void * data, unsigned int size)
+{
+    // Clear old data
+    m_data.clear();
+
+    // Check if data is valid
+    if (!data || size == 0) {
+        return;
+    }
+
+    // Allocate data
+    m_data.resize(size);
+
+    // Copy data
+    std::memcpy(m_data.data(), data, size);
+
+    // Flag buffer invalid
+    setValid(false);
+}
+
 void Buffer::allocate(unsigned int size)
 {
     // Clear old data
@@ -46,24 +67,6 @@ void Buffer::allocate(unsigned int size)
 
     // Set new size
     m_data.resize(size);
-
-    // Flag buffer invalid
-    setValid(false);
-}
-
-void Buffer::setData(char * data, unsigned int size)
-{
-    // Clear old data
-    m_data.clear();
-
-    // Check if data is valid
-    if (data && size > 0) {
-        // Allocate data
-        m_data.resize(size);
-
-        // Copy data
-        std::copy_n(data, size, m_data.data());
-    }
 
     // Flag buffer invalid
     setValid(false);

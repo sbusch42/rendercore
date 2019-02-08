@@ -49,8 +49,11 @@ public:
     *
     *  @param[in] shader
     *    Shader (must NOT be null!)
+    *
+    *  @remarks
+    *    Transfers ownership over the shader to the program.
     */
-    void attach(Shader * shader);
+    void attach(std::unique_ptr<Shader> && shader);
 
     /**
     *  @brief
@@ -58,11 +61,8 @@ public:
     *
     *  @param[in] shader
     *    Shader (must NOT be null!)
-    *
-    *  @remarks
-    *    Transfers ownership over the shader to the program.
     */
-    void attach(std::unique_ptr<Shader> && shader);
+    void attach(Shader * shader);
 
     /**
     *  @brief
@@ -81,9 +81,9 @@ protected:
     virtual void onDeinit() override;
 
 protected:
-    std::unique_ptr<globjects::Program>    m_program; ///< OpenGL program (can be null)
-    std::vector<Shader *>                  m_shaders; ///< Shaders attached to the program
-    std::vector< std::unique_ptr<Shader> > m_owned;   ///< List of shaders owned by the program
+    std::unique_ptr<globjects::Program>    m_program;    ///< OpenGL program (can be null)
+    std::vector<Shader *>                  m_shaders;    ///< Shaders attached to the program
+    std::vector< std::unique_ptr<Shader> > m_ownShaders; ///< List of shaders owned by the program
 };
 
 

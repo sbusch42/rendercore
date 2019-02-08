@@ -86,12 +86,8 @@ std::unique_ptr<Asset> GltfLoader::parseFile(const cppexpose::Object & root)
         }
     }
 
-    // Check for errors
-    if (res) {
-        return std::move(asset);
-    } else {
-        return nullptr;
-    }
+    // [TODO] Check for errors
+    return std::move(asset);
 }
 
 bool GltfLoader::parseAsset(Asset & asset, const cppexpose::AbstractVar * value)

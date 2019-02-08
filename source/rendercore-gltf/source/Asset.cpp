@@ -60,6 +60,15 @@ std::vector<Scene *> Asset::scenes() const
     return lst;
 }
 
+Scene * Asset::scene(size_t index) const
+{
+    if (index < m_scenes.size()) {
+        return m_scenes[index].get();
+    } else {
+        return nullptr;
+    }
+}
+
 void Asset::addScene(std::unique_ptr<Scene> && scene)
 {
     m_scenes.push_back(std::move(scene));
@@ -74,6 +83,15 @@ std::vector<Node *> Asset::nodes() const
     }
 
     return lst;
+}
+
+Node * Asset::node(size_t index) const
+{
+    if (index < m_nodes.size()) {
+        return m_nodes[index].get();
+    } else {
+        return nullptr;
+    }
 }
 
 void Asset::addNode(std::unique_ptr<Node> && node)
@@ -92,6 +110,15 @@ std::vector<Buffer *> Asset::buffers() const
     return lst;
 }
 
+Buffer * Asset::buffer(size_t index) const
+{
+    if (index < m_buffers.size()) {
+        return m_buffers[index].get();
+    } else {
+        return nullptr;
+    }
+}
+
 void Asset::addBuffer(std::unique_ptr<Buffer> && buffer)
 {
     m_buffers.push_back(std::move(buffer));
@@ -106,6 +133,15 @@ std::vector<BufferView *> Asset::bufferViews() const
     }
 
     return lst;
+}
+
+BufferView * Asset::bufferView(size_t index) const
+{
+    if (index < m_bufferViews.size()) {
+        return m_bufferViews[index].get();
+    } else {
+        return nullptr;
+    }
 }
 
 void Asset::addBufferView(std::unique_ptr<BufferView> && bufferView)
@@ -124,6 +160,15 @@ std::vector<Accessor *> Asset::accessors() const
     return lst;
 }
 
+Accessor * Asset::accessor(size_t index) const
+{
+    if (index < m_accessors.size()) {
+        return m_accessors[index].get();
+    } else {
+        return nullptr;
+    }
+}
+
 void Asset::addAccessor(std::unique_ptr<Accessor> && accessor)
 {
     m_accessors.push_back(std::move(accessor));
@@ -138,6 +183,15 @@ std::vector<Mesh *> Asset::meshes() const
     }
 
     return lst;
+}
+
+Mesh * Asset::mesh(size_t index) const
+{
+    if (index < m_meshes.size()) {
+        return m_meshes[index].get();
+    } else {
+        return nullptr;
+    }
 }
 
 void Asset::addMesh(std::unique_ptr<Mesh> && mesh)

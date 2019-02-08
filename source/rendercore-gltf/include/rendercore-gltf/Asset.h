@@ -103,6 +103,18 @@ public:
 
     /**
     *  @brief
+    *    Get scene
+    *
+    *  @param[in] index
+    *    Scene index
+    *
+    *  @return
+    *    Scene (can be null)
+    */
+    Scene * scene(size_t index) const;
+
+    /**
+    *  @brief
     *    Add scene
     *
     *  @param[in] scene
@@ -118,6 +130,18 @@ public:
     *    List of nodes
     */
     std::vector<Node *> nodes() const;
+
+    /**
+    *  @brief
+    *    Get node
+    *
+    *  @param[in] index
+    *    Node index
+    *
+    *  @return
+    *    Node (can be null)
+    */
+    Node * node(size_t index) const;
 
     /**
     *  @brief
@@ -139,6 +163,18 @@ public:
 
     /**
     *  @brief
+    *    Get buffer
+    *
+    *  @param[in] index
+    *    Buffer index
+    *
+    *  @return
+    *    Buffer (can be null)
+    */
+    Buffer * buffer(size_t index) const;
+
+    /**
+    *  @brief
     *    Add buffer
     *
     *  @param[in] buffer
@@ -154,6 +190,18 @@ public:
     *    List of buffer views
     */
     std::vector<BufferView *> bufferViews() const;
+
+    /**
+    *  @brief
+    *    Get buffer view
+    *
+    *  @param[in] index
+    *    Buffer view index
+    *
+    *  @return
+    *    Buffer view (can be null)
+    */
+    BufferView * bufferView(size_t index) const;
 
     /**
     *  @brief
@@ -175,6 +223,18 @@ public:
 
     /**
     *  @brief
+    *    Get accessor
+    *
+    *  @param[in] index
+    *    Accessor index
+    *
+    *  @return
+    *    Accessor (can be null)
+    */
+    Accessor * accessor(size_t index) const;
+
+    /**
+    *  @brief
     *    Add accessor
     *
     *  @param[in] accessor
@@ -190,6 +250,18 @@ public:
     *    List of meshes
     */
     std::vector<Mesh *> meshes() const;
+
+    /**
+    *  @brief
+    *    Get mesh
+    *
+    *  @param[in] index
+    *    Mesh index
+    *
+    *  @return
+    *    Mesh (can be null)
+    */
+    Mesh * mesh(size_t index) const;
 
     /**
     *  @brief

@@ -30,7 +30,7 @@ void Program::attach(std::unique_ptr<Shader> && shader)
     attach(shader.get());
 
     // Transfer ownership of shader
-    m_owned.push_back(std::move(shader));
+    m_ownShaders.push_back(std::move(shader));
 }
 
 void Program::attach(Shader * shader)

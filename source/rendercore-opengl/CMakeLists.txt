@@ -42,9 +42,11 @@ set(headers
     ${include_path}/AbstractGLContextFactory.h
     ${include_path}/Box.h
     ${include_path}/Buffer.h
+    ${include_path}/Buffer.inl
     ${include_path}/Geometry.h
     ${include_path}/Geometry.inl
     ${include_path}/Geometry2.h
+    ${include_path}/Geometry2.inl
     ${include_path}/GLContextFormat.h
     ${include_path}/GLContextUtils.h
     ${include_path}/Icosahedron.h
@@ -57,6 +59,7 @@ set(headers
     ${include_path}/Texture.h
     ${include_path}/TimeMeasurement.h
     ${include_path}/Triangle.h
+    ${include_path}/VertexAttribute.h
 )
 
 set(sources
@@ -78,6 +81,7 @@ set(sources
     ${source_path}/Texture.cpp
     ${source_path}/TimeMeasurement.cpp
     ${source_path}/Triangle.cpp
+    ${source_path}/VertexAttribute.cpp
 )
 
 # Group source files

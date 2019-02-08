@@ -32,10 +32,12 @@ set(source_path  "${CMAKE_CURRENT_SOURCE_DIR}/source")
 
 set(headers
     ${include_path}/ExampleRenderer.h
+    ${include_path}/GeometryExample.h
 )
 
 set(sources
     ${source_path}/ExampleRenderer.cpp
+    ${source_path}/GeometryExample.cpp
 )
 
 # Group source files

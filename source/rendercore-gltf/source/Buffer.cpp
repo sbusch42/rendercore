@@ -10,6 +10,7 @@ namespace gltf
 
 Buffer::Buffer()
 : m_size(0)
+, m_uri("")
 {
 }
 

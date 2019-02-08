@@ -3,6 +3,8 @@
 
 
 #include <memory>
+#include <vector>
+#include <array>
 
 #include <globjects/Buffer.h>
 
@@ -44,7 +46,7 @@ public:
     *    Get data size
     *
     *  @return
-    *    Data size
+    *    Data size (in bytes)
     */
     unsigned int size() const;
 
@@ -68,23 +70,61 @@ public:
 
     /**
     *  @brief
-    *    Allocate data
-    *
-    *  @param[in] sue
-    *    Data size
-    */
-    void allocate(unsigned int size);
-
-    /**
-    *  @brief
     *    Set data
     *
     *  @param[in] data
     *    Buffer data (can be null)
     *  @param[in] size
-    *    Data size
+    *    Data size (in bytes)
     */
-    void setData(char * data, unsigned int size);
+    void setData(const void * data, unsigned int size);
+
+    /**
+    *  @brief
+    *    Set data from typed vector
+    *
+    *  @tparam Type
+    *    The element type
+    *  @param[in] data
+    *    Buffer data
+    */
+    template <typename Type>
+    void setData(const std::vector<Type> & data);
+
+    /**
+    *  @brief
+    *    Set data from typed array
+    *
+    *  @tparam Type
+    *    The element type
+    *  @tparam Count
+    *    The number of elements
+    *  @param[in] data
+    *    Buffer data
+    */
+    template <typename Type, std::size_t Count>
+    void setData(const std::array<Type, Count> & data);
+
+    /**
+    *  @brief
+    *    Allocate data
+    *
+    *  @param[in] size
+    *    Data size (in bytes)
+    */
+    void allocate(unsigned int size);
+
+    /**
+    *  @brief
+    *    Allocate data for a specific data type
+    *
+    *  @tparam Type
+    *    The element type
+    *  @param[in] numElements
+    *    Number of elements
+    */
+    template <typename Type>
+    void allocate(unsigned int numElements);
 
     /**
     *  @brief
@@ -116,3 +156,6 @@ protected:
 
 } // namespace opengl
 } // namespace rendercore
+
+
+#include <rendercore-opengl/Buffer.inl>

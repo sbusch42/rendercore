@@ -6,6 +6,8 @@
 #include <string>
 #include <vector>
 
+#include <rendercore-opengl/Buffer.h>
+
 #include <rendercore-gltf/rendercore-gltf_api.h>
 
 
@@ -16,6 +18,7 @@ namespace gltf
 
 
 class Asset;
+class Mesh;
 
 
 /**
@@ -56,8 +59,11 @@ protected:
     */
     void loadBuffer(const std::string & path);
 
+    // [TODO]
+    void createMesh(const Asset & asset, const Mesh & mesh);
+
 protected:
-    std::vector< std::unique_ptr<std::vector<char>> > m_buffers; ///< List of data buffers
+    std::vector< std::unique_ptr<rendercore::opengl::Buffer> > m_buffers; ///< List of data buffers
 };
 
 

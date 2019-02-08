@@ -56,7 +56,7 @@ public:
     *    Get data type
     *
     *  @return
-    *    Data type
+    *    Data type (e.g., "SCALAR", "VEC3", ...)
     */
     const std::string & dataType() const;
 
@@ -65,7 +65,7 @@ public:
     *    Set data type
     *
     *  @param[in] dataType
-    *    Data type
+    *    Data type (e.g., "SCALAR", "VEC3", ...)
     */
     void setDataType(const std::string & dataType);
 

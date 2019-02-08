@@ -32,13 +32,11 @@ ExampleRenderer::ExampleRenderer(GpuContainer * container)
 , m_counter(0)
 {
     // [TODO] Load mesh
-    /*
     GltfLoader loader;
     auto asset = loader.load(rendercore::dataPath() + "/rendercore/gltf/BoxAnimated/BoxAnimated.gltf");
 
     GltfConverter converter;
     converter.convert(*asset.get());
-    */
 
     // Initialize object transformation
     m_transform.setTranslation  ({ 0.0f, 0.0f, 0.0f });
