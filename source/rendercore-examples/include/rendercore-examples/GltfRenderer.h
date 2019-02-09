@@ -4,13 +4,12 @@
 
 #include <memory>
 
+#include <rendercore/AbstractDrawable.h>
 #include <rendercore/Camera.h>
 #include <rendercore/Renderer.h>
 #include <rendercore/Transform.h>
 
 #include <rendercore-opengl/Program.h>
-#include <rendercore-opengl/Texture.h>
-#include <rendercore-opengl/Geometry.h>
 
 #include <rendercore-examples/rendercore-examples_api.h>
 
@@ -23,9 +22,9 @@ namespace examples
 
 /**
 *  @brief
-*    Example renderer that displays different kinds of geometry
+*    Example renderer that displays a GTLF mesh
 */
-class RENDERCORE_EXAMPLES_API GeometryExample : public Renderer
+class RENDERCORE_EXAMPLES_API GltfRenderer : public Renderer
 {
 public:
     /**
@@ -35,26 +34,21 @@ public:
     *  @param[in] container
     *    GPU container (can be null)
     */
-    GeometryExample(GpuContainer * container = nullptr);
+    GltfRenderer(GpuContainer * container = nullptr);
 
     // Copying a renderer is not allowed
-    GeometryExample(const GeometryExample &) = delete;
+    GltfRenderer(const GltfRenderer &) = delete;
 
     // Copying a renderer is not allowed
-    GeometryExample & operator=(const GeometryExample &) = delete;
+    GltfRenderer & operator=(const GltfRenderer &) = delete;
 
     /**
     *  @brief
     *    Destructor
     */
-    virtual ~GeometryExample();
+    virtual ~GltfRenderer();
 
 protected:
-    // Geometry generation
-    void createPoints();
-    void createPointsInterleaved();
-
-    // Virtual Renderer functions
     virtual void onInit() override;
     virtual void onDeinit() override;
     virtual void onUpdate() override;
@@ -67,8 +61,7 @@ protected:
 
     // GPU data
     std::unique_ptr<rendercore::Camera>           m_camera;   ///< Camera in the scene
-    std::unique_ptr<rendercore::opengl::Geometry> m_geometry; ///< Geometry that is rasterized
-    std::unique_ptr<rendercore::opengl::Texture>  m_texture;  ///< Texture
+    std::unique_ptr<rendercore::AbstractDrawable> m_geometry; ///< Geometry that is rasterized
     std::unique_ptr<rendercore::opengl::Program>  m_program;  ///< Program used for rendering
 };
 

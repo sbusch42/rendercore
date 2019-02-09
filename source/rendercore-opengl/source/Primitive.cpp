@@ -142,6 +142,11 @@ void Primitive::prepareVAO()
         size_t index = it.first;
         auto * attr  = it.second;
 
+        // Check if attribute is valid
+        if (!attr || !attr->buffer()) {
+            continue;
+        }
+
         // Configure vertex attribute
         m_vao->enable(index);
         m_vao->binding(i)->setAttribute(index);

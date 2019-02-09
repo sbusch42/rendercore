@@ -16,7 +16,8 @@
 #include <rendercore-opengl/GLContextUtils.h>
 
 #include <rendercore-examples/ExampleRenderer.h>
-#include <rendercore-examples/GeometryExample.h>
+#include <rendercore-examples/GeometryRenderer.h>
+#include <rendercore-examples/GltfRenderer.h>
 
 
 using namespace rendercore;
@@ -64,7 +65,7 @@ int main(int argc, char * argv[])
     }
 
     // Create renderer
-    window.canvas()->setRenderer(cppassist::make_unique<ExampleRenderer>());
+    window.canvas()->setRenderer(cppassist::make_unique<GltfRenderer>());
 
     // Initialize context, print context info
     window.context()->use();

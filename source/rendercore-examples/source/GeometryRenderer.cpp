@@ -1,5 +1,5 @@
 
-#include <rendercore-examples/GeometryExample.h>
+#include <rendercore-examples/GeometryRenderer.h>
 
 #include <iostream>
 
@@ -12,13 +12,8 @@
 #include <rendercore-opengl/Primitive.h>
 #include <rendercore-opengl/Shader.h>
 
-#include <rendercore-gltf/GltfConverter.h>
-#include <rendercore-gltf/GltfLoader.h>
-#include <rendercore-gltf/Asset.h>
-
 
 using namespace rendercore::opengl;
-using namespace rendercore::gltf;
 
 
 namespace rendercore
@@ -27,17 +22,10 @@ namespace examples
 {
 
 
-GeometryExample::GeometryExample(GpuContainer * container)
+GeometryRenderer::GeometryRenderer(GpuContainer * container)
 : Renderer(container)
 , m_counter(0)
 {
-    // [TODO] Load mesh
-    GltfLoader loader;
-    auto asset = loader.load(rendercore::dataPath() + "/rendercore/gltf/BoxAnimated/BoxAnimated.gltf");
-
-    GltfConverter converter;
-    converter.convert(*asset.get());
-
     // Initialize object transformation
     m_transform.setTranslation  ({ 0.0f, 0.0f, 0.0f });
     m_transform.setScale        ({ 1.0f, 1.0f, 1.0f });
@@ -68,11 +56,11 @@ GeometryExample::GeometryExample(GpuContainer * container)
     createPoints();
 }
 
-GeometryExample::~GeometryExample()
+GeometryRenderer::~GeometryRenderer()
 {
 }
 
-void GeometryExample::createPoints()
+void GeometryRenderer::createPoints()
 {
     // Positions
     static const std::array<glm::vec3, 8> positions { {
@@ -146,7 +134,7 @@ void GeometryExample::createPoints()
     m_geometry->addPrimitive(std::move(points));
 }
 
-void GeometryExample::createPointsInterleaved()
+void GeometryRenderer::createPointsInterleaved()
 {
     // Vertices (positions and colors)
     static const std::array<glm::vec3, 16> vertices { {
@@ -208,19 +196,19 @@ void GeometryExample::createPointsInterleaved()
     m_geometry->addPrimitive(std::move(points));
 }
 
-void GeometryExample::onInit()
+void GeometryRenderer::onInit()
 {
     // [DEBUG]
     std::cout << "onInit()" << std::endl;
 }
 
-void GeometryExample::onDeinit()
+void GeometryRenderer::onDeinit()
 {
     // [DEBUG]
     std::cout << "onDeinit()" << std::endl;
 }
 
-void GeometryExample::onUpdate()
+void GeometryRenderer::onUpdate()
 {
     // [DEBUG]
     // std::cout << "onUpdate(" << m_counter << ")" << std::endl;
@@ -235,7 +223,7 @@ void GeometryExample::onUpdate()
     scheduleRedraw();
 }
 
-void GeometryExample::onRender()
+void GeometryRenderer::onRender()
 {
     // [DEBUG]
     // std::cout << "onRender()" << std::endl;

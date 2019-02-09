@@ -1,5 +1,5 @@
 
-#include <rendercore-examples/ExampleRenderer.h>
+#include <rendercore-examples/GltfRenderer.h>
 
 #include <iostream>
 
@@ -9,11 +9,15 @@
 
 #include <rendercore/rendercore.h>
 
-#include <rendercore-opengl/Sphere.h>
 #include <rendercore-opengl/Shader.h>
+
+#include <rendercore-gltf/GltfConverter.h>
+#include <rendercore-gltf/GltfLoader.h>
+#include <rendercore-gltf/Asset.h>
 
 
 using namespace rendercore::opengl;
+using namespace rendercore::gltf;
 
 
 namespace rendercore
@@ -22,7 +26,7 @@ namespace examples
 {
 
 
-ExampleRenderer::ExampleRenderer(GpuContainer * container)
+GltfRenderer::GltfRenderer(GpuContainer * container)
 : Renderer(container)
 , m_counter(0)
 {
@@ -35,44 +39,46 @@ ExampleRenderer::ExampleRenderer(GpuContainer * container)
     // Create camera
     m_camera = cppassist::make_unique<Camera>();
 
-    // Load texture
-    m_texture = cppassist::make_unique<Texture>(this);
-    m_texture->load(rendercore::dataPath() + "/rendercore/textures/brickwall.glraw");
-
     // Create program
     m_program = cppassist::make_unique<Program>(this);
 
     // Load vertex shader
     auto vertShader = cppassist::make_unique<Shader>(this);
-    vertShader->load(gl::GL_VERTEX_SHADER, rendercore::dataPath() + "/rendercore/shaders/geometry/geometry.vert");
+    vertShader->load(gl::GL_VERTEX_SHADER, rendercore::dataPath() + "/rendercore/shaders/geometry/gltf.vert");
     m_program->attach(std::move(vertShader));
 
     // Load fragment shader
     auto fragShader = cppassist::make_unique<Shader>(this);
-    fragShader->load(gl::GL_FRAGMENT_SHADER, rendercore::dataPath() + "/rendercore/shaders/geometry/geometry.frag");
+    fragShader->load(gl::GL_FRAGMENT_SHADER, rendercore::dataPath() + "/rendercore/shaders/geometry/gltf.frag");
     m_program->attach(std::move(fragShader));
 
-    // Create geometry
-    m_geometry = cppassist::make_unique<Sphere>(this, 2.0f, true);
+    // Load GLTF asset
+    GltfLoader loader;
+    auto asset = loader.load(rendercore::dataPath() + "/rendercore/gltf/BoxAnimated/BoxAnimated.gltf");
+
+    // Create mesh from GLTF
+    GltfConverter converter;
+    converter.convert(*asset.get(), rendercore::dataPath() + "/rendercore/gltf/BoxAnimated");
+    m_geometry.reset(converter.geometry());
 }
 
-ExampleRenderer::~ExampleRenderer()
+GltfRenderer::~GltfRenderer()
 {
 }
 
-void ExampleRenderer::onInit()
+void GltfRenderer::onInit()
 {
     // [DEBUG]
     std::cout << "onInit()" << std::endl;
 }
 
-void ExampleRenderer::onDeinit()
+void GltfRenderer::onDeinit()
 {
     // [DEBUG]
     std::cout << "onDeinit()" << std::endl;
 }
 
-void ExampleRenderer::onUpdate()
+void GltfRenderer::onUpdate()
 {
     // [DEBUG]
     // std::cout << "onUpdate(" << m_counter << ")" << std::endl;
@@ -87,7 +93,7 @@ void ExampleRenderer::onUpdate()
     scheduleRedraw();
 }
 
-void ExampleRenderer::onRender()
+void GltfRenderer::onRender()
 {
     // [DEBUG]
     // std::cout << "onRender()" << std::endl;
@@ -112,10 +118,6 @@ void ExampleRenderer::onRender()
     m_program->program()->setUniform<glm::mat4>("projectionMatrix",             m_camera->projectionMatrix());
     m_program->program()->setUniform<glm::mat4>("projectionInvertedMatrix",     m_camera->projectionInvertedMatrix());
     m_program->program()->setUniform<glm::mat3>("normalMatrix",                 m_camera->normalMatrix());
-    m_program->program()->setUniform<int>      ("tex0",                         0);
-
-    // Bind texture
-    m_texture->texture()->bindActive(0);
 
     // Bind program
     m_program->program()->use();
@@ -128,9 +130,6 @@ void ExampleRenderer::onRender()
 
     // Release program
     m_program->program()->release();
-
-    // Release program
-    m_texture->texture()->unbindActive(0);
 }
 
 
