@@ -3,11 +3,14 @@
 
 
 #include <memory>
+#include <vector>
 
 #include <rendercore/Camera.h>
 #include <rendercore/Renderer.h>
 #include <rendercore/Transform.h>
 
+#include <rendercore-opengl/Texture.h>
+#include <rendercore-opengl/Material.h>
 #include <rendercore-opengl/Geometry.h>
 #include <rendercore-opengl/Program.h>
 
@@ -61,9 +64,11 @@ protected:
     Transform    m_transform; ///< Transformation of the model
 
     // GPU data
-    std::unique_ptr<rendercore::Camera>           m_camera;   ///< Camera in the scene
-    std::unique_ptr<rendercore::opengl::Geometry> m_geometry; ///< Geometry that is rasterized
-    std::unique_ptr<rendercore::opengl::Program>  m_program;  ///< Program used for rendering
+    std::unique_ptr<rendercore::Camera>                          m_camera;    ///< Camera in the scene
+    std::unique_ptr<rendercore::opengl::Program>                 m_program;   ///< Program used for rendering
+    std::vector< std::unique_ptr<rendercore::opengl::Texture> >  m_textures;  ///< List of textures
+    std::vector< std::unique_ptr<rendercore::opengl::Material> > m_materials; ///< List of materials
+    std::vector< std::unique_ptr<rendercore::opengl::Geometry> > m_meshes;    ///< List of meshes
 };
 
 

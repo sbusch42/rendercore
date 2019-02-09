@@ -56,13 +56,26 @@ GltfRenderer::GltfRenderer(GpuContainer * container)
     GltfLoader loader;
     auto asset = loader.load(rendercore::dataPath() + "/rendercore/gltf/BoxAnimated/BoxAnimated.gltf");
 
-    // Create mesh from GLTF
+    // Transfer data from GLTF
     GltfConverter converter;
     converter.convert(*asset.get());
+
+    auto & textures = converter.textures();
+    for (auto & texture : textures) {
+        texture->setContainer(this);
+        m_textures.push_back(std::move(texture));
+    }
+
+    auto & materials = converter.materials();
+    for (auto & material : materials) {
+        material->setContainer(this);
+        m_materials.push_back(std::move(material));
+    }
+
     auto & meshes = converter.meshes();
-    if (meshes.size() > 0) {
-        m_geometry = std::move(meshes[0]);
-        m_geometry->setContainer(this);
+    for (auto & mesh : meshes) {
+        mesh->setContainer(this);
+        m_meshes.push_back(std::move(mesh));
     }
 }
 
@@ -131,8 +144,8 @@ void GltfRenderer::onRender()
     gl::glEnable(gl::GL_DEPTH_TEST);
 
     // Render geometry
-    if (m_geometry) {
-        m_geometry->draw();
+    if (m_meshes.size() > 0) {
+        m_meshes[0]->draw();
     }
 
     // Release program

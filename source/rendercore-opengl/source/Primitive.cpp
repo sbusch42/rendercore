@@ -22,7 +22,7 @@ Primitive::Primitive()
 , m_indexBuffer(nullptr)
 , m_indexType(gl::GL_UNSIGNED_INT)
 , m_count(0)
-, m_material(0)
+, m_material(nullptr)
 {
 }
 
@@ -85,12 +85,12 @@ void Primitive::bindAttribute(size_t index, const VertexAttribute * vertexAttrib
     m_attributes[index] = vertexAttribute;
 }
 
-unsigned int Primitive::material() const
+Material * Primitive::material() const
 {
     return m_material;
 }
 
-void Primitive::setMaterial(unsigned int material)
+void Primitive::setMaterial(Material * material)
 {
     m_material = material;
 }

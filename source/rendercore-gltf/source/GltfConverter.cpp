@@ -112,7 +112,7 @@ void GltfConverter::generateMesh(const Asset & gltfAsset, const Mesh & gltfMesh)
         // Create primitive
         auto primitive = cppassist::make_unique<rendercore::opengl::Primitive>();
         primitive->setMode((gl::GLenum)gltfPrimitive->mode());
-        primitive->setMaterial(gltfPrimitive->material());
+        primitive->setMaterial(gltfPrimitive->material() < m_materials.size() ? m_materials[gltfPrimitive->material()].get() : nullptr);
 
         // Process vertex attributes
         const auto & attributes = gltfPrimitive->attributes();

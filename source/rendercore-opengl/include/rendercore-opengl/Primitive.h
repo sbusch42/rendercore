@@ -18,6 +18,7 @@ namespace opengl
 {
 
 
+class Material;
 class Buffer;
 class VertexAttribute;
 
@@ -143,18 +144,18 @@ public:
     *    Get material
     *
     *  @return
-    *    Material index
+    *    Material (can be null)
     */
-    unsigned int material() const;
+    Material * material() const;
 
     /**
     *  @brief
     *    Set material
     *
     *  @param[in] material
-    *    Material index
+    *    Material (can be null)
     */
-    void setMaterial(unsigned int material);
+    void setMaterial(Material * material);
 
     /**
     *  @brief
@@ -199,7 +200,7 @@ protected:
     Buffer       * m_indexBuffer; ///< Index buffer (can be null)
     gl::GLenum     m_indexType;   ///< Data type of index buffer (e.g., GL_UNSIGNED_INT)
     unsigned int   m_count;       ///< Number of elements to render
-    unsigned int   m_material;    ///< Material index
+    Material *     m_material;    ///< Material (can be null)
 
     // Attributes
     std::unordered_map<size_t, const VertexAttribute *> m_attributes; ///< Vertex attribute bindings
