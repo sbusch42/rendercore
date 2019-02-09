@@ -21,7 +21,7 @@ Primitive::Primitive()
 : m_mode(gl::GL_NONE)
 , m_indexBuffer(nullptr)
 , m_indexType(gl::GL_UNSIGNED_INT)
-, m_numElements(0)
+, m_count(0)
 , m_material(0)
 {
 }
@@ -56,14 +56,14 @@ void Primitive::setIndexBuffer(Buffer * buffer, gl::GLenum type)
     m_indexType   = type;
 }
 
-unsigned int Primitive::numElements() const
+unsigned int Primitive::count() const
 {
-    return m_numElements;
+    return m_count;
 }
 
-void Primitive::setNumElements(unsigned int numElements)
+void Primitive::setCount(unsigned int count)
 {
-    m_numElements = numElements;
+    m_count = count;
 }
 
 const std::unordered_map<size_t, const VertexAttribute *> & Primitive::attributeBindings() const
@@ -108,13 +108,13 @@ void Primitive::draw()
     // Draw with index buffer (DrawElements)
     if (m_indexBuffer) {
         m_indexBuffer->buffer()->bind(gl::GL_ELEMENT_ARRAY_BUFFER);
-        m_vao->drawElements(m_mode, m_numElements, m_indexType, nullptr);
+        m_vao->drawElements(m_mode, m_count, m_indexType, nullptr);
     }
 
     // Draw without buffer (DrawArrays)
     else {
         globjects::Buffer::unbind(gl::GL_ELEMENT_ARRAY_BUFFER);
-        m_vao->drawArrays(m_mode, 0, m_numElements);
+        m_vao->drawArrays(m_mode, 0, m_count);
     }
 
     // Release VAO

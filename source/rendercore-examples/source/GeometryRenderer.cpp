@@ -127,7 +127,7 @@ void GeometryRenderer::createPoints()
     auto points = cppassist::make_unique<opengl::Primitive>();
     points->setMode(gl::GL_POINTS);
     points->setIndexBuffer(indexBuffer, gl::GL_UNSIGNED_INT);
-    points->setNumElements(indices.size());
+    points->setCount(indices.size());
     points->setMaterial(0);
     points->bindAttribute(0, positionAttribute);
     points->bindAttribute(1, colorAttribute);
@@ -189,7 +189,7 @@ void GeometryRenderer::createPointsInterleaved()
     auto points = cppassist::make_unique<opengl::Primitive>();
     points->setMode(gl::GL_POINTS);
     points->setIndexBuffer(indexBuffer, gl::GL_UNSIGNED_INT);
-    points->setNumElements(indices.size());
+    points->setCount(indices.size());
     points->setMaterial(0);
     points->bindAttribute(0, positionAttribute);
     points->bindAttribute(1, colorAttribute);

@@ -30,7 +30,7 @@ Sphere::Sphere(GpuContainer * container, float radius, bool texCoords)
     // Create primitive
     auto prim = cppassist::make_unique<opengl::Primitive>();
     prim->setMode(gl::GL_TRIANGLES);
-    prim->setNumElements(m_icosahedron->indices().size() * std::tuple_size<Icosahedron::Face>::value);
+    prim->setCount(m_icosahedron->indices().size() * std::tuple_size<Icosahedron::Face>::value);
 
     // Create vertex buffer
     auto * vertexBuffer = createBuffer(scaledVertices);

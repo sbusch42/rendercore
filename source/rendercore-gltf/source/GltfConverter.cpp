@@ -208,7 +208,7 @@ void GltfConverter::createMesh(const Asset & gltfAsset, const Mesh & gltfMesh)
                 if (index < m_bufferViews.size()) {
                     // Set index buffer
                     primitive->setIndexBuffer(m_bufferViews[index].get(), (gl::GLenum)gltfAccessor->componentType());
-                    primitive->setNumElements(gltfAccessor->count());
+                    primitive->setCount(gltfAccessor->count());
                 }
             }
         }

@@ -72,7 +72,7 @@ Triangle::Triangle(GpuContainer * container, float width, float height, bool)
     // Add primitive
     auto prim = cppassist::make_unique<opengl::Primitive>();
     prim->setMode(gl::GL_TRIANGLES);
-    prim->setNumElements(vertices.size());
+    prim->setCount(vertices.size());
     prim->bindAttribute(0, positionAttribute);
     prim->bindAttribute(1, texCoordAttribute);
     addPrimitive(std::move(prim));

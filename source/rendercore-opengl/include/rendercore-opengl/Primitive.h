@@ -90,21 +90,21 @@ public:
 
     /**
     *  @brief
-    *    Get number of elements
+    *    Get element count
     *
     *  @return
     *    Number of elements to render
     */
-    unsigned int numElements() const;
+    unsigned int count() const;
 
     /**
     *  @brief
-    *    Set number of elements
+    *    Set element count
     *
-    *  @param[in] numElements
+    *  @param[in] count
     *    Number of elements to render
     */
-    void setNumElements(unsigned int numElements);
+    void setCount(unsigned int count);
 
     /**
     *  @brief
@@ -198,7 +198,7 @@ protected:
     gl::GLenum     m_mode;        ///< Primitive mode (e.g., GL_TRIANGLES)
     Buffer       * m_indexBuffer; ///< Index buffer (can be null)
     gl::GLenum     m_indexType;   ///< Data type of index buffer (e.g., GL_UNSIGNED_INT)
-    unsigned int   m_numElements; ///< Number of elements to render
+    unsigned int   m_count;       ///< Number of elements to render
     unsigned int   m_material;    ///< Material index
 
     // Attributes
