@@ -9,9 +9,11 @@
 #include <cppfs/FileHandle.h>
 
 #include <rendercore-opengl/Geometry.h>
+#include <rendercore-opengl/Material.h>
 
 #include <rendercore-gltf/Asset.h>
 #include <rendercore-gltf/Buffer.h>
+#include <rendercore-gltf/Material.h>
 #include <rendercore-gltf/Mesh.h>
 
 
@@ -43,6 +45,12 @@ void GltfConverter::convert(const Asset & asset)
         loadData(asset.basePath(), buffer->uri());
     }
 
+    // Generate materials
+    auto materials = asset.materials();
+    for (auto * material : materials) {
+        generateMaterial(asset, *material);
+    }
+
     // Generate meshes
     auto meshes = asset.meshes();
     for (auto * mesh : meshes) {
@@ -50,9 +58,44 @@ void GltfConverter::convert(const Asset & asset)
     }
 }
 
+std::vector< std::unique_ptr<rendercore::opengl::Texture> > & GltfConverter::textures()
+{
+    return m_textures;
+}
+
+std::vector< std::unique_ptr<rendercore::opengl::Material> > & GltfConverter::materials()
+{
+    return m_materials;
+}
+
 std::vector< std::unique_ptr<rendercore::opengl::Geometry> > & GltfConverter::meshes()
 {
     return m_meshes;
+}
+
+void GltfConverter::generateMaterial(const Asset & asset, const Material & gltfMaterial)
+{
+    // Create material
+    auto material = cppassist::make_unique<rendercore::opengl::Material>();
+
+    // Set attributes
+    material->setValue<glm::vec4>("baseColorFactor", gltfMaterial.baseColorFactor());
+    material->setValue<float>("metallicFactor", gltfMaterial.metallicFactor());
+    material->setValue<float>("roughnessFactor", gltfMaterial.roughnessFactor());
+    material->setValue<glm::vec3>("emissiveFactor", gltfMaterial.emissiveFactor());
+    material->setValue<std::string>("alphaMode", gltfMaterial.alphaMode());
+    material->setValue<float>("alphaCutoff", gltfMaterial.alphaCutoff());
+    material->setValue<bool>("doubleSided", gltfMaterial.doubleSided());
+
+    // Set textures
+    material->setTexture("baseColorTexture",         loadTexture(asset.basePath(), gltfMaterial.baseColorTexture()));
+    material->setTexture("metallicRoughnessTexture", loadTexture(asset.basePath(), gltfMaterial.metallicRoughnessTexture()));
+    material->setTexture("normalTexture",            loadTexture(asset.basePath(), gltfMaterial.normalTexture()));
+    material->setTexture("occlusionTexture",         loadTexture(asset.basePath(), gltfMaterial.occlusionTexture()));
+    material->setTexture("emissiveTexture",          loadTexture(asset.basePath(), gltfMaterial.emissiveTexture()));
+
+    // Save material
+    m_materials.push_back(std::move(material));
 }
 
 void GltfConverter::generateMesh(const Asset & gltfAsset, const Mesh & gltfMesh)
@@ -189,6 +232,27 @@ void GltfConverter::generateMesh(const Asset & gltfAsset, const Mesh & gltfMesh)
 
     // Save mesh
     m_meshes.push_back(std::move(geometry));
+}
+
+rendercore::opengl::Texture * GltfConverter::loadTexture(const std::string & basePath, const std::string & filename)
+{
+    // Check filename
+    if (filename == "") {
+        return nullptr;
+    }
+
+    // Create texture
+    auto texture = cppassist::make_unique<rendercore::opengl::Texture>();
+    auto * texturePtr = texture.get();
+
+    // Load texture
+    texture->load(basePath + filename);
+
+    // Save texture
+    m_textures.push_back(std::move(texture));
+
+    // Return texture :)
+    return texturePtr;
 }
 
 void GltfConverter::loadData(const std::string & basePath, const std::string & filename)

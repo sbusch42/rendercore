@@ -18,6 +18,9 @@ namespace opengl
 {
 
 
+class Texture;
+
+
 /**
 *  @brief
 *    Material
@@ -109,6 +112,62 @@ public:
     template <typename Type>
     void setValue(const std::string & name, const Type & value);
 
+    /**
+    *  @brief
+    *    Get textures
+    *
+    *  @return
+    *    List of texture names
+    */
+    std::vector<std::string> textures() const;
+
+    /**
+    *  @brief
+    *    Check if texture exists
+    *
+    *  @param[in] name
+    *    Texture name
+    *
+    *  @return
+    *    'true' if texture exists, else 'false'
+    */
+    bool hasTexture(const std::string & name) const;
+
+    /**
+    *  @brief
+    *    Get texture
+    *
+    *  @param[in] name
+    *    Texture name
+    *
+    *  @return
+    *    Texture (can be null)
+    */
+    const Texture * texture(const std::string & name) const;
+
+    /**
+    *  @brief
+    *    Get texture
+    *
+    *  @param[in] name
+    *    Texture name
+    *
+    *  @return
+    *    Texture (can be null)
+    */
+    Texture * texture(const std::string & name);
+
+    /**
+    *  @brief
+    *    Set texture
+    *
+    *  @param[in] name
+    *    Texture name
+    *  @param[in] texture
+    *    Texture (can be null)
+    */
+    void setTexture(const std::string & name, Texture * texture);
+
 protected:
     // Virtual GpuObject functions
     virtual void onInit() override;
@@ -116,6 +175,7 @@ protected:
 
 protected:
     std::map< std::string, std::unique_ptr<AbstractMaterialAttribute> > m_attributes; ///< Material attributes
+    std::map< std::string, Texture * >                                  m_textures;   ///< Textures
 };
 
 

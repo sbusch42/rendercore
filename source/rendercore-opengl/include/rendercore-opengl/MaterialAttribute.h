@@ -2,7 +2,7 @@
 #pragma once
 
 
-#include <rendercore/GpuObject.h>
+#include <string>
 
 #include <glm/fwd.hpp>
 
@@ -25,6 +25,8 @@ enum class AttributeType : unsigned int
     Integer,
     UnsignedInteger,
     Float,
+    Boolean,
+    String,
     Vec2,
     Vec3,
     Vec4,
@@ -59,6 +61,20 @@ public:
 
 template <>
 class RENDERCORE_OPENGL_API AttributeTypeFor<float>
+{
+public:
+    static AttributeType type();
+};
+
+template <>
+class RENDERCORE_OPENGL_API AttributeTypeFor<bool>
+{
+public:
+    static AttributeType type();
+};
+
+template <>
+class RENDERCORE_OPENGL_API AttributeTypeFor<std::string>
 {
 public:
     static AttributeType type();

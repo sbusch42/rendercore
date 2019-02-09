@@ -23,6 +23,16 @@ AttributeType AttributeTypeFor<float>::type()
     return AttributeType::Float;
 }
 
+AttributeType AttributeTypeFor<bool>::type()
+{
+    return AttributeType::Boolean;
+}
+
+AttributeType AttributeTypeFor<std::string>::type()
+{
+    return AttributeType::String;
+}
+
 AttributeType AttributeTypeFor<glm::vec2>::type()
 {
     return AttributeType::Vec2;
