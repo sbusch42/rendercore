@@ -9,13 +9,13 @@ namespace opengl
 
 
 template <typename Type>
-Buffer * Geometry::createBuffer(const std::vector<Type> & data)
+Buffer * Mesh::createBuffer(const std::vector<Type> & data)
 {
     return this->createBuffer(static_cast<const void *>(data.data()), sizeof(Type) * data.size());
 }
 
 template <typename Type, std::size_t Count>
-Buffer * Geometry::createBuffer(const std::array<Type, Count> & data)
+Buffer * Mesh::createBuffer(const std::array<Type, Count> & data)
 {
     return this->createBuffer(static_cast<const void *>(data.data()), sizeof(Type) * Count);
 }

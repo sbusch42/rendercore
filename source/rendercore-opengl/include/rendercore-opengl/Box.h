@@ -2,7 +2,7 @@
 #pragma once
 
 
-#include <rendercore-opengl/Geometry.h>
+#include <rendercore-opengl/Mesh.h>
 
 
 namespace rendercore
@@ -15,7 +15,7 @@ namespace opengl
 *  @brief
 *    Box shape
 */
-class RENDERCORE_OPENGL_API Box : public Geometry
+class RENDERCORE_OPENGL_API Box : public Mesh
 {
 public:
     /**

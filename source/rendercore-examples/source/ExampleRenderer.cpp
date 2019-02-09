@@ -52,8 +52,8 @@ ExampleRenderer::ExampleRenderer(GpuContainer * container)
     fragShader->load(gl::GL_FRAGMENT_SHADER, rendercore::dataPath() + "/rendercore/shaders/geometry/geometry.frag");
     m_program->attach(std::move(fragShader));
 
-    // Create geometry
-    m_geometry = cppassist::make_unique<Sphere>(this, 2.0f, true);
+    // Create mesh
+    m_mesh = cppassist::make_unique<Sphere>(this, 2.0f, true);
 }
 
 ExampleRenderer::~ExampleRenderer()
@@ -124,8 +124,8 @@ void ExampleRenderer::onRender()
     // Set rendering states
     gl::glEnable(gl::GL_DEPTH_TEST);
 
-    // Render geometry
-    m_geometry->draw();
+    // Render mesh
+    m_mesh->draw();
 
     // Release program
     m_program->program()->release();

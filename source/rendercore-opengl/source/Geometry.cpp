@@ -5,6 +5,11 @@
 
 #include <glbinding/gl/gl.h>
 
+#include <globjects/VertexAttributeBinding.h>
+
+#include <rendercore-opengl/Buffer.h>
+#include <rendercore-opengl/VertexAttribute.h>
+
 
 namespace rendercore
 {
@@ -12,8 +17,12 @@ namespace opengl
 {
 
 
-Geometry::Geometry(GpuContainer * container)
-: GpuContainer(container)
+Geometry::Geometry()
+: m_mode(gl::GL_NONE)
+, m_indexBuffer(nullptr)
+, m_indexType(gl::GL_UNSIGNED_INT)
+, m_count(0)
+, m_material(nullptr)
 {
 }
 
@@ -21,140 +30,135 @@ Geometry::~Geometry()
 {
 }
 
-const std::vector< Buffer * > & Geometry::buffers() const
+gl::GLenum Geometry::mode() const
 {
-    // Return list of buffers
-    return m_buffers;
+    return m_mode;
 }
 
-const Buffer * Geometry::buffer(size_t index) const
+void Geometry::setMode(gl::GLenum mode)
 {
-    // Check if index is valid
-    if (index >= m_buffers.size()) {
+    m_mode = mode;
+}
+
+Buffer * Geometry::indexBuffer() const
+{
+    return m_indexBuffer;
+}
+
+gl::GLenum Geometry::indexBufferType() const
+{
+    return m_indexType;
+}
+
+void Geometry::setIndexBuffer(Buffer * buffer, gl::GLenum type)
+{
+    m_indexBuffer = buffer;
+    m_indexType   = type;
+}
+
+unsigned int Geometry::count() const
+{
+    return m_count;
+}
+
+void Geometry::setCount(unsigned int count)
+{
+    m_count = count;
+}
+
+const std::unordered_map<size_t, const VertexAttribute *> & Geometry::attributeBindings() const
+{
+    return m_attributes;
+}
+
+const VertexAttribute * Geometry::attributeBinding(size_t index) const
+{
+    if (index >= m_attributes.size()) {
         return nullptr;
     }
 
-    // Return buffer
-    return m_buffers[index];
+    return m_attributes.at(index);
 }
 
-Buffer * Geometry::buffer(size_t index)
+void Geometry::bindAttribute(size_t index, const VertexAttribute * vertexAttribute)
 {
-    // Check if index is valid
-    if (index >= m_buffers.size()) {
-        return nullptr;
+    m_attributes[index] = vertexAttribute;
+}
+
+Material * Geometry::material() const
+{
+    return m_material;
+}
+
+void Geometry::setMaterial(Material * material)
+{
+    m_material = material;
+}
+
+void Geometry::draw()
+{
+    // Check if VAO needs to be created
+    if (!m_vao.get()) {
+        prepareVAO();
     }
 
-    // Return buffer
-    return m_buffers[index];
-}
+    // Bind VAO
+    m_vao->bind();
 
-void Geometry::addBuffer(Buffer * buffer)
-{
-    // Check if buffer is not empty
-    if (!buffer) {
-        return;
+    // Draw with index buffer (DrawElements)
+    if (m_indexBuffer) {
+        m_indexBuffer->buffer()->bind(gl::GL_ELEMENT_ARRAY_BUFFER);
+        m_vao->drawElements(m_mode, m_count, m_indexType, nullptr);
     }
 
-    // Add buffer to geometry
-    m_buffers.push_back(buffer);
-}
-
-void Geometry::addBuffer(std::unique_ptr<Buffer> && buffer)
-{
-    // Add buffer
-    addBuffer(buffer.get());
-
-    // Transfer ownership of buffer
-    m_ownbuffers.push_back(std::move(buffer));
-}
-
-Buffer * Geometry::createBuffer(const void * data, unsigned int size)
-{
-    // Create new buffer
-    auto buffer = cppassist::make_unique<Buffer>(this);
-
-    // Set buffer data
-    buffer->setData(data, size);
-
-    // Add buffer
-    auto * bufferPtr = buffer.get();
-    addBuffer(std::move(buffer));
-
-    // Return buffer
-    return bufferPtr;
-}
-
-const std::vector< std::unique_ptr<VertexAttribute> > & Geometry::vertexAttributes() const
-{
-    // Return list of vertex attributes
-    return m_vertexAttributes;
-}
-
-VertexAttribute * Geometry::addVertexAttribute(Buffer * buffer
-, unsigned int baseOffset
-, unsigned int relativeOffset
-, int stride
-, gl::GLenum type
-, unsigned int components
-, bool normalize)
-{
-    // Create vertex attribute
-    auto vertexAttribute = cppassist::make_unique<VertexAttribute>(
-        buffer,
-        baseOffset,
-        relativeOffset,
-        stride,
-        type,
-        components,
-        normalize
-    );
-
-    // Add vertex attribute
-    auto * vertexAttributePtr = vertexAttribute.get();
-    m_vertexAttributes.push_back(std::move(vertexAttribute));
-
-    // Return vertex attribute
-    return vertexAttributePtr;
-}
-
-const std::vector< std::unique_ptr<Primitive> > & Geometry::primitives() const
-{
-    // Return list of primitives
-    return m_primitives;
-}
-
-const Primitive * Geometry::primitive(size_t index) const
-{
-    // Check if index is valid
-    if (index >= m_primitives.size()) {
-        return nullptr;
+    // Draw without buffer (DrawArrays)
+    else {
+        globjects::Buffer::unbind(gl::GL_ELEMENT_ARRAY_BUFFER);
+        m_vao->drawArrays(m_mode, 0, m_count);
     }
 
-    // Return primitive
-    return m_primitives[index].get();
+    // Release VAO
+    m_vao->unbind();
 }
 
-void Geometry::addPrimitive(std::unique_ptr<Primitive> && primitive)
+void Geometry::deinit()
 {
-    // Add primitive
-    m_primitives.push_back(std::move(primitive));
+    // Release VAO
+    m_vao.reset();
 }
 
-void Geometry::draw() const
+void Geometry::prepareVAO()
 {
-    // Draw primitives
-    for (auto & primitive : m_primitives) {
-        primitive->draw();
+    // Create VAO
+    m_vao = cppassist::make_unique<globjects::VertexArray>();
+
+    // Bind VAO
+    m_vao->bind();
+
+    // Bind vertex attributes
+    size_t i = 0;
+    for (auto it : m_attributes) {
+        // Get attribute index and VertexAttribute
+        size_t index = it.first;
+        auto * attr  = it.second;
+
+        // Check if attribute is valid
+        if (!attr || !attr->buffer()) {
+            continue;
+        }
+
+        // Configure vertex attribute
+        m_vao->enable(index);
+        m_vao->binding(i)->setAttribute(index);
+        m_vao->binding(i)->setBuffer(attr->buffer()->buffer(), attr->baseOffset(), attr->stride());
+        m_vao->binding(i)->setFormat(attr->components(), attr->type(), attr->normalize(), attr->relativeOffset());
+
+        // Next
+        i++;
     }
-}
 
-void Geometry::onDeinit()
-{
-    // Release GPU-data
-    for (auto & primitive : m_primitives) {
-        primitive->deinit();
-    }
+    // Release VAO
+    m_vao->unbind();
 }
 
 

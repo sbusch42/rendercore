@@ -1,7 +1,5 @@
 
-- Geometry: derive from GpuObject, store CPU representation of geometry and derive GPU data from it
-- Mesh
-- Material
+- MaterialSet, use material index in geometry
 - Lights
 
 - GLTF

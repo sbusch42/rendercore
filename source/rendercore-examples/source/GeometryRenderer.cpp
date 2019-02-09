@@ -9,7 +9,7 @@
 
 #include <rendercore/rendercore.h>
 
-#include <rendercore-opengl/Primitive.h>
+#include <rendercore-opengl/Geometry.h>
 #include <rendercore-opengl/Shader.h>
 
 
@@ -92,7 +92,7 @@ void GeometryRenderer::createPoints()
     } };
 
     // Create geometry
-    m_geometry = cppassist::make_unique<Geometry>(this);
+    m_geometry = cppassist::make_unique<Mesh>(this);
 
     // Create buffers
     auto * positionBuffer = m_geometry->createBuffer(positions);
@@ -123,15 +123,15 @@ void GeometryRenderer::createPoints()
     // Create index buffer
     auto * indexBuffer = m_geometry->createBuffer(indices);
 
-    // Add primitive
-    auto points = cppassist::make_unique<opengl::Primitive>();
+    // Add geometry
+    auto points = cppassist::make_unique<opengl::Geometry>();
     points->setMode(gl::GL_POINTS);
     points->setIndexBuffer(indexBuffer, gl::GL_UNSIGNED_INT);
     points->setCount(indices.size());
     points->setMaterial(0);
     points->bindAttribute(0, positionAttribute);
     points->bindAttribute(1, colorAttribute);
-    m_geometry->addPrimitive(std::move(points));
+    m_geometry->addGeometry(std::move(points));
 }
 
 void GeometryRenderer::createPointsInterleaved()
@@ -155,7 +155,7 @@ void GeometryRenderer::createPointsInterleaved()
     } };
 
     // Create geometry
-    m_geometry = cppassist::make_unique<Geometry>(this);
+    m_geometry = cppassist::make_unique<Mesh>(this);
 
     // Create vertex buffer
     auto * vertexBuffer = m_geometry->createBuffer(vertices);
@@ -185,15 +185,15 @@ void GeometryRenderer::createPointsInterleaved()
     // Create index buffer
     auto * indexBuffer = m_geometry->createBuffer(indices);
 
-    // Add primitive
-    auto points = cppassist::make_unique<opengl::Primitive>();
+    // Add geometry
+    auto points = cppassist::make_unique<opengl::Geometry>();
     points->setMode(gl::GL_POINTS);
     points->setIndexBuffer(indexBuffer, gl::GL_UNSIGNED_INT);
     points->setCount(indices.size());
     points->setMaterial(0);
     points->bindAttribute(0, positionAttribute);
     points->bindAttribute(1, colorAttribute);
-    m_geometry->addPrimitive(std::move(points));
+    m_geometry->addGeometry(std::move(points));
 }
 
 void GeometryRenderer::onInit()

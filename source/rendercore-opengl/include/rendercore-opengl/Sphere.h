@@ -2,7 +2,7 @@
 #pragma once
 
 
-#include <rendercore-opengl/Geometry.h>
+#include <rendercore-opengl/Mesh.h>
 #include <rendercore-opengl/Icosahedron.h>
 
 
@@ -16,7 +16,7 @@ namespace opengl
 *  @brief
 *    Sphere shape
 */
-class RENDERCORE_OPENGL_API Sphere : public Geometry
+class RENDERCORE_OPENGL_API Sphere : public Mesh
 {
 public:
     /**

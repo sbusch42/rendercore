@@ -22,7 +22,7 @@ Triangle::Triangle(GpuContainer * container, float size, bool texCoords)
 }
 
 Triangle::Triangle(GpuContainer * container, float width, float height, bool)
-: Geometry(container)
+: Mesh(container)
 {
     // Triangle geometry
     static const std::array<glm::vec2, 3> vertices { {
@@ -69,13 +69,13 @@ Triangle::Triangle(GpuContainer * container, float width, float height, bool)
         false
     );
 
-    // Add primitive
-    auto prim = cppassist::make_unique<opengl::Primitive>();
-    prim->setMode(gl::GL_TRIANGLES);
-    prim->setCount(vertices.size());
-    prim->bindAttribute(0, positionAttribute);
-    prim->bindAttribute(1, texCoordAttribute);
-    addPrimitive(std::move(prim));
+    // Add geometry
+    auto geometry = cppassist::make_unique<opengl::Geometry>();
+    geometry->setMode(gl::GL_TRIANGLES);
+    geometry->setCount(vertices.size());
+    geometry->bindAttribute(0, positionAttribute);
+    geometry->bindAttribute(1, texCoordAttribute);
+    addGeometry(std::move(geometry));
 }
 
 Triangle::~Triangle()

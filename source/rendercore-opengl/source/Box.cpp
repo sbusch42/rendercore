@@ -20,7 +20,7 @@ Box::Box(GpuContainer * container, float size, bool texCoords)
 }
 
 Box::Box(GpuContainer * container, float width, float height, float depth, bool)
-: Geometry(container)
+: Mesh(container)
 {
     // Box geometry
     static const std::array<glm::vec3, 36> vertices { {
@@ -155,13 +155,13 @@ Box::Box(GpuContainer * container, float width, float height, float depth, bool)
         false
     );
 
-    // Add primitive
-    auto prim = cppassist::make_unique<opengl::Primitive>();
-    prim->setMode(gl::GL_TRIANGLES);
-    prim->setCount(vertices.size());
-    prim->bindAttribute(0, positionAttribute);
-    prim->bindAttribute(1, texCoordAttribute);
-    addPrimitive(std::move(prim));
+    // Add geometry
+    auto geometry = cppassist::make_unique<opengl::Geometry>();
+    geometry->setMode(gl::GL_TRIANGLES);
+    geometry->setCount(vertices.size());
+    geometry->bindAttribute(0, positionAttribute);
+    geometry->bindAttribute(1, texCoordAttribute);
+    addGeometry(std::move(geometry));
 }
 
 Box::~Box()

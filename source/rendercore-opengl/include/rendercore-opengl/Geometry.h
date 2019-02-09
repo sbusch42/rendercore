@@ -3,16 +3,13 @@
 
 
 #include <memory>
-#include <vector>
-#include <array>
 #include <unordered_map>
 
-#include <rendercore/GpuContainer.h>
-#include <rendercore/AbstractDrawable.h>
+#include <glbinding/gl/types.h>
 
-#include <rendercore-opengl/Buffer.h>
-#include <rendercore-opengl/Primitive.h>
-#include <rendercore-opengl/VertexAttribute.h>
+#include <globjects/VertexArray.h>
+
+#include <rendercore-opengl/rendercore-opengl_api.h>
 
 
 namespace rendercore
@@ -21,21 +18,23 @@ namespace opengl
 {
 
 
+class Material;
+class Buffer;
+class VertexAttribute;
+
+
 /**
 *  @brief
 *    Geometry that can be rendered
 */
-class RENDERCORE_OPENGL_API Geometry : public rendercore::GpuContainer, public AbstractDrawable
+class RENDERCORE_OPENGL_API Geometry
 {
 public:
     /**
     *  @brief
     *    Constructor
-    *
-    *  @param[in] container
-    *    GPU container (can be null)
     */
-    Geometry(GpuContainer * container = nullptr);
+    Geometry();
 
     /**
     *  @brief
@@ -45,189 +44,171 @@ public:
 
     /**
     *  @brief
-    *    Get buffers
+    *    Get primitive mode
     *
     *  @return
-    *    Associated buffers
+    *    Primitive mode (e.g., GL_TRIANGLES)
     */
-    const std::vector< Buffer * > & buffers() const;
+    gl::GLenum mode() const;
 
     /**
     *  @brief
-    *    Get buffer
+    *    Set primitive mode
     *
-    *  @param[in] index
-    *    Buffer index
-    *
-    *  @return
-    *    Buffer (can be null)
+    *  @param[in] mode
+    *    Primitive mode (e.g., GL_TRIANGLES)
     */
-    const Buffer * buffer(size_t index) const;
+    void setMode(gl::GLenum mode);
 
     /**
     *  @brief
-    *    Get buffer
-    *
-    *  @param[in] index
-    *    Buffer index
+    *    Get index buffer
     *
     *  @return
-    *    Buffer (can be null)
+    *    Index buffer (can be null)
     */
-    Buffer * buffer(size_t index);
+    Buffer * indexBuffer() const;
 
     /**
     *  @brief
-    *    Set buffer
+    *    Get index buffer type
+    *
+    *  @return
+    *    Data type of index buffer (e.g., GL_UNSIGNED_INT)
+    */
+    gl::GLenum indexBufferType() const;
+
+    /**
+    *  @brief
+    *    Set index buffer
     *
     *  @param[in] buffer
-    *    Buffer (must NOT be null!)
+    *    Index buffer (can be null)
+    *  @param[in] type
+    *    Data type of index buffer (e.g., GL_UNSIGNED_INT)
     */
-    void addBuffer(Buffer * buffer);
+    void setIndexBuffer(Buffer * buffer, gl::GLenum type);
 
     /**
     *  @brief
-    *    Add buffer
+    *    Get element count
     *
-    *  @param[in] buffer
-    *    Buffer (must NOT be null!)
+    *  @return
+    *    Number of elements to render
+    */
+    unsigned int count() const;
+
+    /**
+    *  @brief
+    *    Set element count
+    *
+    *  @param[in] count
+    *    Number of elements to render
+    */
+    void setCount(unsigned int count);
+
+    /**
+    *  @brief
+    *    Get attribute bindings
+    *
+    *  @return
+    *    List of attribute bindings
+    */
+    const std::unordered_map<size_t, const VertexAttribute *> & attributeBindings() const;
+
+    /**
+    *  @brief
+    *    Get attribute binding for given attribute index
+    *
+    *  @param[in] index
+    *    Attribute index
+    *
+    *  @return
+    *    Attribute binding (can be null)
+    */
+    const VertexAttribute * attributeBinding(size_t index) const;
+
+    /**
+    *  @brief
+    *    Create attribute binding
+    *
+    *  @param[in] index
+    *    Attribute index
+    *  @param[in] vertexAttribute
+    *    Vertex attribute to bind
+    */
+    void bindAttribute(size_t index, const VertexAttribute * vertexAttribute);
+
+    /**
+    *  @brief
+    *    Get material
+    *
+    *  @return
+    *    Material (can be null)
+    */
+    Material * material() const;
+
+    /**
+    *  @brief
+    *    Set material
+    *
+    *  @param[in] material
+    *    Material (can be null)
+    */
+    void setMaterial(Material * material);
+
+    /**
+    *  @brief
+    *    Draw geometry
     *
     *  @remarks
-    *    Transfers ownership over the buffer to the geometry.
+    *    On the first call, the VAO for this geometry will be created
+    *    and prepared according to the configuration of this object.
+    *
+    *  @notes
+    *    - Requires an active rendering context
     */
-    void addBuffer(std::unique_ptr<Buffer> && buffer);
+    void draw();
 
     /**
     *  @brief
-    *    Create buffer from data
+    *    De-Initialize geometry
     *
-    *  @param[in] data
-    *    Buffer data (can be null)
-    *  @param[in] size
-    *    Data size
+    *  @remarks
+    *    This function must be called when the rendering context has been lost.
+    *    It invalidates the VAO being held in this object, so that is has to
+    *    be reconstructed on the next call to draw().
     *
-    *  @return
-    *    Buffer (can be null)
+    *  @notes
+    *    - Requires an active rendering context
     */
-    Buffer * createBuffer(const void * data, unsigned int size);
-
-    /**
-    *  @brief
-    *    Create buffer from typed vector
-    *
-    *  @tparam Type
-    *    The element type
-    *  @param[in] data
-    *    Buffer data
-    */
-    template <typename Type>
-    Buffer * createBuffer(const std::vector<Type> & data);
-
-    /**
-    *  @brief
-    *    Create buffer from typed array
-    *
-    *  @tparam Type
-    *    The element type
-    *  @tparam Count
-    *    The number of elements
-    *  @param[in] data
-    *    Buffer data
-    */
-    template <typename Type, std::size_t Count>
-    Buffer * createBuffer(const std::array<Type, Count> & data);
-
-    /**
-    *  @brief
-    *    Get vertex attributes
-    *
-    *  @return
-    *    Vertex attributes
-    */
-    const std::vector< std::unique_ptr<VertexAttribute> > & vertexAttributes() const;
-
-    /**
-    *  @brief
-    *    Add vertex attribute
-    *
-    *  @param[in] buffer
-    *    Buffer that is used (must NOT be null!)
-    *  @param[in] baseOffset
-    *    Offset into the buffer (in bytes)
-    *  @param[in] relativeOffset
-    *    Relative offset of this attribute data (in bytes)
-    *  @param[in] stride
-    *    Number of bytes between two adjacent elements in the buffer (in bytes)
-    *  @param[in] type
-    *    Data type (e.g., gl::GL_FLOAT)
-    *  @param[in] components
-    *    Number of components
-    *  @param[in] normalize
-    *    Shall the data be normalized?
-    *
-    *  @return
-    *    Vertex attribute (never null)
-    */
-    VertexAttribute * addVertexAttribute(Buffer * buffer
-      , unsigned int baseOffset
-      , unsigned int relativeOffset
-      , int stride
-      , gl::GLenum type
-      , unsigned int components
-      , bool normalize);
-
-    /**
-    *  @brief
-    *    Get primitives
-    *
-    *  @return
-    *    Primitives
-    */
-    const std::vector< std::unique_ptr<Primitive> > & primitives() const;
-
-    /**
-    *  @brief
-    *    Get primitive
-    *
-    *  @param[in] index
-    *    Primitive index
-    *
-    *  @return
-    *    Primitive at given index (can be null)
-    */
-    const Primitive * primitive(size_t index) const;
-
-    /**
-    *  @brief
-    *    Add primitive
-    *
-    *  @param[in] primitive
-    *    Primitive
-    */
-    void addPrimitive(std::unique_ptr<Primitive> && primitive);
-
-    // Virtual AbstractDrawable functions
-    virtual void draw() const override;
+    void deinit();
 
 protected:
-    // Virtual GpuObject functions
-    virtual void onDeinit() override;
+    /**
+    *  @brief
+    *    Create VAO from data
+    *
+    *  @notes
+    *    - Requires an active rendering context
+    */
+    void prepareVAO();
 
 protected:
-    // Buffers
-    std::vector< Buffer * >                m_buffers;    ///< Buffers associated with this geometry
-    std::vector< std::unique_ptr<Buffer> > m_ownbuffers; ///< Buffers that are owned by the geometry
+    // Geometry configuration
+    gl::GLenum     m_mode;        ///< Primitive mode (e.g., GL_TRIANGLES)
+    Buffer       * m_indexBuffer; ///< Index buffer (can be null)
+    gl::GLenum     m_indexType;   ///< Data type of index buffer (e.g., GL_UNSIGNED_INT)
+    unsigned int   m_count;       ///< Number of elements to render
+    Material *     m_material;    ///< Material (can be null)
 
-    // Vertex attributes
-    std::vector< std::unique_ptr<VertexAttribute> > m_vertexAttributes; ///< List of vertex attributes
+    // Attributes
+    std::unordered_map<size_t, const VertexAttribute *> m_attributes; ///< Vertex attribute bindings
 
-    // Primitives
-    std::vector< std::unique_ptr<Primitive> > m_primitives; ///< List of primitives that are drawn
+    // OpenGL objects
+    std::unique_ptr<globjects::VertexArray> m_vao; ///< Vertex array object
 };
 
 
 } // namespace opengl
 } // namespace rendercore
-
-
-#include <rendercore-opengl/Geometry.inl>

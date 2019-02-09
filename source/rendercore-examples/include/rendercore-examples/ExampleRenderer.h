@@ -63,7 +63,7 @@ protected:
 
     // GPU data
     std::unique_ptr<rendercore::Camera>           m_camera;   ///< Camera in the scene
-    std::unique_ptr<rendercore::AbstractDrawable> m_geometry; ///< Geometry that is rasterized
+    std::unique_ptr<rendercore::AbstractDrawable> m_mesh;     ///< Mesh that is rasterized
     std::unique_ptr<rendercore::opengl::Texture>  m_texture;  ///< Texture
     std::unique_ptr<rendercore::opengl::Program>  m_program;  ///< Program used for rendering
 };

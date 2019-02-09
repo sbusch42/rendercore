@@ -11,7 +11,7 @@
 
 #include <rendercore-opengl/Texture.h>
 #include <rendercore-opengl/Material.h>
-#include <rendercore-opengl/Geometry.h>
+#include <rendercore-opengl/Mesh.h>
 #include <rendercore-opengl/Program.h>
 
 #include <rendercore-examples/rendercore-examples_api.h>
@@ -68,7 +68,7 @@ protected:
     std::unique_ptr<rendercore::opengl::Program>                 m_program;   ///< Program used for rendering
     std::vector< std::unique_ptr<rendercore::opengl::Texture> >  m_textures;  ///< List of textures
     std::vector< std::unique_ptr<rendercore::opengl::Material> > m_materials; ///< List of materials
-    std::vector< std::unique_ptr<rendercore::opengl::Geometry> > m_meshes;    ///< List of meshes
+    std::vector< std::unique_ptr<rendercore::opengl::Mesh> >     m_meshes;    ///< List of meshes
 };
 
 

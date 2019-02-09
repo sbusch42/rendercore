@@ -44,14 +44,14 @@ set(headers
     ${include_path}/Buffer.h
     ${include_path}/Buffer.inl
     ${include_path}/Geometry.h
-    ${include_path}/Geometry.inl
     ${include_path}/GLContextFormat.h
     ${include_path}/GLContextUtils.h
     ${include_path}/Icosahedron.h
     ${include_path}/Material.h
     ${include_path}/MaterialAttribute.h
     ${include_path}/MaterialAttribute.inl
-    ${include_path}/Primitive.h
+    ${include_path}/Mesh.h
+    ${include_path}/Mesh.inl
     ${include_path}/Program.h
     ${include_path}/Quad.h
     ${include_path}/Shader.h
@@ -73,7 +73,7 @@ set(sources
     ${source_path}/Icosahedron.cpp
     ${source_path}/Material.cpp
     ${source_path}/MaterialAttribute.cpp
-    ${source_path}/Primitive.cpp
+    ${source_path}/Mesh.cpp
     ${source_path}/Program.cpp
     ${source_path}/Quad.cpp
     ${source_path}/Shader.cpp

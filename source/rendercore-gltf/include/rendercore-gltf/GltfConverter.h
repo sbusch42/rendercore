@@ -6,7 +6,7 @@
 #include <string>
 #include <vector>
 
-#include <rendercore-opengl/Geometry.h>
+#include <rendercore-opengl/Mesh.h>
 #include <rendercore-opengl/Material.h>
 #include <rendercore-opengl/Texture.h>
 
@@ -77,7 +77,7 @@ public:
     *  @return
     *    List of loaded meshes
     */
-    std::vector< std::unique_ptr<rendercore::opengl::Geometry> > & meshes();
+    std::vector< std::unique_ptr<rendercore::opengl::Mesh> > & meshes();
 
 protected:
     /**
@@ -128,7 +128,7 @@ protected:
     std::vector< std::unique_ptr< std::vector<char> > >          m_data;      ///< Loaded data buffers
     std::vector< std::unique_ptr<rendercore::opengl::Texture> >  m_textures;  ///< List of textures
     std::vector< std::unique_ptr<rendercore::opengl::Material> > m_materials; ///< List of materials
-    std::vector< std::unique_ptr<rendercore::opengl::Geometry> > m_meshes;    ///< List of meshes
+    std::vector< std::unique_ptr<rendercore::opengl::Mesh> >     m_meshes;    ///< List of meshes
 };
 
 

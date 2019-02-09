@@ -15,7 +15,7 @@ namespace opengl
 
 
 Sphere::Sphere(GpuContainer * container, float radius, bool texCoords)
-: Geometry(container)
+: Mesh(container)
 {
     // Create icosahedron
     m_icosahedron = cppassist::make_unique<Icosahedron>();
@@ -27,10 +27,10 @@ Sphere::Sphere(GpuContainer * container, float radius, bool texCoords)
         vertex *= radius;
     }
 
-    // Create primitive
-    auto prim = cppassist::make_unique<opengl::Primitive>();
-    prim->setMode(gl::GL_TRIANGLES);
-    prim->setCount(m_icosahedron->indices().size() * std::tuple_size<Icosahedron::Face>::value);
+    // Create geometry
+    auto geometry = cppassist::make_unique<opengl::Geometry>();
+    geometry->setMode(gl::GL_TRIANGLES);
+    geometry->setCount(m_icosahedron->indices().size() * std::tuple_size<Icosahedron::Face>::value);
 
     // Create vertex buffer
     auto * vertexBuffer = createBuffer(scaledVertices);
@@ -47,7 +47,7 @@ Sphere::Sphere(GpuContainer * container, float radius, bool texCoords)
     );
 
     // Bind attribute
-    prim->bindAttribute(0, positionAttribute);
+    geometry->bindAttribute(0, positionAttribute);
 
     // Add texture coordinates?
     if (texCoords) {
@@ -69,15 +69,15 @@ Sphere::Sphere(GpuContainer * container, float radius, bool texCoords)
         );
 
         // Bind attribute
-        prim->bindAttribute(1, texCoordAttribute);
+        geometry->bindAttribute(1, texCoordAttribute);
     }
 
     // Create index buffer
     auto * indexBuffer = createBuffer(m_icosahedron->indices());
-    prim->setIndexBuffer(indexBuffer, gl::GL_UNSIGNED_SHORT);
+    geometry->setIndexBuffer(indexBuffer, gl::GL_UNSIGNED_SHORT);
 
-    // Add primitive to geometry
-    addPrimitive(std::move(prim));
+    // Add geometry
+    addGeometry(std::move(geometry));
 }
 
 Sphere::~Sphere()

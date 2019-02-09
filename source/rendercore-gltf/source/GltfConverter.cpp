@@ -8,7 +8,7 @@
 #include <cppfs/fs.h>
 #include <cppfs/FileHandle.h>
 
-#include <rendercore-opengl/Geometry.h>
+#include <rendercore-opengl/Mesh.h>
 #include <rendercore-opengl/Material.h>
 
 #include <rendercore-gltf/Asset.h>
@@ -68,7 +68,7 @@ std::vector< std::unique_ptr<rendercore::opengl::Material> > & GltfConverter::ma
     return m_materials;
 }
 
-std::vector< std::unique_ptr<rendercore::opengl::Geometry> > & GltfConverter::meshes()
+std::vector< std::unique_ptr<rendercore::opengl::Mesh> > & GltfConverter::meshes()
 {
     return m_meshes;
 }
@@ -100,8 +100,8 @@ void GltfConverter::generateMaterial(const Asset & asset, const Material & gltfM
 
 void GltfConverter::generateMesh(const Asset & gltfAsset, const Mesh & gltfMesh)
 {
-    // Create geometry
-    auto geometry = cppassist::make_unique<rendercore::opengl::Geometry>();
+    // Create mesh
+    auto mesh = cppassist::make_unique<rendercore::opengl::Mesh>();
 
     // Caches
     std::unordered_map<size_t, opengl::VertexAttribute *> vertexAttributes;
@@ -109,10 +109,10 @@ void GltfConverter::generateMesh(const Asset & gltfAsset, const Mesh & gltfMesh)
 
     // Process primitives
     for (auto * gltfPrimitive : gltfMesh.primitives()) {
-        // Create primitive
-        auto primitive = cppassist::make_unique<rendercore::opengl::Primitive>();
-        primitive->setMode((gl::GLenum)gltfPrimitive->mode());
-        primitive->setMaterial(gltfPrimitive->material() < m_materials.size() ? m_materials[gltfPrimitive->material()].get() : nullptr);
+        // Create geometry
+        auto geometry = cppassist::make_unique<rendercore::opengl::Geometry>();
+        geometry->setMode((gl::GLenum)gltfPrimitive->mode());
+        geometry->setMaterial(gltfPrimitive->material() < m_materials.size() ? m_materials[gltfPrimitive->material()].get() : nullptr);
 
         // Process vertex attributes
         const auto & attributes = gltfPrimitive->attributes();
@@ -147,7 +147,7 @@ void GltfConverter::generateMesh(const Asset & gltfAsset, const Mesh & gltfMesh)
                 std::vector<char> * data = (bufferIndex < m_data.size()) ? m_data[bufferIndex].get() : nullptr;
                 if (data) {
                     // Create buffer
-                    buffer = geometry->createBuffer(data->data() + gltfBufferView->offset(), gltfBufferView->size());
+                    buffer = mesh->createBuffer(data->data() + gltfBufferView->offset(), gltfBufferView->size());
 
                     // Save buffer for later use
                     bufferViews[bufferViewIndex] = buffer;
@@ -171,7 +171,7 @@ void GltfConverter::generateMesh(const Asset & gltfAsset, const Mesh & gltfMesh)
                 else if (dataType == "MAT4")   numComponents = 16;
 
                 // Create vertex attribute
-                vertexAttribute = geometry->addVertexAttribute(
+                vertexAttribute = mesh->addVertexAttribute(
                     buffer,
                     gltfAccessor->offset(),
                     0,
@@ -186,7 +186,7 @@ void GltfConverter::generateMesh(const Asset & gltfAsset, const Mesh & gltfMesh)
             }
 
             // Bind vertex attribute
-            primitive->bindAttribute(attributeIndex, vertexAttribute);
+            geometry->bindAttribute(attributeIndex, vertexAttribute);
         }
 
         // Set index buffer
@@ -212,26 +212,26 @@ void GltfConverter::generateMesh(const Asset & gltfAsset, const Mesh & gltfMesh)
                             std::vector<char> * data = (bufferIndex < m_data.size()) ? m_data[bufferIndex].get() : nullptr;
                             if (data) {
                                 // Create buffer
-                                buffer = geometry->createBuffer(data->data() + gltfBufferView->offset(), gltfBufferView->size());
+                                buffer = mesh->createBuffer(data->data() + gltfBufferView->offset(), gltfBufferView->size());
                             }
                         }
 
                         // Set index buffer
                         if (buffer) {
-                            primitive->setIndexBuffer(buffer, (gl::GLenum)gltfAccessor->componentType());
-                            primitive->setCount(gltfAccessor->count());
+                            geometry->setIndexBuffer(buffer, (gl::GLenum)gltfAccessor->componentType());
+                            geometry->setCount(gltfAccessor->count());
                         }
                     }
                 }
             }
         }
 
-        // Add primitive to geometry
-        geometry->addPrimitive(std::move(primitive));
+        // Add geometry to mesh
+        mesh->addGeometry(std::move(geometry));
     }
 
     // Save mesh
-    m_meshes.push_back(std::move(geometry));
+    m_meshes.push_back(std::move(mesh));
 }
 
 rendercore::opengl::Texture * GltfConverter::loadTexture(const std::string & basePath, const std::string & filename)
