@@ -4,6 +4,7 @@
 
 #include <memory>
 #include <vector>
+#include <string>
 
 #include <rendercore-gltf/Scene.h>
 #include <rendercore-gltf/Node.h>
@@ -37,6 +38,24 @@ public:
     *    Destructor
     */
     ~Asset();
+
+    /**
+    *  @brief
+    *    Get base path
+    *
+    *  @return
+    *    Path to directory from which the asset has been loaded
+    */
+    const std::string & basePath() const;
+
+    /**
+    *  @brief
+    *    Set base path
+    *
+    *  @param[in] path
+    *    Path to directory from which the asset has been loaded
+    */
+    void setBasePath(const std::string & path);
 
     /**
     *  @brief
@@ -273,10 +292,11 @@ public:
     void addMesh(std::unique_ptr<Mesh> && mesh);
 
 protected:
-    // Options
-    float m_version;    ///< GLTF version
-    float m_minVersion; ///< Minimum GLTF version for this asset
-    int   m_scene;      ///< Index of default scene (-1 for none)
+    // Meta data
+    std::string m_basePath;   ///< Path to directory from which the asset has been loaded
+    float       m_version;    ///< GLTF version
+    float       m_minVersion; ///< Minimum GLTF version for this asset
+    int         m_scene;      ///< Index of default scene (-1 for none)
 
     // Data
     std::vector< std::unique_ptr<Scene> >      m_scenes;

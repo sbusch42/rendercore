@@ -51,6 +51,15 @@ public:
 
     /**
     *  @brief
+    *    Set container
+    *
+    *  @param[in] container
+    *    Container to which the object belongs (can be null)
+    */
+    void setContainer(GpuContainer * container);
+
+    /**
+    *  @brief
     *    Check if GPU object has been initialized
     *
     *  @return

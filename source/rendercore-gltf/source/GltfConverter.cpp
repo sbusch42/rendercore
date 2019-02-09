@@ -35,98 +35,34 @@ GltfConverter::~GltfConverter()
 {
 }
 
-void GltfConverter::convert(const Asset & asset, const std::string & basePath)
+void GltfConverter::convert(const Asset & asset)
 {
-    // Create buffers
+    // Load data buffers
     auto buffers = asset.buffers();
     for (auto * buffer : buffers) {
-        loadBuffer(basePath, buffer->uri());
+        loadData(asset.basePath(), buffer->uri());
     }
 
-    // Create buffer views
-    auto bufferViews = asset.bufferViews();
-    for (auto * bufferView : bufferViews) {
-        loadBufferView(asset, *bufferView);
-    }
-
-    // Create meshes
+    // Generate meshes
     auto meshes = asset.meshes();
     for (auto * mesh : meshes) {
-        createMesh(asset, *mesh);
+        generateMesh(asset, *mesh);
     }
 }
 
-rendercore::opengl::Geometry * GltfConverter::geometry()
+std::vector< std::unique_ptr<rendercore::opengl::Geometry> > & GltfConverter::meshes()
 {
-    rendercore::opengl::Geometry * geometry = nullptr;
-
-    if (m_meshes.size() > 0) {
-        geometry = m_meshes[0].get();
-    }
-
-    for (size_t i=0; i<m_meshes.size(); i++) {
-        m_meshes[i].release();
-    }
-
-    for (size_t i=0; i<m_bufferViews.size(); i++) {
-        m_bufferViews[i].release();
-    }
-
-    return geometry;
+    return m_meshes;
 }
 
-void GltfConverter::loadBuffer(const std::string & basePath, const std::string & path)
-{
-    // [TODO] Check if path contains BASE64-encoded data
-
-    // Create data buffer
-    auto buffer = cppassist::make_unique< std::vector<char> >();
-
-    // Open file
-    auto f = fs::open(basePath + "/" + path);
-    if (f.exists()) {
-        // Create input stream
-        auto inputStream = f.createInputStream(std::ios::binary);
-        if (inputStream && !inputStream->eof()) {
-            // Allocate data
-            buffer->resize(f.size());
-
-            // Read data
-            inputStream->read(buffer->data(), f.size());
-        }
-    }
-
-    // Save buffer
-    m_buffers.push_back(std::move(buffer));
-}
-
-void GltfConverter::loadBufferView(const Asset &, const BufferView & view)
-{
-    // Get buffer index
-    auto bufferIndex = view.buffer();
-    if (bufferIndex < m_buffers.size()) {
-        // Get buffer
-        std::vector<char> * buffer = m_buffers[bufferIndex].get();
-
-        // Create buffer for buffer view
-        auto bufferView = cppassist::make_unique<rendercore::opengl::Buffer>();
-        bufferView->setData(buffer->data() + view.offset(), view.size());
-
-        // Save buffer
-        m_bufferViews.push_back(std::move(bufferView));
-    } else {
-        // Invalid buffer
-        m_bufferViews.push_back(nullptr);
-    }
-}
-
-void GltfConverter::createMesh(const Asset & gltfAsset, const Mesh & gltfMesh)
+void GltfConverter::generateMesh(const Asset & gltfAsset, const Mesh & gltfMesh)
 {
     // Create geometry
     auto geometry = cppassist::make_unique<rendercore::opengl::Geometry>();
 
-    // Cache of vertex attribute
+    // Caches
     std::unordered_map<size_t, opengl::VertexAttribute *> vertexAttributes;
+    std::unordered_map<size_t, opengl::Buffer *>          bufferViews;
 
     // Process primitives
     for (auto * gltfPrimitive : gltfMesh.primitives()) {
@@ -159,10 +95,23 @@ void GltfConverter::createMesh(const Asset & gltfAsset, const Mesh & gltfMesh)
             auto * gltfBuffer = gltfAsset.buffer(bufferIndex);
             if (!gltfBuffer) break;
 
-            // Get buffer
-            opengl::Buffer * buffer = bufferViewIndex < m_bufferViews.size() ? m_bufferViews[bufferViewIndex].get() : nullptr;
+            // Get or create buffer view
+            opengl::Buffer * buffer = nullptr;
+            if (bufferViews.count(bufferViewIndex) > 0) {
+                buffer = bufferViews.at(bufferViewIndex);
+            } else {
+                // Get data
+                std::vector<char> * data = (bufferIndex < m_data.size()) ? m_data[bufferIndex].get() : nullptr;
+                if (data) {
+                    // Create buffer
+                    buffer = geometry->createBuffer(data->data() + gltfBufferView->offset(), gltfBufferView->size());
 
-            // Get corresponding vertex attribute
+                    // Save buffer for later use
+                    bufferViews[bufferViewIndex] = buffer;
+                } else break;
+            }
+
+            // Get or create vertex attribute
             opengl::VertexAttribute * vertexAttribute = nullptr;
             if (vertexAttributes.count(accessorIndex) > 0) {
                 vertexAttribute = vertexAttributes.at(accessorIndex);
@@ -204,11 +153,32 @@ void GltfConverter::createMesh(const Asset & gltfAsset, const Mesh & gltfMesh)
             auto * gltfAccessor = gltfAsset.accessor(indexBuffer);
             if (gltfAccessor) {
                 // Get buffer view
-                auto index = gltfAccessor->bufferView();
-                if (index < m_bufferViews.size()) {
-                    // Set index buffer
-                    primitive->setIndexBuffer(m_bufferViews[index].get(), (gl::GLenum)gltfAccessor->componentType());
-                    primitive->setCount(gltfAccessor->count());
+                auto bufferViewIndex = gltfAccessor->bufferView();
+                auto * gltfBufferView = gltfAsset.bufferView(bufferViewIndex);
+                if (gltfBufferView) {
+                    // Get buffer
+                    size_t bufferIndex = gltfBufferView->buffer();
+                    auto * gltfBuffer = gltfAsset.buffer(bufferIndex);
+                    if (gltfBuffer) {
+                        // Get or create buffer
+                        opengl::Buffer * buffer = nullptr;
+                        if (bufferViews.count(bufferViewIndex) > 0) {
+                            buffer = bufferViews.at(bufferViewIndex);
+                        } else {
+                            // Get data
+                            std::vector<char> * data = (bufferIndex < m_data.size()) ? m_data[bufferIndex].get() : nullptr;
+                            if (data) {
+                                // Create buffer
+                                buffer = geometry->createBuffer(data->data() + gltfBufferView->offset(), gltfBufferView->size());
+                            }
+                        }
+
+                        // Set index buffer
+                        if (buffer) {
+                            primitive->setIndexBuffer(buffer, (gl::GLenum)gltfAccessor->componentType());
+                            primitive->setCount(gltfAccessor->count());
+                        }
+                    }
                 }
             }
         }
@@ -219,6 +189,31 @@ void GltfConverter::createMesh(const Asset & gltfAsset, const Mesh & gltfMesh)
 
     // Save mesh
     m_meshes.push_back(std::move(geometry));
+}
+
+void GltfConverter::loadData(const std::string & basePath, const std::string & filename)
+{
+    // [TODO] Check if filename contains BASE64-encoded data
+
+    // Create data
+    auto data = cppassist::make_unique< std::vector<char> >();
+
+    // Open file
+    auto f = fs::open(basePath + filename);
+    if (f.exists()) {
+        // Create input stream
+        auto inputStream = f.createInputStream(std::ios::binary);
+        if (inputStream && !inputStream->eof()) {
+            // Allocate data
+            data->resize(f.size());
+
+            // Read data
+            inputStream->read(data->data(), f.size());
+        }
+    }
+
+    // Save data
+    m_data.push_back(std::move(data));
 }
 
 

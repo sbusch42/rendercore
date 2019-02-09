@@ -19,6 +19,16 @@ Asset::~Asset()
 {
 }
 
+const std::string & Asset::basePath() const
+{
+    return m_basePath;
+}
+
+void Asset::setBasePath(const std::string & path)
+{
+    m_basePath = path;
+}
+
 float Asset::version() const
 {
     return m_version;

@@ -58,8 +58,12 @@ GltfRenderer::GltfRenderer(GpuContainer * container)
 
     // Create mesh from GLTF
     GltfConverter converter;
-    converter.convert(*asset.get(), rendercore::dataPath() + "/rendercore/gltf/BoxAnimated");
-    m_geometry.reset(converter.geometry());
+    converter.convert(*asset.get());
+    auto & meshes = converter.meshes();
+    if (meshes.size() > 0) {
+        m_geometry = std::move(meshes[0]);
+        m_geometry->setContainer(this);
+    }
 }
 
 GltfRenderer::~GltfRenderer()
@@ -126,7 +130,9 @@ void GltfRenderer::onRender()
     gl::glEnable(gl::GL_DEPTH_TEST);
 
     // Render geometry
-    m_geometry->draw();
+    if (m_geometry) {
+        m_geometry->draw();
+    }
 
     // Release program
     m_program->program()->release();

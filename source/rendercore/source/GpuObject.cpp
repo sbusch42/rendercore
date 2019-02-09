@@ -35,6 +35,22 @@ const GpuContainer * GpuObject::container() const
     return m_container;
 }
 
+void GpuObject::setContainer(GpuContainer * container)
+{
+    // Unregister from old container
+    if (m_container) {
+        m_container->unregisterObject(this);
+    }
+
+    // Set new container
+    m_container = container;
+
+    // Register at container
+    if (m_container) {
+        m_container->registerObject(this);
+    }
+}
+
 bool GpuObject::initialized() const
 {
     return m_initialized;

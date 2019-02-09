@@ -4,11 +4,11 @@
 
 #include <memory>
 
-#include <rendercore/AbstractDrawable.h>
 #include <rendercore/Camera.h>
 #include <rendercore/Renderer.h>
 #include <rendercore/Transform.h>
 
+#include <rendercore-opengl/Geometry.h>
 #include <rendercore-opengl/Program.h>
 
 #include <rendercore-examples/rendercore-examples_api.h>
@@ -61,7 +61,7 @@ protected:
 
     // GPU data
     std::unique_ptr<rendercore::Camera>           m_camera;   ///< Camera in the scene
-    std::unique_ptr<rendercore::AbstractDrawable> m_geometry; ///< Geometry that is rasterized
+    std::unique_ptr<rendercore::opengl::Geometry> m_geometry; ///< Geometry that is rasterized
     std::unique_ptr<rendercore::opengl::Program>  m_program;  ///< Program used for rendering
 };
 

@@ -2,14 +2,16 @@
 #include <rendercore-gltf/GltfLoader.h>
 
 #include <algorithm>
-#include <iostream>
 
 #include <cppassist/memory/make_unique.h>
+
+#include <cppfs/FilePath.h>
 
 #include <cppexpose/JSON.h>
 #include <cppexpose/Object.h>
 
 
+using namespace cppfs;
 using namespace cppexpose;
 
 
@@ -36,16 +38,20 @@ std::unique_ptr<Asset> GltfLoader::load(const std::string & path)
         return false;
     }
 
+    // Get base directory
+    std::string basePath = FilePath(path).directoryPath();
+
     // Parse file
-    return parseFile(root);
+    return parseFile(root, basePath);
 }
 
-std::unique_ptr<Asset> GltfLoader::parseFile(const cppexpose::Object & root)
+std::unique_ptr<Asset> GltfLoader::parseFile(const cppexpose::Object & root, const std::string & basePath)
 {
     bool res = true;
 
     // Create asset
     std::unique_ptr<Asset> asset = cppassist::make_unique<Asset>();
+    asset->setBasePath(basePath);
 
     // Get object properties
     const auto & properties = root.properties();

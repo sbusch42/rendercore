@@ -57,7 +57,7 @@ public:
 
 protected:
     // GLTF parsing
-    std::unique_ptr<Asset> parseFile(const cppexpose::Object & root);
+    std::unique_ptr<Asset> parseFile(const cppexpose::Object & root, const std::string & basePath);
     bool parseAsset(Asset & asset, const cppexpose::AbstractVar * value);
     bool parseDefaultScene(Asset & asset, const cppexpose::AbstractVar * value);
     bool parseScenes(Asset & asset, const cppexpose::AbstractVar * value);
