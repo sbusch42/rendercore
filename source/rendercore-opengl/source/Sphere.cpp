@@ -7,6 +7,8 @@
 
 #include <glbinding/gl/enum.h>
 
+#include <rendercore-opengl/enums.h>
+
 
 namespace rendercore
 {
@@ -47,7 +49,7 @@ Sphere::Sphere(GpuContainer * container, float radius, bool texCoords)
     );
 
     // Bind attribute
-    geometry->bindAttribute(0, positionAttribute);
+    geometry->bindAttribute((unsigned int)AttributeIndex::Position, positionAttribute);
 
     // Add texture coordinates?
     if (texCoords) {
@@ -69,7 +71,7 @@ Sphere::Sphere(GpuContainer * container, float radius, bool texCoords)
         );
 
         // Bind attribute
-        geometry->bindAttribute(1, texCoordAttribute);
+        geometry->bindAttribute((unsigned int)AttributeIndex::TexCoord0, texCoordAttribute);
     }
 
     // Create index buffer

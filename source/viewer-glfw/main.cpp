@@ -65,9 +65,9 @@ int main(int argc, char * argv[])
     }
 
     // Create renderer
-    // window.canvas()->setRenderer(cppassist::make_unique<ExampleRenderer>());
+    window.canvas()->setRenderer(cppassist::make_unique<ExampleRenderer>());
     // window.canvas()->setRenderer(cppassist::make_unique<GeometryRenderer>());
-    window.canvas()->setRenderer(cppassist::make_unique<GltfRenderer>());
+    // window.canvas()->setRenderer(cppassist::make_unique<GltfRenderer>());
 
     // Initialize context, print context info
     window.context()->use();

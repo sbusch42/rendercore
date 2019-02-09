@@ -135,6 +135,17 @@ const Geometry * Mesh::geometry(size_t index) const
     return m_geometries[index].get();
 }
 
+Geometry * Mesh::geometry(size_t index)
+{
+    // Check if index is valid
+    if (index >= m_geometries.size()) {
+        return nullptr;
+    }
+
+    // Return geometry
+    return m_geometries[index].get();
+}
+
 void Mesh::addGeometry(std::unique_ptr<Geometry> && geometry)
 {
     // Add geometry

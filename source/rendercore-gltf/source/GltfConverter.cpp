@@ -10,6 +10,7 @@
 
 #include <rendercore-opengl/Mesh.h>
 #include <rendercore-opengl/Material.h>
+#include <rendercore-opengl/enums.h>
 
 #include <rendercore-gltf/Asset.h>
 #include <rendercore-gltf/Buffer.h>
@@ -79,20 +80,20 @@ void GltfConverter::generateMaterial(const Asset & asset, const Material & gltfM
     auto material = cppassist::make_unique<rendercore::opengl::Material>();
 
     // Set attributes
-    material->setValue<glm::vec4>("baseColorFactor", gltfMaterial.baseColorFactor());
-    material->setValue<float>("metallicFactor", gltfMaterial.metallicFactor());
-    material->setValue<float>("roughnessFactor", gltfMaterial.roughnessFactor());
-    material->setValue<glm::vec3>("emissiveFactor", gltfMaterial.emissiveFactor());
-    material->setValue<std::string>("alphaMode", gltfMaterial.alphaMode());
-    material->setValue<float>("alphaCutoff", gltfMaterial.alphaCutoff());
-    material->setValue<bool>("doubleSided", gltfMaterial.doubleSided());
+    material->setValue<glm::vec4>  ("baseColorFactor", gltfMaterial.baseColorFactor());
+    material->setValue<float>      ("metallicFactor",  gltfMaterial.metallicFactor());
+    material->setValue<float>      ("roughnessFactor", gltfMaterial.roughnessFactor());
+    material->setValue<glm::vec3>  ("emissiveFactor",  gltfMaterial.emissiveFactor());
+    material->setValue<std::string>("alphaMode",       gltfMaterial.alphaMode());
+    material->setValue<float>      ("alphaCutoff",     gltfMaterial.alphaCutoff());
+    material->setValue<bool>       ("doubleSided",     gltfMaterial.doubleSided());
 
     // Set textures
-    material->setTexture("baseColorTexture",         loadTexture(asset.basePath(), gltfMaterial.baseColorTexture()));
-    material->setTexture("metallicRoughnessTexture", loadTexture(asset.basePath(), gltfMaterial.metallicRoughnessTexture()));
-    material->setTexture("normalTexture",            loadTexture(asset.basePath(), gltfMaterial.normalTexture()));
-    material->setTexture("occlusionTexture",         loadTexture(asset.basePath(), gltfMaterial.occlusionTexture()));
-    material->setTexture("emissiveTexture",          loadTexture(asset.basePath(), gltfMaterial.emissiveTexture()));
+    material->setTexture("baseColor",         loadTexture(asset.basePath(), gltfMaterial.baseColorTexture()));
+    material->setTexture("metallicRoughness", loadTexture(asset.basePath(), gltfMaterial.metallicRoughnessTexture()));
+    material->setTexture("normal",            loadTexture(asset.basePath(), gltfMaterial.normalTexture()));
+    material->setTexture("occlusion",         loadTexture(asset.basePath(), gltfMaterial.occlusionTexture()));
+    material->setTexture("emissive",          loadTexture(asset.basePath(), gltfMaterial.emissiveTexture()));
 
     // Save material
     m_materials.push_back(std::move(material));
@@ -119,22 +120,39 @@ void GltfConverter::generateMesh(const Asset & gltfAsset, const Mesh & gltfMesh)
         for (auto & it : attributes) {
             // Get attribute
             std::string name = it.first;
-            size_t attributeIndex = 10;
-            if (name == "POSITION") attributeIndex = 0;
-            if (name == "connect" || name == "signals") continue;
+            if (name == "connect" || name == "signals") {
+                continue;
+            }
+
+            // Determine attribute index
+            unsigned int attributeIndex = 2342; // invalid value
+            if (name == "POSITION")   attributeIndex = (unsigned int)AttributeIndex::Position;
+            if (name == "NORMAL")     attributeIndex = (unsigned int)AttributeIndex::Normal;
+            if (name == "TANGENT")    attributeIndex = (unsigned int)AttributeIndex::Tangent;
+            if (name == "TEXCOORD_0") attributeIndex = (unsigned int)AttributeIndex::TexCoord0;
+            if (name == "TEXCOORD_1") attributeIndex = (unsigned int)AttributeIndex::TexCoord1;
+            if (name == "TEXCOORD_2") attributeIndex = (unsigned int)AttributeIndex::TexCoord2;
+            if (name == "TEXCOORD_3") attributeIndex = (unsigned int)AttributeIndex::TexCoord3;
+            if (name == "COLOR_0")    attributeIndex = (unsigned int)AttributeIndex::Color0;
+            if (name == "COLOR_1")    attributeIndex = (unsigned int)AttributeIndex::Color1;
+            if (name == "COLOR_2")    attributeIndex = (unsigned int)AttributeIndex::Color2;
+            if (name == "COLOR_3")    attributeIndex = (unsigned int)AttributeIndex::Color3;
+            if (attributeIndex == 2342) {
+                continue;
+            }
 
             // Get GLTF accessor
-            size_t accessorIndex = it.second;
+            unsigned int accessorIndex = it.second;
             auto * gltfAccessor = gltfAsset.accessor(accessorIndex);
             if (!gltfAccessor) break;
 
             // Get GLTF buffer view
-            size_t bufferViewIndex = gltfAccessor->bufferView();
+            unsigned int bufferViewIndex = gltfAccessor->bufferView();
             auto * gltfBufferView = gltfAsset.bufferView(bufferViewIndex);
             if (!gltfBufferView) break;
 
             // Get GLTF buffer
-            size_t bufferIndex = gltfBufferView->buffer();
+            unsigned int bufferIndex = gltfBufferView->buffer();
             auto * gltfBuffer = gltfAsset.buffer(bufferIndex);
             if (!gltfBuffer) break;
 

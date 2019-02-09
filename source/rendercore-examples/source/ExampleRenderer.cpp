@@ -10,7 +10,6 @@
 #include <rendercore/rendercore.h>
 
 #include <rendercore-opengl/Sphere.h>
-#include <rendercore-opengl/Shader.h>
 
 
 using namespace rendercore::opengl;
@@ -39,21 +38,19 @@ ExampleRenderer::ExampleRenderer(GpuContainer * container)
     m_texture = cppassist::make_unique<Texture>(this);
     m_texture->load(rendercore::dataPath() + "/rendercore/textures/brickwall.glraw");
 
-    // Create program
-    m_program = cppassist::make_unique<Program>(this);
-
-    // Load vertex shader
-    auto vertShader = cppassist::make_unique<Shader>(this);
-    vertShader->load(gl::GL_VERTEX_SHADER, rendercore::dataPath() + "/rendercore/shaders/geometry/geometry.vert");
-    m_program->attach(std::move(vertShader));
-
-    // Load fragment shader
-    auto fragShader = cppassist::make_unique<Shader>(this);
-    fragShader->load(gl::GL_FRAGMENT_SHADER, rendercore::dataPath() + "/rendercore/shaders/geometry/geometry.frag");
-    m_program->attach(std::move(fragShader));
+    // Create material
+    m_material = cppassist::make_unique<Material>(this);
+    m_material->setTexture("baseColor", m_texture.get());
+    m_material->setValue<glm::vec4>("baseColorFactor", glm::vec4(0.2f, 0.7f, 0.2f, 1.0f));
 
     // Create mesh
     m_mesh = cppassist::make_unique<Sphere>(this, 2.0f, true);
+    for (size_t i=0; i<m_mesh->geometries().size(); i++) {
+        m_mesh->geometry(i)->setMaterial(m_material.get());
+    }
+
+    // Create mesh renderer
+    m_meshRenderer = cppassist::make_unique<MeshRenderer>(this);
 }
 
 ExampleRenderer::~ExampleRenderer()
@@ -103,35 +100,8 @@ void ExampleRenderer::onRender()
     m_camera->lookAt(glm::vec3(0.0f, 0.0, 9.0f), glm::vec3(0.0f, 0.0f, 0.0f), glm::vec3(0.0f, 1.0f, 0.0f));
     m_camera->perspective(glm::radians(40.0f), glm::ivec2(m_viewport.z, m_viewport.w), 0.1f, 64.0f);
 
-    // Update uniforms
-    m_program->program()->setUniform<glm::mat4>("modelMatrix",                  m_transform.transform());
-    m_program->program()->setUniform<glm::mat4>("modelViewProjectionMatrix",    m_camera->viewProjectionMatrix() * m_transform.transform());
-    m_program->program()->setUniform<glm::mat4>("viewProjectionMatrix",         m_camera->viewProjectionMatrix());
-    m_program->program()->setUniform<glm::mat4>("viewProjectionInvertedMatrix", m_camera->viewProjectionInvertedMatrix());
-    m_program->program()->setUniform<glm::mat4>("viewMatrix",                   m_camera->viewMatrix());
-    m_program->program()->setUniform<glm::mat4>("viewInvertexMatrix",           m_camera->viewInvertedMatrix());
-    m_program->program()->setUniform<glm::mat4>("projectionMatrix",             m_camera->projectionMatrix());
-    m_program->program()->setUniform<glm::mat4>("projectionInvertedMatrix",     m_camera->projectionInvertedMatrix());
-    m_program->program()->setUniform<glm::mat3>("normalMatrix",                 m_camera->normalMatrix());
-    m_program->program()->setUniform<int>      ("tex0",                         0);
-
-    // Bind texture
-    m_texture->texture()->bindActive(0);
-
-    // Bind program
-    m_program->program()->use();
-
-    // Set rendering states
-    gl::glEnable(gl::GL_DEPTH_TEST);
-
     // Render mesh
-    m_mesh->draw();
-
-    // Release program
-    m_program->program()->release();
-
-    // Release program
-    m_texture->texture()->unbindActive(0);
+    m_meshRenderer->render(*m_mesh.get(), m_transform, m_camera.get());
 }
 
 

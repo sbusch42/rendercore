@@ -4,13 +4,14 @@
 
 #include <memory>
 
-#include <rendercore/AbstractDrawable.h>
 #include <rendercore/Camera.h>
 #include <rendercore/Renderer.h>
 #include <rendercore/Transform.h>
 
-#include <rendercore-opengl/Program.h>
+#include <rendercore-opengl/Mesh.h>
+#include <rendercore-opengl/Material.h>
 #include <rendercore-opengl/Texture.h>
+#include <rendercore-opengl/MeshRenderer.h>
 
 #include <rendercore-examples/rendercore-examples_api.h>
 
@@ -63,9 +64,12 @@ protected:
 
     // GPU data
     std::unique_ptr<rendercore::Camera>           m_camera;   ///< Camera in the scene
-    std::unique_ptr<rendercore::AbstractDrawable> m_mesh;     ///< Mesh that is rasterized
+    std::unique_ptr<rendercore::opengl::Mesh>     m_mesh;     ///< Mesh that is rasterized
+    std::unique_ptr<rendercore::opengl::Material> m_material; ///< Material
     std::unique_ptr<rendercore::opengl::Texture>  m_texture;  ///< Texture
-    std::unique_ptr<rendercore::opengl::Program>  m_program;  ///< Program used for rendering
+
+    // Sub-renderers
+    std::unique_ptr<rendercore::opengl::MeshRenderer> m_meshRenderer; ///< Mesh renderer
 };
 
 

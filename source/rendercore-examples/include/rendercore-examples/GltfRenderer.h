@@ -9,10 +9,10 @@
 #include <rendercore/Renderer.h>
 #include <rendercore/Transform.h>
 
-#include <rendercore-opengl/Texture.h>
-#include <rendercore-opengl/Material.h>
 #include <rendercore-opengl/Mesh.h>
-#include <rendercore-opengl/Program.h>
+#include <rendercore-opengl/Material.h>
+#include <rendercore-opengl/Texture.h>
+#include <rendercore-opengl/MeshRenderer.h>
 
 #include <rendercore-examples/rendercore-examples_api.h>
 
@@ -52,8 +52,6 @@ public:
     virtual ~GltfRenderer();
 
 protected:
-    virtual void onInit() override;
-    virtual void onDeinit() override;
     virtual void onUpdate() override;
     virtual void onRender() override;
 
@@ -65,10 +63,12 @@ protected:
 
     // GPU data
     std::unique_ptr<rendercore::Camera>                          m_camera;    ///< Camera in the scene
-    std::unique_ptr<rendercore::opengl::Program>                 m_program;   ///< Program used for rendering
     std::vector< std::unique_ptr<rendercore::opengl::Texture> >  m_textures;  ///< List of textures
     std::vector< std::unique_ptr<rendercore::opengl::Material> > m_materials; ///< List of materials
     std::vector< std::unique_ptr<rendercore::opengl::Mesh> >     m_meshes;    ///< List of meshes
+
+    // Sub-renderers
+    std::unique_ptr<rendercore::opengl::MeshRenderer> m_meshRenderer; ///< Mesh renderer
 };
 
 

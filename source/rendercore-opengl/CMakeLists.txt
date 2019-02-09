@@ -38,6 +38,8 @@ set(include_path "${CMAKE_CURRENT_SOURCE_DIR}/include/${target}")
 set(source_path  "${CMAKE_CURRENT_SOURCE_DIR}/source")
 
 set(headers
+    ${include_path}/enums.h
+
     ${include_path}/AbstractGLContext.h
     ${include_path}/AbstractGLContextFactory.h
     ${include_path}/Box.h
@@ -52,6 +54,7 @@ set(headers
     ${include_path}/MaterialAttribute.inl
     ${include_path}/Mesh.h
     ${include_path}/Mesh.inl
+    ${include_path}/MeshRenderer.h
     ${include_path}/Program.h
     ${include_path}/Quad.h
     ${include_path}/Shader.h
@@ -74,6 +77,7 @@ set(sources
     ${source_path}/Material.cpp
     ${source_path}/MaterialAttribute.cpp
     ${source_path}/Mesh.cpp
+    ${source_path}/MeshRenderer.cpp
     ${source_path}/Program.cpp
     ${source_path}/Quad.cpp
     ${source_path}/Shader.cpp

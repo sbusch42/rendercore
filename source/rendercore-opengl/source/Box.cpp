@@ -7,6 +7,8 @@
 
 #include <glbinding/gl/enum.h>
 
+#include <rendercore-opengl/enums.h>
+
 
 namespace rendercore
 {
@@ -159,8 +161,8 @@ Box::Box(GpuContainer * container, float width, float height, float depth, bool)
     auto geometry = cppassist::make_unique<opengl::Geometry>();
     geometry->setMode(gl::GL_TRIANGLES);
     geometry->setCount(vertices.size());
-    geometry->bindAttribute(0, positionAttribute);
-    geometry->bindAttribute(1, texCoordAttribute);
+    geometry->bindAttribute((unsigned int)AttributeIndex::Position,  positionAttribute);
+    geometry->bindAttribute((unsigned int)AttributeIndex::TexCoord0, texCoordAttribute);
     addGeometry(std::move(geometry));
 }
 

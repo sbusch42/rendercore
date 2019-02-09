@@ -199,6 +199,18 @@ public:
 
     /**
     *  @brief
+    *    Get geometry
+    *
+    *  @param[in] index
+    *    Geometry index
+    *
+    *  @return
+    *    Geometry at given index (can be null)
+    */
+    Geometry * geometry(size_t index);
+
+    /**
+    *  @brief
     *    Add geometry
     *
     *  @param[in] geometry
