@@ -49,6 +49,8 @@ set(headers
     ${include_path}/GLContextUtils.h
     ${include_path}/Icosahedron.h
     ${include_path}/Material.h
+    ${include_path}/MaterialAttribute.h
+    ${include_path}/MaterialAttribute.inl
     ${include_path}/Primitive.h
     ${include_path}/Program.h
     ${include_path}/Quad.h
@@ -70,6 +72,7 @@ set(sources
     ${source_path}/GLContextUtils.cpp
     ${source_path}/Icosahedron.cpp
     ${source_path}/Material.cpp
+    ${source_path}/MaterialAttribute.cpp
     ${source_path}/Primitive.cpp
     ${source_path}/Program.cpp
     ${source_path}/Quad.cpp
