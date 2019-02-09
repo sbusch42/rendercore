@@ -25,12 +25,12 @@ namespace examples
 ExampleRenderer::ExampleRenderer(GpuContainer * container)
 : Renderer(container)
 , m_counter(0)
+, m_angle(0.0f)
 {
     // Initialize object transformation
-    m_transform.setTranslation  ({ 0.0f, 0.0f, 0.0f });
-    m_transform.setScale        ({ 1.0f, 1.0f, 1.0f });
-    m_transform.setRotationAxis ({ 0.0f, 1.0f, 0.0f });
-    m_transform.setRotationAngle(0.0f);
+    m_transform.setTranslation({ 0.0f, 0.0f, 0.0f });
+    m_transform.setScale      ({ 1.0f, 1.0f, 1.0f });
+    m_transform.setRotation   (glm::angleAxis(0.0f, glm::vec3(0.0f, 1.0f, 0.0f)));
 
     // Create camera
     m_camera = cppassist::make_unique<Camera>();
@@ -81,7 +81,8 @@ void ExampleRenderer::onUpdate()
     m_counter++;
 
     // Rotate model
-    m_transform.setRotationAngle(m_transform.rotationAngle() + m_timeDelta * 1.0f);
+    m_angle += m_timeDelta * 1.0f;
+    m_transform.setRotation(glm::angleAxis(m_angle, glm::vec3(0.0f, 1.0f, 0.0f)));
 
     // Animation has been updated, redraw the scene (will also issue another update)
     scheduleRedraw();

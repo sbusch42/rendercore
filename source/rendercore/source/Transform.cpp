@@ -12,8 +12,7 @@ namespace rendercore
 
 
 Transform::Transform()
-: m_rotationAxis(0.0f, 1.0f, 0.0f)
-, m_rotationAngle(0.0f)
+: m_rotation(0.0f, 0.0f, 0.0f, 1.0f)
 , m_translation(0.0f, 0.0f, 0.0f)
 , m_scale(1.0f)
 {
@@ -23,31 +22,16 @@ Transform::~Transform()
 {
 }
 
-const glm::vec3 & Transform::rotationAxis() const
+const glm::quat & Transform::rotation() const
 {
-    // Return rotation axis
-    return m_rotationAxis;
+    // Return rotation
+    return m_rotation;
 }
 
-void Transform::setRotationAxis(const glm::vec3 & axis)
+void Transform::setRotation(const glm::quat & rotation)
 {
-    // Set rotation axis
-    m_rotationAxis = axis;
-
-    // Reset transformation matrix
-    m_transform.invalidate();
-}
-
-float Transform::rotationAngle() const
-{
-    // Return rotation angle
-    return m_rotationAngle;
-}
-
-void Transform::setRotationAngle(float angle)
-{
-    // Set rotation angle
-    m_rotationAngle = angle;
+    // Set rotation
+    m_rotation = rotation;
 
     // Reset transformation matrix
     m_transform.invalidate();
@@ -91,7 +75,7 @@ const glm::mat4 & Transform::transform() const
         glm::mat4 transform = glm::mat4(1.0);
         transform = glm::translate(transform, m_translation);
         transform = glm::scale(transform, m_scale);
-        transform = glm::rotate(transform, m_rotationAngle, m_rotationAxis);
+        transform = transform * glm::toMat4(m_rotation);
 
         // Update transformation matrix
         m_transform.setValue(transform);

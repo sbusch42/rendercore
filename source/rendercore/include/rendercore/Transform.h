@@ -3,6 +3,7 @@
 
 
 #include <glm/glm.hpp>
+#include <glm/gtx/quaternion.hpp>
 
 #include <rendercore/Cached.h>
 
@@ -32,39 +33,21 @@ public:
 
     /**
     *  @brief
-    *    Get rotation axis
+    *    Get rotation
     *
     *  @return
-    *    Rotation axis
+    *    Rotation quaternion
     */
-    const glm::vec3 & rotationAxis() const;
+    const glm::quat & rotation() const;
 
     /**
     *  @brief
-    *    Set rotation axis
+    *    Set rotation
     *
-    *  @param[in] axis
-    *    Rotation axis
+    *  @param[in] rotation
+    *    Rotation quaternion
     */
-    void setRotationAxis(const glm::vec3 & axis);
-
-    /**
-    *  @brief
-    *    Get rotation angle
-    *
-    *  @return
-    *    Rotation angle (in radians)
-    */
-    float rotationAngle() const;
-
-    /**
-    *  @brief
-    *    Set rotation angle
-    *
-    *  @param[in] angle
-    *    Rotation angle (in radians)
-    */
-    void setRotationAngle(float angle);
+    void setRotation(const glm::quat & rotation);
 
     /**
     *  @brief
@@ -113,10 +96,9 @@ public:
 
 protected:
     // Transformation components
-    glm::vec3 m_rotationAxis;  ///< Axis around which the object is rotated
-    float     m_rotationAngle; ///< Rotation angle (in radians)
-    glm::vec3 m_translation;   ///< Vector by which the object is translated
-    glm::vec3 m_scale;         ///< Factors by which the object is scaled
+    glm::quat m_rotation;    ///< Rotation quaternion
+    glm::vec3 m_translation; ///< Vector by which the object is translated
+    glm::vec3 m_scale;       ///< Factors by which the object is scaled
 
     // Resulting matrix
     Cached<glm::mat4> m_transform; ///< Transformation matrix

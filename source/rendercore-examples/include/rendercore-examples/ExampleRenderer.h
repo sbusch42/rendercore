@@ -58,6 +58,7 @@ protected:
 protected:
     // Simulation data
     unsigned int m_counter;   ///< Update counter
+    float        m_angle;     ///< Rotation angle
     Transform    m_transform; ///< Transformation of the model
 
     // GPU data
