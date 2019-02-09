@@ -12,6 +12,7 @@
 #include <rendercore-gltf/BufferView.h>
 #include <rendercore-gltf/Accessor.h>
 #include <rendercore-gltf/Mesh.h>
+#include <rendercore-gltf/Material.h>
 
 
 namespace rendercore
@@ -291,6 +292,36 @@ public:
     */
     void addMesh(std::unique_ptr<Mesh> && mesh);
 
+    /**
+    *  @brief
+    *    Get materials
+    *
+    *  @return
+    *    List of materials
+    */
+    std::vector<Material *> materials() const;
+
+    /**
+    *  @brief
+    *    Get material
+    *
+    *  @param[in] index
+    *    Material index
+    *
+    *  @return
+    *    Material (can be null)
+    */
+    Material * material(size_t index) const;
+
+    /**
+    *  @brief
+    *    Add material
+    *
+    *  @param[in] material
+    *    Material (must NOT be nullptr)
+    */
+    void addMaterial(std::unique_ptr<Material> && material);
+
 protected:
     // Meta data
     std::string m_basePath;   ///< Path to directory from which the asset has been loaded
@@ -305,6 +336,7 @@ protected:
     std::vector< std::unique_ptr<BufferView> > m_bufferViews;
     std::vector< std::unique_ptr<Accessor> >   m_accessors;
     std::vector< std::unique_ptr<Mesh> >       m_meshes;
+    std::vector< std::unique_ptr<Material> >   m_materials;
 };
 
 

@@ -472,18 +472,117 @@ bool GltfLoader::parseAccessor(Asset & asset, const cppexpose::AbstractVar * val
     return true;
 }
 
-bool GltfLoader::parseMaterials(Asset &, const cppexpose::AbstractVar * value)
+bool GltfLoader::parseMaterials(Asset & asset, const cppexpose::AbstractVar * value)
 {
+    bool res = true;
+
     // Value must be an array
     if (!value->isArray()) {
         return false;
     }
 
     // Get array
-    // const cppexpose::Array & array = *value->asArray();
+    const cppexpose::Array & array = *value->asArray();
 
-    // [TODO]
-    return false;
+    // Parse materials
+    for (size_t i=0; i<array.size(); i++) {
+        res &= parseMaterial(asset, array.at(i));
+    }
+
+    // Done
+    return res;
+}
+
+bool GltfLoader::parseMaterial(Asset & asset, const cppexpose::AbstractVar * value)
+{
+    // Value must be an object
+    if (!value->isObject()) {
+        return false;
+    }
+
+    // Create material
+    auto material = cppassist::make_unique<Material>();
+
+    // Get object
+    const cppexpose::Object & obj = *value->asObject();
+
+    // 'name'
+    if (obj.propertyExists("name")) {
+        material->setName(obj.property("name")->convert<std::string>());
+    }
+
+    // 'pbrMetallicRoughness'
+    if (obj.propertyExists("pbrMetallicRoughness")) {
+        // Get object
+        const cppexpose::Object * subObj = obj.property("pbrMetallicRoughness")->asObject();
+        if (subObj) {
+            // 'baseColorFactor'
+            if (subObj->propertyExists("baseColorFactor")) {
+                material->setBaseColorFactor(parseVec4(subObj->property("baseColorFactor")));
+            }
+
+            // 'baseColorTexture'
+            if (subObj->propertyExists("baseColorTexture")) {
+                material->setBaseColorTexture(subObj->property("baseColorTexture")->convert<std::string>());
+            }
+
+            // 'metallicFactor'
+            if (subObj->propertyExists("metallicFactor")) {
+                material->setMetallicFactor(subObj->property("metallicFactor")->convert<float>());
+            }
+
+            // 'roughnessFactor'
+            if (subObj->propertyExists("roughnessFactor")) {
+                material->setRoughnessFactor(subObj->property("roughnessFactor")->convert<float>());
+            }
+
+            // 'metallicRoughnessTexture'
+            if (subObj->propertyExists("metallicRoughnessTexture")) {
+                material->setMetallicRoughnessTexture(subObj->property("metallicRoughnessTexture")->convert<std::string>());
+            }
+        }
+    }
+
+    // 'normalTexture'
+    if (obj.propertyExists("normalTexture")) {
+        material->setNormalTexture(obj.property("normalTexture")->convert<std::string>());
+    }
+
+    // 'occlusionTexture'
+    if (obj.propertyExists("occlusionTexture")) {
+        material->setOcclusionTexture(obj.property("occlusionTexture")->convert<std::string>());
+    }
+
+    // 'emissiveTexture'
+    if (obj.propertyExists("emissiveTexture")) {
+        material->setEmissiveTexture(obj.property("emissiveTexture")->convert<std::string>());
+    }
+
+    // 'emissiveFactor'
+    if (obj.propertyExists("emissiveFactor")) {
+        material->setEmissiveFactor(parseVec3(obj.property("emissiveFactor")));
+    }
+
+    // 'alphaMode'
+    if (obj.propertyExists("alphaMode")) {
+        material->setAlphaMode(obj.property("alphaMode")->convert<std::string>());
+    }
+
+    // 'alphaCutoff'
+    if (obj.propertyExists("alphaCutoff")) {
+        material->setAlphaCutoff(obj.property("alphaCutoff")->convert<float>());
+    }
+
+    // 'doubleSided'
+    if (obj.propertyExists("doubleSided")) {
+        material->setDoubleSided(obj.property("doubleSided")->convert<bool>());
+    }
+
+    // Add material
+    asset.addMaterial(std::move(material));
+
+    // Done
+    return true;
 }
 
 bool GltfLoader::parseBuffers(Asset & asset, const cppexpose::AbstractVar * value)

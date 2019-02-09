@@ -72,6 +72,7 @@ protected:
     bool parseAccessors(Asset & asset, const cppexpose::AbstractVar * value);
     bool parseAccessor(Asset & asset, const cppexpose::AbstractVar * value);
     bool parseMaterials(Asset & asset, const cppexpose::AbstractVar * value);
+    bool parseMaterial(Asset & asset, const cppexpose::AbstractVar * value);
     bool parseBuffers(Asset & asset, const cppexpose::AbstractVar * value);
     bool parseBuffer(Asset & asset, const cppexpose::AbstractVar * value);
     bool parseBufferViews(Asset & asset, const cppexpose::AbstractVar * value);

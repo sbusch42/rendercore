@@ -209,6 +209,31 @@ void Asset::addMesh(std::unique_ptr<Mesh> && mesh)
     m_meshes.push_back(std::move(mesh));
 }
 
+std::vector<Material *> Asset::materials() const
+{
+    std::vector<Material *> lst;
+
+    for (auto & material : m_materials) {
+        lst.push_back(material.get());
+    }
+
+    return lst;
+}
+
+Material * Asset::material(size_t index) const
+{
+    if (index < m_materials.size()) {
+        return m_materials[index].get();
+    } else {
+        return nullptr;
+    }
+}
+
+void Asset::addMaterial(std::unique_ptr<Material> && material)
+{
+    m_materials.push_back(std::move(material));
+}
+
 
 } // namespace gltf
 } // namespace rendercore
