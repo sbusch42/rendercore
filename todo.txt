@@ -2,7 +2,8 @@
 - MaterialSet, use material index in geometry
 - Lights
 
-- GLTF
+o GLTF
+  - Finish
 
 - Input (mouse, keyboard)
 - Camera navigations
@@ -13,7 +14,6 @@
 - ScreenAlignedQuad
 - Picking/ID-buffer
 
-- Transform: use quaternion
 - BoundingBox
 - Scene
 - Object manipulators
