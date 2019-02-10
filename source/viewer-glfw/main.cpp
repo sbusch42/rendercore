@@ -15,9 +15,9 @@
 
 #include <rendercore-opengl/GLContextUtils.h>
 
-#include <rendercore-examples/ExampleRenderer.h>
-#include <rendercore-examples/GeometryRenderer.h>
-#include <rendercore-examples/GltfRenderer.h>
+#include <rendercore-examples/GeometryExampleRenderer.h>
+#include <rendercore-examples/MeshExampleRenderer.h>
+#include <rendercore-examples/GltfExampleRenderer.h>
 
 
 using namespace rendercore;
@@ -65,9 +65,9 @@ int main(int argc, char * argv[])
     }
 
     // Create renderer
-    window.canvas()->setRenderer(cppassist::make_unique<ExampleRenderer>());
-    // window.canvas()->setRenderer(cppassist::make_unique<GeometryRenderer>());
-    // window.canvas()->setRenderer(cppassist::make_unique<GltfRenderer>());
+    // window.canvas()->setRenderer(cppassist::make_unique<GeometryExampleRenderer>());
+    window.canvas()->setRenderer(cppassist::make_unique<MeshExampleRenderer>());
+    // window.canvas()->setRenderer(cppassist::make_unique<GltfExampleRenderer>());
 
     // Initialize context, print context info
     window.context()->use();

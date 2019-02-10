@@ -25,7 +25,7 @@ namespace examples
 *  @brief
 *    Example renderer that displays different kinds of geometry
 */
-class RENDERCORE_EXAMPLES_API GeometryRenderer : public Renderer
+class RENDERCORE_EXAMPLES_API GeometryExampleRenderer : public Renderer
 {
 public:
     /**
@@ -35,19 +35,19 @@ public:
     *  @param[in] container
     *    GPU container (can be null)
     */
-    GeometryRenderer(GpuContainer * container = nullptr);
+    GeometryExampleRenderer(GpuContainer * container = nullptr);
 
     // Copying a renderer is not allowed
-    GeometryRenderer(const GeometryRenderer &) = delete;
+    GeometryExampleRenderer(const GeometryExampleRenderer &) = delete;
 
     // Copying a renderer is not allowed
-    GeometryRenderer & operator=(const GeometryRenderer &) = delete;
+    GeometryExampleRenderer & operator=(const GeometryExampleRenderer &) = delete;
 
     /**
     *  @brief
     *    Destructor
     */
-    virtual ~GeometryRenderer();
+    virtual ~GeometryExampleRenderer();
 
 protected:
     // Geometry generation

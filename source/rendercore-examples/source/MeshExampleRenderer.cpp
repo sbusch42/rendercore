@@ -1,5 +1,5 @@
 
-#include <rendercore-examples/ExampleRenderer.h>
+#include <rendercore-examples/MeshExampleRenderer.h>
 
 #include <iostream>
 
@@ -21,7 +21,7 @@ namespace examples
 {
 
 
-ExampleRenderer::ExampleRenderer(GpuContainer * container)
+MeshExampleRenderer::MeshExampleRenderer(GpuContainer * container)
 : Renderer(container)
 , m_counter(0)
 , m_angle(0.0f)
@@ -54,23 +54,23 @@ ExampleRenderer::ExampleRenderer(GpuContainer * container)
     m_meshRenderer = cppassist::make_unique<MeshRenderer>(this);
 }
 
-ExampleRenderer::~ExampleRenderer()
+MeshExampleRenderer::~MeshExampleRenderer()
 {
 }
 
-void ExampleRenderer::onInit()
+void MeshExampleRenderer::onInit()
 {
     // [DEBUG]
     std::cout << "onInit()" << std::endl;
 }
 
-void ExampleRenderer::onDeinit()
+void MeshExampleRenderer::onDeinit()
 {
     // [DEBUG]
     std::cout << "onDeinit()" << std::endl;
 }
 
-void ExampleRenderer::onUpdate()
+void MeshExampleRenderer::onUpdate()
 {
     // [DEBUG]
     // std::cout << "onUpdate(" << m_counter << ")" << std::endl;
@@ -86,7 +86,7 @@ void ExampleRenderer::onUpdate()
     scheduleRedraw();
 }
 
-void ExampleRenderer::onRender()
+void MeshExampleRenderer::onRender()
 {
     // [DEBUG]
     // std::cout << "onRender()" << std::endl;

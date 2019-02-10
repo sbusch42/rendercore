@@ -1,5 +1,5 @@
 
-#include <rendercore-examples/GeometryRenderer.h>
+#include <rendercore-examples/GeometryExampleRenderer.h>
 
 #include <iostream>
 
@@ -22,7 +22,7 @@ namespace examples
 {
 
 
-GeometryRenderer::GeometryRenderer(GpuContainer * container)
+GeometryExampleRenderer::GeometryExampleRenderer(GpuContainer * container)
 : Renderer(container)
 , m_counter(0)
 , m_angle(0.0f)
@@ -56,11 +56,11 @@ GeometryRenderer::GeometryRenderer(GpuContainer * container)
     createPoints();
 }
 
-GeometryRenderer::~GeometryRenderer()
+GeometryExampleRenderer::~GeometryExampleRenderer()
 {
 }
 
-void GeometryRenderer::createPoints()
+void GeometryExampleRenderer::createPoints()
 {
     // Positions
     static const std::array<glm::vec3, 8> positions { {
@@ -134,7 +134,7 @@ void GeometryRenderer::createPoints()
     m_geometry->addGeometry(std::move(points));
 }
 
-void GeometryRenderer::createPointsInterleaved()
+void GeometryExampleRenderer::createPointsInterleaved()
 {
     // Vertices (positions and colors)
     static const std::array<glm::vec3, 16> vertices { {
@@ -196,19 +196,19 @@ void GeometryRenderer::createPointsInterleaved()
     m_geometry->addGeometry(std::move(points));
 }
 
-void GeometryRenderer::onInit()
+void GeometryExampleRenderer::onInit()
 {
     // [DEBUG]
     std::cout << "onInit()" << std::endl;
 }
 
-void GeometryRenderer::onDeinit()
+void GeometryExampleRenderer::onDeinit()
 {
     // [DEBUG]
     std::cout << "onDeinit()" << std::endl;
 }
 
-void GeometryRenderer::onUpdate()
+void GeometryExampleRenderer::onUpdate()
 {
     // [DEBUG]
     // std::cout << "onUpdate(" << m_counter << ")" << std::endl;
@@ -224,7 +224,7 @@ void GeometryRenderer::onUpdate()
     scheduleRedraw();
 }
 
-void GeometryRenderer::onRender()
+void GeometryExampleRenderer::onRender()
 {
     // [DEBUG]
     // std::cout << "onRender()" << std::endl;

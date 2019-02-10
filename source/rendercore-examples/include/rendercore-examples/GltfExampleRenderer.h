@@ -27,7 +27,7 @@ namespace examples
 *  @brief
 *    Example renderer that displays a GTLF mesh
 */
-class RENDERCORE_EXAMPLES_API GltfRenderer : public Renderer
+class RENDERCORE_EXAMPLES_API GltfExampleRenderer : public Renderer
 {
 public:
     /**
@@ -37,19 +37,19 @@ public:
     *  @param[in] container
     *    GPU container (can be null)
     */
-    GltfRenderer(GpuContainer * container = nullptr);
+    GltfExampleRenderer(GpuContainer * container = nullptr);
 
     // Copying a renderer is not allowed
-    GltfRenderer(const GltfRenderer &) = delete;
+    GltfExampleRenderer(const GltfExampleRenderer &) = delete;
 
     // Copying a renderer is not allowed
-    GltfRenderer & operator=(const GltfRenderer &) = delete;
+    GltfExampleRenderer & operator=(const GltfExampleRenderer &) = delete;
 
     /**
     *  @brief
     *    Destructor
     */
-    virtual ~GltfRenderer();
+    virtual ~GltfExampleRenderer();
 
 protected:
     virtual void onUpdate() override;

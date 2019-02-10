@@ -24,9 +24,9 @@ namespace examples
 
 /**
 *  @brief
-*    Example renderer that displays a spinning object
+*    Example renderer that displays a spinning mesh
 */
-class RENDERCORE_EXAMPLES_API ExampleRenderer : public Renderer
+class RENDERCORE_EXAMPLES_API MeshExampleRenderer : public Renderer
 {
 public:
     /**
@@ -36,19 +36,19 @@ public:
     *  @param[in] container
     *    GPU container (can be null)
     */
-    ExampleRenderer(GpuContainer * container = nullptr);
+    MeshExampleRenderer(GpuContainer * container = nullptr);
 
     // Copying a renderer is not allowed
-    ExampleRenderer(const ExampleRenderer &) = delete;
+    MeshExampleRenderer(const MeshExampleRenderer &) = delete;
 
     // Copying a renderer is not allowed
-    ExampleRenderer & operator=(const ExampleRenderer &) = delete;
+    MeshExampleRenderer & operator=(const MeshExampleRenderer &) = delete;
 
     /**
     *  @brief
     *    Destructor
     */
-    virtual ~ExampleRenderer();
+    virtual ~MeshExampleRenderer();
 
 protected:
     virtual void onInit() override;

@@ -1,5 +1,5 @@
 
-#include <rendercore-examples/GltfRenderer.h>
+#include <rendercore-examples/GltfExampleRenderer.h>
 
 #include <cppassist/memory/make_unique.h>
 
@@ -22,7 +22,7 @@ namespace examples
 {
 
 
-GltfRenderer::GltfRenderer(GpuContainer * container)
+GltfExampleRenderer::GltfExampleRenderer(GpuContainer * container)
 : Renderer(container)
 , m_counter(0)
 , m_angle(0.0f)
@@ -65,11 +65,11 @@ GltfRenderer::GltfRenderer(GpuContainer * container)
     m_meshRenderer = cppassist::make_unique<MeshRenderer>(this);
 }
 
-GltfRenderer::~GltfRenderer()
+GltfExampleRenderer::~GltfExampleRenderer()
 {
 }
 
-void GltfRenderer::onUpdate()
+void GltfExampleRenderer::onUpdate()
 {
     // Advance counter
     m_counter++;
@@ -82,7 +82,7 @@ void GltfRenderer::onUpdate()
     scheduleRedraw();
 }
 
-void GltfRenderer::onRender()
+void GltfExampleRenderer::onRender()
 {
     // Update viewport
     gl::glViewport(m_viewport.x, m_viewport.y, m_viewport.z, m_viewport.w);
