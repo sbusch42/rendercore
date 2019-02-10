@@ -66,9 +66,11 @@ uniform float alphaCutoff       = 0.5;
 uniform float normalScale       = 1.0;
 uniform float occlusionStrength = 1.0;
 
-uniform vec3 eyePosition    = vec3(0.0, 0.0, 0.0);
-uniform vec3 lightPosition  = vec3(0.0, 0.0, 0.0);
-uniform vec3 lightColor     = vec3(1.0, 1.0, 1.0);
+uniform vec3  eyePosition           = vec3(0.0, 0.0, 0.0);
+uniform vec3  lightPosition         = vec3(0.0, 0.0, 0.0);
+uniform vec3  lightColor            = vec3(1.0, 1.0, 1.0);
+uniform vec3  ambientLightColor     = vec3(1.0, 1.0, 1.0);
+uniform float ambientLightIntensity = 1.0;
 
 // Debugging flags used for shader output of intermediate PBR variables
 uniform vec4 scaleDiffBaseMR = vec4(1.0);
@@ -327,6 +329,9 @@ void main()
     // Calculate lighting contribution from image based lighting source (IBL)
 #ifdef USE_IBL
     color += getIBLContribution(pbrInputs, n, reflection);
+#else
+    // Add simple ambient light
+    color += ambientLightColor * ambientLightIntensity * baseColor.xyz;
 #endif
 
     // Apply optional PBR terms for additional (optional) shading
