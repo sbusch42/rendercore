@@ -49,40 +49,45 @@ void Camera::setProjectionMatrix(const glm::mat4 & matrix)
 
 const mat4 & Camera::viewProjectionMatrix() const
 {
-    if (!m_viewProjectionMatrix.isValid())
+    if (!m_viewProjectionMatrix.isValid()) {
         m_viewProjectionMatrix.setValue(projectionMatrix() * viewMatrix());
+    }
 
     return m_viewProjectionMatrix.value();
 }
 
 const mat4 & Camera::viewInvertedMatrix() const
 {
-    if (!m_viewInvertedMatrix.isValid())
+    if (!m_viewInvertedMatrix.isValid()) {
         m_viewInvertedMatrix.setValue(inverse(viewMatrix()));
+    }
 
     return m_viewInvertedMatrix.value();
 }
 
 const mat4 & Camera::projectionInvertedMatrix() const
 {
-    if (!m_projectionInvertedMatrix.isValid())
+    if (!m_projectionInvertedMatrix.isValid()) {
         m_projectionInvertedMatrix.setValue(inverse(projectionMatrix()));
+    }
 
     return m_projectionInvertedMatrix.value();
 }
 
 const mat4 & Camera::viewProjectionInvertedMatrix() const
 {
-    if (!m_viewProjectionInvertedMatrix.isValid())
+    if (!m_viewProjectionInvertedMatrix.isValid()) {
         m_viewProjectionInvertedMatrix.setValue(inverse(viewProjectionMatrix()));
+    }
 
     return m_viewProjectionInvertedMatrix.value();
 }
 
 const mat3 & Camera::normalMatrix() const
 {
-    if (!m_normalMatrix.isValid())
+    if (!m_normalMatrix.isValid()) {
         m_normalMatrix.setValue(inverseTranspose(mat3(viewMatrix())));
+    }
 
     return m_normalMatrix.value();
 }

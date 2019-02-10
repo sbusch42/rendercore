@@ -41,7 +41,8 @@ ExampleRenderer::ExampleRenderer(GpuContainer * container)
     // Create material
     m_material = cppassist::make_unique<Material>(this);
     m_material->setTexture("baseColor", m_texture.get());
-    m_material->setValue<glm::vec4>("baseColorFactor", glm::vec4(0.2f, 0.7f, 0.2f, 1.0f));
+    m_material->setValue<float>("metallicFactor", 1.0);
+    m_material->setValue<float>("roughnessFactor", 0.5);
 
     // Create mesh
     m_mesh = cppassist::make_unique<Sphere>(this, 2.0f, true);

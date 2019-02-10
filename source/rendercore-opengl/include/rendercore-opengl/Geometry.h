@@ -118,6 +118,18 @@ public:
 
     /**
     *  @brief
+    *    Check if an attribute binding exists for given attribute index
+    *
+    *  @param[in] index
+    *    Attribute index
+    *
+    *  @return
+    *    'trie' if attribute binding exists, else 'false'
+    */
+    bool hasAttributeBinding(size_t index) const;
+
+    /**
+    *  @brief
     *    Get attribute binding for given attribute index
     *
     *  @param[in] index

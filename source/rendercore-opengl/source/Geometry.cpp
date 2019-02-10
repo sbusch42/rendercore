@@ -71,13 +71,18 @@ const std::unordered_map<size_t, const VertexAttribute *> & Geometry::attributeB
     return m_attributes;
 }
 
+bool Geometry::hasAttributeBinding(size_t index) const
+{
+    return (m_attributes.count(index) > 0);
+}
+
 const VertexAttribute * Geometry::attributeBinding(size_t index) const
 {
-    if (index >= m_attributes.size()) {
-        return nullptr;
+    if (m_attributes.count(index) > 0) {
+        return m_attributes.at(index);
     }
 
-    return m_attributes.at(index);
+    return nullptr;
 }
 
 void Geometry::bindAttribute(size_t index, const VertexAttribute * vertexAttribute)
