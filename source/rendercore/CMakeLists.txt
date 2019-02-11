@@ -56,6 +56,11 @@ set(headers
     ${include_path}/Signal.h
     ${include_path}/Signal.inl
     ${include_path}/Transform.h
+
+    ${include_path}/scene/Scene.h
+    ${include_path}/scene/SceneNode.h
+    ${include_path}/scene/SceneNode.inl
+    ${include_path}/scene/SceneNodeComponent.h
 )
 
 set(sources
@@ -75,6 +80,10 @@ set(sources
     ${source_path}/Renderer.cpp
     ${source_path}/ScopedConnection.cpp
     ${source_path}/Transform.cpp
+
+    ${source_path}/scene/Scene.cpp
+    ${source_path}/scene/SceneNode.cpp
+    ${source_path}/scene/SceneNodeComponent.cpp
 )
 
 # Group source files
