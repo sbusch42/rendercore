@@ -14,12 +14,30 @@ namespace rendercore
 Transform::Transform()
 : m_rotation(0.0f, 0.0f, 0.0f, 1.0f)
 , m_translation(0.0f, 0.0f, 0.0f)
-, m_scale(1.0f)
+, m_scale(1.0f, 1.0f, 1.0f)
+{
+}
+
+Transform::Transform(const Transform & transform)
+: m_rotation(transform.m_rotation)
+, m_translation(transform.m_translation)
+, m_scale(transform.m_scale)
+, m_transform(transform.transform())
 {
 }
 
 Transform::~Transform()
 {
+}
+
+Transform & Transform::operator =(const Transform & transform)
+{
+    m_rotation    = transform.m_rotation;
+    m_translation = transform.m_translation;
+    m_scale       = transform.m_scale;
+    m_transform   = transform.transform();
+
+    return *this;
 }
 
 const glm::quat & Transform::rotation() const
@@ -82,9 +100,9 @@ const glm::mat4 & Transform::transform() const
     if (!m_transform.isValid()) {
         // Calculate transformation matrix
         glm::mat4 transform = glm::mat4(1.0);
-        transform = glm::translate(transform, m_translation);
         transform = glm::scale(transform, m_scale);
         transform = transform * glm::toMat4(m_rotation);
+        transform = glm::translate(transform, m_translation);
 
         // Update transformation matrix
         m_transform.setValue(transform);

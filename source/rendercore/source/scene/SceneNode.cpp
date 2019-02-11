@@ -6,13 +6,6 @@ namespace rendercore
 {
 
 
-class SceneNodeComponent2 : public SceneNodeComponent
-{
-    SceneNodeComponent2() {}
-    ~SceneNodeComponent2() {}
-};
-
-
 SceneNode::SceneNode()
 : m_parent(nullptr)
 {
@@ -20,7 +13,6 @@ SceneNode::SceneNode()
 
 SceneNode::~SceneNode()
 {
-    this->components<SceneNodeComponent2>();
 }
 
 SceneNode * SceneNode::parent() const

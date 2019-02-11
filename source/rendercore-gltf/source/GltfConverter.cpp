@@ -242,7 +242,7 @@ void GltfConverter::generateMesh(const Asset & gltfAsset, const Mesh & gltfMesh)
                             std::vector<char> * data = (bufferIndex < m_data.size()) ? m_data[bufferIndex].get() : nullptr;
                             if (data) {
                                 // Create buffer
-                                buffer = mesh->createBuffer(data->data() + gltfBufferView->offset(), gltfBufferView->size());
+                                buffer = mesh->createBuffer(data->data() + gltfBufferView->offset() + gltfAccessor->offset(), gltfBufferView->size() - gltfAccessor->offset());
                             }
                         }
 
@@ -296,6 +296,7 @@ void GltfConverter::generateScene(const Asset & gltfAsset, const Scene & gltfSce
             transform.setRotation(gltfNode->rotation());
             transform.setScale(gltfNode->scale());
         }
+        node->setTransform(transform);
 
         // Set mesh
         int meshIndex = gltfNode->mesh();

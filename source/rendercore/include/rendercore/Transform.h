@@ -27,9 +27,30 @@ public:
 
     /**
     *  @brief
+    *    Copy Constructor
+    *
+    *  @param[in] transform
+    *    Transformation
+    */
+    Transform(const Transform & transform);
+
+    /**
+    *  @brief
     *    Destructor
     */
     virtual ~Transform();
+
+    /**
+    *  @brief
+    *    Assignment operator
+    *
+    *  @param[in] transform
+    *    Transformation
+    *
+    *  @return
+    *    Reference to this object
+    */
+    Transform & operator =(const Transform & transform);
 
     /**
     *  @brief

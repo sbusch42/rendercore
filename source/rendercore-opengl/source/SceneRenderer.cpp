@@ -58,6 +58,9 @@ void SceneRenderer::render(Scene & scene, const glm::mat4 & transform, Camera * 
 
 void SceneRenderer::render(SceneNode & node, const glm::mat4 & transform, Camera * camera)
 {
+    // Calculate transformation of this node
+    glm::mat4 trans = transform * node.transform().transform();
+
     // Get mesh components
     auto meshComponents = node.components<MeshComponent>();
     for (auto * meshComponent : meshComponents) {
@@ -65,13 +68,13 @@ void SceneRenderer::render(SceneNode & node, const glm::mat4 & transform, Camera
         auto * mesh = meshComponent->mesh();
         if (mesh) {
             // Render mesh
-            render(*mesh, transform, camera);
+            render(*mesh, trans, camera);
         }
     }
 
     // Render child nodes
     for (auto & child : node.children()) {
-        render(*child.get(), transform * node.transform().transform(), camera);
+        render(*child.get(), trans, camera);
     }
 }
 
