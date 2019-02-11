@@ -8,11 +8,12 @@
 #include <rendercore/Camera.h>
 #include <rendercore/Renderer.h>
 #include <rendercore/Transform.h>
+#include <rendercore/scene/Scene.h>
 
 #include <rendercore-opengl/Mesh.h>
 #include <rendercore-opengl/Material.h>
 #include <rendercore-opengl/Texture.h>
-#include <rendercore-opengl/MeshRenderer.h>
+#include <rendercore-opengl/SceneRenderer.h>
 
 #include <rendercore-examples/rendercore-examples_api.h>
 
@@ -66,9 +67,10 @@ protected:
     std::vector< std::unique_ptr<rendercore::opengl::Texture> >  m_textures;  ///< List of textures
     std::vector< std::unique_ptr<rendercore::opengl::Material> > m_materials; ///< List of materials
     std::vector< std::unique_ptr<rendercore::opengl::Mesh> >     m_meshes;    ///< List of meshes
+    std::vector< std::unique_ptr<rendercore::Scene> >            m_scenes;    ///< List of scenes
 
     // Sub-renderers
-    std::unique_ptr<rendercore::opengl::MeshRenderer> m_meshRenderer; ///< Mesh renderer
+    std::unique_ptr<rendercore::opengl::SceneRenderer> m_sceneRenderer; ///< Scene renderer
 };
 
 

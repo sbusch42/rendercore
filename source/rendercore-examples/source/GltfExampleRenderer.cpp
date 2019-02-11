@@ -61,8 +61,13 @@ GltfExampleRenderer::GltfExampleRenderer(GpuContainer * container)
         m_meshes.push_back(std::move(mesh));
     }
 
+    auto & scenes = converter.scenes();
+    for (auto & scene : scenes) {
+        m_scenes.push_back(std::move(scene));
+    }
+
     // Create mesh renderer
-    m_meshRenderer = cppassist::make_unique<MeshRenderer>(this);
+    m_sceneRenderer = cppassist::make_unique<SceneRenderer>(this);
 }
 
 GltfExampleRenderer::~GltfExampleRenderer()
@@ -94,9 +99,9 @@ void GltfExampleRenderer::onRender()
     m_camera->lookAt(glm::vec3(0.0f, 0.0, 9.0f), glm::vec3(0.0f, 0.0f, 0.0f), glm::vec3(0.0f, 1.0f, 0.0f));
     m_camera->perspective(glm::radians(40.0f), glm::ivec2(m_viewport.z, m_viewport.w), 0.1f, 64.0f);
 
-    // Render mesh
-    if (m_meshes.size() > 0) {
-        m_meshRenderer->render(*m_meshes[0].get(), m_transform, m_camera.get());
+    // Render scenes
+    for (auto & scene : m_scenes) {
+        m_sceneRenderer->render(*scene.get(), m_transform.transform(), m_camera.get());
     }
 }
 

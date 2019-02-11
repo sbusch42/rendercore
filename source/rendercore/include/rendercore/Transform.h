@@ -51,6 +51,15 @@ public:
 
     /**
     *  @brief
+    *    Set rotation
+    *
+    *  @param[in] rotation
+    *    Rotation quaternion
+    */
+    void setRotation(const glm::vec4 & rotation);
+
+    /**
+    *  @brief
     *    Get translation
     *
     *  @return
@@ -93,6 +102,15 @@ public:
     *    Transformation matrix
     */
     const glm::mat4 & transform() const;
+
+    /**
+    *  @brief
+    *    Set transformation matrix
+    *
+    *  @param[in] transform
+    *    Transformation matrix
+    */
+    void setTransform(const glm::mat4 & transform);
 
 protected:
     // Transformation components

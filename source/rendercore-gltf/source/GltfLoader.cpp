@@ -250,6 +250,12 @@ bool GltfLoader::parseNode(Asset & asset, const cppexpose::AbstractVar * value)
         node->setChildren(parseIntArray(obj.property("children")));
     }
 
+    // 'mesh'
+    if (obj.propertyExists("mesh")) {
+        // Get attached mesh index
+        node->setMesh(obj.property("mesh")->convert<int>());
+    }
+
     // 'camera'
     if (obj.propertyExists("camera")) {
         // Get attached camera index

@@ -55,24 +55,6 @@ public:
 
     /**
     *  @brief
-    *    Get attached camera
-    *
-    *  @return
-    *    Index of attached camera (-1 for none)
-    */
-    int camera() const;
-
-    /**
-    *  @brief
-    *    Get attached camera
-    *
-    *  @param[in] camera
-    *    Index of attached camera (-1 for none)
-    */
-    void setCamera(int camera);
-
-    /**
-    *  @brief
     *    Check if transformation matrix has been set
     *
     *  @return
@@ -170,9 +152,46 @@ public:
     */
     void setChildren(const std::vector<unsigned int> & children);
 
+    /**
+    *  @brief
+    *    Get attached camera
+    *
+    *  @return
+    *    Index of attached camera (-1 for none)
+    */
+    int camera() const;
+
+    /**
+    *  @brief
+    *    Get attached camera
+    *
+    *  @param[in] camera
+    *    Index of attached camera (-1 for none)
+    */
+    void setCamera(int camera);
+
+    /**
+    *  @brief
+    *    Get attached mesh
+    *
+    *  @return
+    *    Index of attached mesh (-1 for none)
+    */
+    int mesh() const;
+
+    /**
+    *  @brief
+    *    Get attached mesh
+    *
+    *  @param[in] mesh
+    *    Index of attached mesh (-1 for none)
+    */
+    void setMesh(int mesh);
+
 protected:
     std::string               m_name;        ///< Node name
     int                       m_camera;      ///< Index of attached camera
+    int                       m_mesh;        ///< Index of attached mesh
     bool                      m_hasMatrix;   ///< 'true' if matrix has been set, else 'false'
     glm::mat4                 m_matrix;      ///< Transformation matrix
     glm::vec3                 m_translation; ///< Translation

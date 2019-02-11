@@ -8,9 +8,10 @@
 #include <cppfs/fs.h>
 #include <cppfs/FileHandle.h>
 
+#include <rendercore-opengl/enums.h>
 #include <rendercore-opengl/Mesh.h>
 #include <rendercore-opengl/Material.h>
-#include <rendercore-opengl/enums.h>
+#include <rendercore-opengl/scene/MeshComponent.h>
 
 #include <rendercore-gltf/Asset.h>
 #include <rendercore-gltf/Buffer.h>
@@ -57,6 +58,12 @@ void GltfConverter::convert(const Asset & asset)
     for (auto * mesh : meshes) {
         generateMesh(asset, *mesh);
     }
+
+    // Generate scenes
+    auto scenes = asset.scenes();
+    for (auto * scene : scenes) {
+        generateScene(asset, *scene);
+    }
 }
 
 std::vector< std::unique_ptr<rendercore::opengl::Texture> > & GltfConverter::textures()
@@ -72,6 +79,11 @@ std::vector< std::unique_ptr<rendercore::opengl::Material> > & GltfConverter::ma
 std::vector< std::unique_ptr<rendercore::opengl::Mesh> > & GltfConverter::meshes()
 {
     return m_meshes;
+}
+
+std::vector< std::unique_ptr<rendercore::Scene> > & GltfConverter::scenes()
+{
+    return m_scenes;
 }
 
 void GltfConverter::generateMaterial(const Asset & asset, const Material & gltfMaterial)
@@ -250,6 +262,71 @@ void GltfConverter::generateMesh(const Asset & gltfAsset, const Mesh & gltfMesh)
 
     // Save mesh
     m_meshes.push_back(std::move(mesh));
+}
+
+void GltfConverter::generateScene(const Asset & gltfAsset, const Scene & gltfScene)
+{
+    // Create scene
+    auto scene = cppassist::make_unique<rendercore::Scene>();
+
+    // Get nodes
+    auto gltfNodes = gltfAsset.nodes();
+
+    // Helper function: Get scene node by index
+    auto getNode = [&gltfNodes] (unsigned int index) -> const Node * {
+        if (index < gltfNodes.size()) {
+            return gltfNodes[index];
+        }
+
+        return nullptr;
+    };
+
+    // Helper function: Parse scene node
+    std::function<void (rendercore::SceneNode & parent, const Node * gltfNode)> parseNode;
+    parseNode = [&] (rendercore::SceneNode & parent, const Node * gltfNode) {
+        // Create scene node
+        auto node = cppassist::make_unique<rendercore::SceneNode>();
+
+        // Set transformation
+        Transform transform;
+        if (gltfNode->hasMatrix()) {
+            transform.setTransform(gltfNode->matrix());
+        } else {
+            transform.setTranslation(gltfNode->translation());
+            transform.setRotation(gltfNode->rotation());
+            transform.setScale(gltfNode->scale());
+        }
+
+        // Set mesh
+        int meshIndex = gltfNode->mesh();
+        if (meshIndex >= 0 && meshIndex < (int)m_meshes.size()) {
+            // Create mesh component
+            auto meshComponent = cppassist::make_unique<MeshComponent>();
+            meshComponent->setMesh(m_meshes[meshIndex].get());
+
+            // Add component to scene node
+            node->addComponent(std::move(meshComponent));
+        }
+
+        // Process child nodes
+        for (unsigned int index : gltfNode->children()) {
+            auto * childNode = getNode(index);
+            if (childNode) parseNode(*node.get(), childNode);
+        }
+
+        // Add scene node to parent
+        parent.addChild(std::move(node));
+    };
+
+    // Parse scene starting at the root nodes
+    rendercore::SceneNode & root = *scene->root();
+    for (unsigned int index : gltfScene.rootNodes()) {
+        auto * rootNode = getNode(index);
+        if (rootNode) parseNode(root, rootNode);
+    }
+
+    // Save scene
+    m_scenes.push_back(std::move(scene));
 }
 
 rendercore::opengl::Texture * GltfConverter::loadTexture(const std::string & basePath, const std::string & filename)

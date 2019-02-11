@@ -37,6 +37,15 @@ void Transform::setRotation(const glm::quat & rotation)
     m_transform.invalidate();
 }
 
+void Transform::setRotation(const glm::vec4 & rotation)
+{
+    // Set rotation
+    m_rotation = glm::quat(rotation.x, rotation.y, rotation.z, rotation.w);
+
+    // Reset transformation matrix
+    m_transform.invalidate();
+}
+
 const glm::vec3 & Transform::translation() const
 {
     // Return translation
@@ -83,6 +92,12 @@ const glm::mat4 & Transform::transform() const
 
     // Return transformation matrix
     return m_transform.value();
+}
+
+void Transform::setTransform(const glm::mat4 & transform)
+{
+    // Set transformation matrix
+    m_transform.setValue(transform);
 }
 
 

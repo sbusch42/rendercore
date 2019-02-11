@@ -10,6 +10,7 @@ namespace gltf
 
 Node::Node()
 : m_camera(-1)
+, m_mesh(-1)
 , m_hasMatrix(false)
 {
 }
@@ -26,16 +27,6 @@ const std::string & Node::name() const
 void Node::setName(const std::string & name)
 {
     m_name = name;
-}
-
-int Node::camera() const
-{
-    return m_camera;
-}
-
-void Node::setCamera(int camera)
-{
-    m_camera = camera;
 }
 
 bool Node::hasMatrix() const
@@ -92,6 +83,26 @@ const std::vector<unsigned int> & Node::children() const
 void Node::setChildren(const std::vector<unsigned int> & children)
 {
     m_children = children;
+}
+
+int Node::camera() const
+{
+    return m_camera;
+}
+
+void Node::setCamera(int camera)
+{
+    m_camera = camera;
+}
+
+int Node::mesh() const
+{
+    return m_mesh;
+}
+
+void Node::setMesh(int mesh)
+{
+    m_mesh = mesh;
 }
 
 

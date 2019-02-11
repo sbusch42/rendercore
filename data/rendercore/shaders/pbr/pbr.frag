@@ -70,7 +70,7 @@ uniform vec3  eyePosition           = vec3(0.0, 0.0, 0.0);
 uniform vec3  lightPosition         = vec3(0.0, 0.0, 0.0);
 uniform vec3  lightColor            = vec3(1.0, 1.0, 1.0);
 uniform vec3  ambientLightColor     = vec3(1.0, 1.0, 1.0);
-uniform float ambientLightIntensity = 1.0;
+uniform float ambientLightIntensity = 0.1;
 
 // Debugging flags used for shader output of intermediate PBR variables
 uniform vec4 scaleDiffBaseMR = vec4(1.0);

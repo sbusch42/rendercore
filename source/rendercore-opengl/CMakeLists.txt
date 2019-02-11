@@ -57,12 +57,15 @@ set(headers
     ${include_path}/MeshRenderer.h
     ${include_path}/Program.h
     ${include_path}/Quad.h
+    ${include_path}/SceneRenderer.h
     ${include_path}/Shader.h
     ${include_path}/Sphere.h
     ${include_path}/Texture.h
     ${include_path}/TimeMeasurement.h
     ${include_path}/Triangle.h
     ${include_path}/VertexAttribute.h
+
+    ${include_path}/scene/MeshComponent.h
 )
 
 set(sources
@@ -80,12 +83,15 @@ set(sources
     ${source_path}/MeshRenderer.cpp
     ${source_path}/Program.cpp
     ${source_path}/Quad.cpp
+    ${source_path}/SceneRenderer.cpp
     ${source_path}/Shader.cpp
     ${source_path}/Sphere.cpp
     ${source_path}/Texture.cpp
     ${source_path}/TimeMeasurement.cpp
     ${source_path}/Triangle.cpp
     ${source_path}/VertexAttribute.cpp
+
+    ${source_path}/scene/MeshComponent.cpp
 )
 
 # Group source files
