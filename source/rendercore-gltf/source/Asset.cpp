@@ -234,6 +234,81 @@ void Asset::addMaterial(std::unique_ptr<Material> && material)
     m_materials.push_back(std::move(material));
 }
 
+std::vector<Texture *> Asset::textures() const
+{
+    std::vector<Texture *> lst;
+
+    for (auto & texture : m_textures) {
+        lst.push_back(texture.get());
+    }
+
+    return lst;
+}
+
+Texture * Asset::texture(size_t index) const
+{
+    if (index < m_textures.size()) {
+        return m_textures[index].get();
+    } else {
+        return nullptr;
+    }
+}
+
+void Asset::addTexture(std::unique_ptr<Texture> && texture)
+{
+    m_textures.push_back(std::move(texture));
+}
+
+std::vector<Sampler *> Asset::samplers() const
+{
+    std::vector<Sampler *> lst;
+
+    for (auto & sampler : m_samplers) {
+        lst.push_back(sampler.get());
+    }
+
+    return lst;
+}
+
+Sampler * Asset::sampler(size_t index) const
+{
+    if (index < m_samplers.size()) {
+        return m_samplers[index].get();
+    } else {
+        return nullptr;
+    }
+}
+
+void Asset::addSampler(std::unique_ptr<Sampler> && sampler)
+{
+    m_samplers.push_back(std::move(sampler));
+}
+
+std::vector<Image *> Asset::images() const
+{
+    std::vector<Image *> lst;
+
+    for (auto & image : m_images) {
+        lst.push_back(image.get());
+    }
+
+    return lst;
+}
+
+Image * Asset::image(size_t index) const
+{
+    if (index < m_images.size()) {
+        return m_images[index].get();
+    } else {
+        return nullptr;
+    }
+}
+
+void Asset::addImage(std::unique_ptr<Image> && image)
+{
+    m_images.push_back(std::move(image));
+}
+
 
 } // namespace gltf
 } // namespace rendercore

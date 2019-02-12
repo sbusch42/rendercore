@@ -44,11 +44,14 @@ set(headers
     ${include_path}/Asset.h
     ${include_path}/Buffer.h
     ${include_path}/BufferView.h
+    ${include_path}/Image.h
     ${include_path}/Material.h
     ${include_path}/Mesh.h
     ${include_path}/Node.h
     ${include_path}/Primitive.h
+    ${include_path}/Sampler.h
     ${include_path}/Scene.h
+    ${include_path}/Texture.h
 )
 
 set(sources
@@ -59,11 +62,14 @@ set(sources
     ${source_path}/Asset.cpp
     ${source_path}/Buffer.cpp
     ${source_path}/BufferView.cpp
+    ${source_path}/Image.cpp
     ${source_path}/Material.cpp
     ${source_path}/Mesh.cpp
     ${source_path}/Node.cpp
     ${source_path}/Primitive.cpp
+    ${source_path}/Sampler.cpp
     ${source_path}/Scene.cpp
+    ${source_path}/Texture.cpp
 )
 
 # Group source files

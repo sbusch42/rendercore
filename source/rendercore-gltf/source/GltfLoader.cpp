@@ -708,6 +708,189 @@ bool GltfLoader::parseBufferView(Asset & asset, const cppexpose::AbstractVar * v
     return true;
 }
 
+bool GltfLoader::parseTextures(Asset & asset, const cppexpose::AbstractVar * value)
+{
+    bool res = true;
+
+    // Value must be an array
+    if (!value->isArray()) {
+        return false;
+    }
+
+    // Get array
+    const cppexpose::Array & array = *value->asArray();
+
+    // Parse textures
+    for (size_t i=0; i<array.size(); i++) {
+        res &= parseTexture(asset, array.at(i));
+    }
+
+    // Done
+    return res;
+}
+
+bool GltfLoader::parseTexture(Asset & asset, const cppexpose::AbstractVar * value)
+{
+    // Value must be an object
+    if (!value->isObject()) {
+        return false;
+    }
+
+    // Create texture
+    auto texture = cppassist::make_unique<Texture>();
+
+    // Get object
+    const cppexpose::Object & obj = *value->asObject();
+
+    // 'name'
+    if (obj.propertyExists("name")) {
+        texture->setName(obj.property("name")->convert<std::string>());
+    }
+
+    // 'sampler'
+    if (obj.propertyExists("sampler")) {
+        texture->setSampler(obj.property("sampler")->convert<int>());
+    }
+
+    // 'source'
+    if (obj.propertyExists("source")) {
+        texture->setImage(obj.property("source")->convert<int>());
+    }
+
+    // Add texture
+    asset.addTexture(std::move(texture));
+
+    // Done
+    return true;
+}
+
+bool GltfLoader::parseSamplers(Asset & asset, const cppexpose::AbstractVar * value)
+{
+    bool res = true;
+
+    // Value must be an array
+    if (!value->isArray()) {
+        return false;
+    }
+
+    // Get array
+    const cppexpose::Array & array = *value->asArray();
+
+    // Parse samplers
+    for (size_t i=0; i<array.size(); i++) {
+        res &= parseSampler(asset, array.at(i));
+    }
+
+    // Done
+    return res;
+}
+
+bool GltfLoader::parseSampler(Asset & asset, const cppexpose::AbstractVar * value)
+{
+    // Value must be an object
+    if (!value->isObject()) {
+        return false;
+    }
+
+    // Create sampler
+    auto sampler = cppassist::make_unique<Sampler>();
+
+    // Get object
+    const cppexpose::Object & obj = *value->asObject();
+
+    // 'name'
+    if (obj.propertyExists("name")) {
+        sampler->setName(obj.property("name")->convert<std::string>());
+    }
+
+    // 'minFilter'
+    if (obj.propertyExists("minFilter")) {
+        sampler->setMinFilter(obj.property("minFilter")->convert<unsigned int>());
+    }
+
+    // 'magFilter'
+    if (obj.propertyExists("magFilter")) {
+        sampler->setMinFilter(obj.property("magFilter")->convert<unsigned int>());
+    }
+
+    // 'wrapS'
+    if (obj.propertyExists("wrapS")) {
+        sampler->setWrapS(obj.property("wrapS")->convert<unsigned int>());
+    }
+
+    // 'wrapT'
+    if (obj.propertyExists("wrapT")) {
+        sampler->setWrapS(obj.property("wrapT")->convert<unsigned int>());
+    }
+
+    // Add sampler
+    asset.addSampler(std::move(sampler));
+
+    // Done
+    return true;
+}
+
+bool GltfLoader::parseImages(Asset & asset, const cppexpose::AbstractVar * value)
+{
+    bool res = true;
+
+    // Value must be an array
+    if (!value->isArray()) {
+        return false;
+    }
+
+    // Get array
+    const cppexpose::Array & array = *value->asArray();
+
+    // Parse images
+    for (size_t i=0; i<array.size(); i++) {
+        res &= parseImage(asset, array.at(i));
+    }
+
+    // Done
+    return res;
+}
+
+bool GltfLoader::parseImage(Asset & asset, const cppexpose::AbstractVar * value)
+{
+    // Value must be an object
+    if (!value->isObject()) {
+        return false;
+    }
+
+    // Create image
+    auto image = cppassist::make_unique<Image>();
+
+    // Get object
+    const cppexpose::Object & obj = *value->asObject();
+
+    // 'name'
+    if (obj.propertyExists("name")) {
+        image->setName(obj.property("name")->convert<std::string>());
+    }
+
+    // 'uri'
+    if (obj.propertyExists("uri")) {
+        image->setMimeType(obj.property("uri")->convert<std::string>());
+    }
+
+    // 'mimeType'
+    if (obj.propertyExists("mimeType")) {
+        image->setMimeType(obj.property("mimeType")->convert<std::string>());
+    }
+
+    // 'bufferView'
+    if (obj.propertyExists("bufferView")) {
+        image->setBufferView(obj.property("bufferView")->convert<unsigned int>());
+    }
+
+    // Add image
+    asset.addImage(std::move(image));
+
+    // Done
+    return true;
+}
+
 std::map<std::string, unsigned int> GltfLoader::parseIntMap(const cppexpose::AbstractVar * value)
 {
     std::map<std::string, unsigned int> map;

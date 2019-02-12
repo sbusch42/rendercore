@@ -13,6 +13,9 @@
 #include <rendercore-gltf/Accessor.h>
 #include <rendercore-gltf/Mesh.h>
 #include <rendercore-gltf/Material.h>
+#include <rendercore-gltf/Texture.h>
+#include <rendercore-gltf/Sampler.h>
+#include <rendercore-gltf/Image.h>
 
 
 namespace rendercore
@@ -322,6 +325,96 @@ public:
     */
     void addMaterial(std::unique_ptr<Material> && material);
 
+    /**
+    *  @brief
+    *    Get textures
+    *
+    *  @return
+    *    List of textures
+    */
+    std::vector<Texture *> textures() const;
+
+    /**
+    *  @brief
+    *    Get texture
+    *
+    *  @param[in] index
+    *    Texture index
+    *
+    *  @return
+    *    Texture (can be null)
+    */
+    Texture * texture(size_t index) const;
+
+    /**
+    *  @brief
+    *    Add texture
+    *
+    *  @param[in] texture
+    *    Material (must NOT be nullptr)
+    */
+    void addTexture(std::unique_ptr<Texture> && texture);
+
+    /**
+    *  @brief
+    *    Get samplers
+    *
+    *  @return
+    *    List of samplers
+    */
+    std::vector<Sampler *> samplers() const;
+
+    /**
+    *  @brief
+    *    Get sampler
+    *
+    *  @param[in] index
+    *    Sampler index
+    *
+    *  @return
+    *    Sampler (can be null)
+    */
+    Sampler * sampler(size_t index) const;
+
+    /**
+    *  @brief
+    *    Add sampler
+    *
+    *  @param[in] sampler
+    *    Sampler (must NOT be nullptr)
+    */
+    void addSampler(std::unique_ptr<Sampler> && sampler);
+
+    /**
+    *  @brief
+    *    Get images
+    *
+    *  @return
+    *    List of images
+    */
+    std::vector<Image *> images() const;
+
+    /**
+    *  @brief
+    *    Get image
+    *
+    *  @param[in] index
+    *    Image index
+    *
+    *  @return
+    *    Image (can be null)
+    */
+    Image * image(size_t index) const;
+
+    /**
+    *  @brief
+    *    Add image
+    *
+    *  @param[in] image
+    *    Image (must NOT be nullptr)
+    */
+    void addImage(std::unique_ptr<Image> && image);
+
 protected:
     // Meta data
     std::string m_basePath;   ///< Path to directory from which the asset has been loaded
@@ -337,6 +430,9 @@ protected:
     std::vector< std::unique_ptr<Accessor> >   m_accessors;
     std::vector< std::unique_ptr<Mesh> >       m_meshes;
     std::vector< std::unique_ptr<Material> >   m_materials;
+    std::vector< std::unique_ptr<Texture> >    m_textures;
+    std::vector< std::unique_ptr<Sampler> >    m_samplers;
+    std::vector< std::unique_ptr<Image> >      m_images;
 };
 
 

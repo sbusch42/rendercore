@@ -77,6 +77,12 @@ protected:
     bool parseBuffer(Asset & asset, const cppexpose::AbstractVar * value);
     bool parseBufferViews(Asset & asset, const cppexpose::AbstractVar * value);
     bool parseBufferView(Asset & asset, const cppexpose::AbstractVar * value);
+    bool parseTextures(Asset & asset, const cppexpose::AbstractVar * value);
+    bool parseTexture(Asset & asset, const cppexpose::AbstractVar * value);
+    bool parseSamplers(Asset & asset, const cppexpose::AbstractVar * value);
+    bool parseSampler(Asset & asset, const cppexpose::AbstractVar * value);
+    bool parseImages(Asset & asset, const cppexpose::AbstractVar * value);
+    bool parseImage(Asset & asset, const cppexpose::AbstractVar * value);
 
     // General parsing functions
     std::map<std::string, unsigned int> parseIntMap(const cppexpose::AbstractVar * value);
