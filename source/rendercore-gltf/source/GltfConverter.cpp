@@ -233,21 +233,13 @@ void GltfConverter::generateMesh(const Asset & gltfAsset, const Mesh & gltfMesh)
                     size_t bufferIndex = gltfBufferView->buffer();
                     auto * gltfBuffer = gltfAsset.buffer(bufferIndex);
                     if (gltfBuffer) {
-                        // Get or create buffer
-                        opengl::Buffer * buffer = nullptr;
-                        if (bufferViews.count(bufferViewIndex) > 0) {
-                            buffer = bufferViews.at(bufferViewIndex);
-                        } else {
-                            // Get data
-                            std::vector<char> * data = (bufferIndex < m_data.size()) ? m_data[bufferIndex].get() : nullptr;
-                            if (data) {
-                                // Create buffer
-                                buffer = mesh->createBuffer(data->data() + gltfBufferView->offset() + gltfAccessor->offset(), gltfBufferView->size() - gltfAccessor->offset());
-                            }
-                        }
+                        // Get data
+                        std::vector<char> * data = (bufferIndex < m_data.size()) ? m_data[bufferIndex].get() : nullptr;
+                        if (data) {
+                            // Create buffer
+                            opengl::Buffer * buffer = mesh->createBuffer(data->data() + gltfBufferView->offset() + gltfAccessor->offset(), gltfBufferView->size() - gltfAccessor->offset());
 
-                        // Set index buffer
-                        if (buffer) {
+                            // Set index buffer
                             geometry->setIndexBuffer(buffer, (gl::GLenum)gltfAccessor->componentType());
                             geometry->setCount(gltfAccessor->count());
                         }
