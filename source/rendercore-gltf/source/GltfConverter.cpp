@@ -8,9 +8,15 @@
 #include <cppfs/fs.h>
 #include <cppfs/FileHandle.h>
 
+#include <glbinding/gl/enum.h>
+
+#include <rendercore/Image.h>
+#include <rendercore/ImageLoader.h>
+
 #include <rendercore-opengl/enums.h>
 #include <rendercore-opengl/Mesh.h>
 #include <rendercore-opengl/Material.h>
+#include <rendercore-opengl/Texture.h>
 #include <rendercore-opengl/scene/MeshComponent.h>
 
 #include <rendercore-gltf/Asset.h>
@@ -101,11 +107,11 @@ void GltfConverter::generateMaterial(const Asset & asset, const Material & gltfM
     material->setValue<bool>       ("doubleSided",     gltfMaterial.doubleSided());
 
     // Set textures
-    material->setTexture("baseColor",         loadTexture(asset.basePath(), gltfMaterial.baseColorTexture()));
-    material->setTexture("metallicRoughness", loadTexture(asset.basePath(), gltfMaterial.metallicRoughnessTexture()));
-    material->setTexture("normal",            loadTexture(asset.basePath(), gltfMaterial.normalTexture()));
-    material->setTexture("occlusion",         loadTexture(asset.basePath(), gltfMaterial.occlusionTexture()));
-    material->setTexture("emissive",          loadTexture(asset.basePath(), gltfMaterial.emissiveTexture()));
+    material->setTexture("baseColor",         loadTexture(asset.basePath(), asset, gltfMaterial.baseColorTexture()));
+    material->setTexture("metallicRoughness", loadTexture(asset.basePath(), asset, gltfMaterial.metallicRoughnessTexture()));
+    material->setTexture("normal",            loadTexture(asset.basePath(), asset, gltfMaterial.normalTexture()));
+    material->setTexture("occlusion",         loadTexture(asset.basePath(), asset, gltfMaterial.occlusionTexture()));
+    material->setTexture("emissive",          loadTexture(asset.basePath(), asset, gltfMaterial.emissiveTexture()));
 
     // Save material
     m_materials.push_back(std::move(material));
@@ -200,12 +206,29 @@ void GltfConverter::generateMesh(const Asset & gltfAsset, const Mesh & gltfMesh)
                 else if (dataType == "MAT3")   numComponents = 9;
                 else if (dataType == "MAT4")   numComponents = 16;
 
+                // Get component type
+                size_t componentSize = 0;
+                     if (gltfAccessor->componentType() == (unsigned int)gl::GL_INT)            componentSize = sizeof(int);
+                else if (gltfAccessor->componentType() == (unsigned int)gl::GL_UNSIGNED_INT)   componentSize = sizeof(unsigned int);
+                else if (gltfAccessor->componentType() == (unsigned int)gl::GL_SHORT)          componentSize = sizeof(short);
+                else if (gltfAccessor->componentType() == (unsigned int)gl::GL_UNSIGNED_SHORT) componentSize = sizeof(unsigned short);
+                else if (gltfAccessor->componentType() == (unsigned int)gl::GL_BYTE)           componentSize = sizeof(char);
+                else if (gltfAccessor->componentType() == (unsigned int)gl::GL_UNSIGNED_BYTE)  componentSize = sizeof(unsigned char);
+                else if (gltfAccessor->componentType() == (unsigned int)gl::GL_FLOAT)          componentSize = sizeof(float);
+                else if (gltfAccessor->componentType() == (unsigned int)gl::GL_DOUBLE)         componentSize = sizeof(double);
+
+                // Calculate stride
+                size_t stride = gltfBufferView->stride();
+                if (stride == 0) {
+                    stride = componentSize * numComponents;
+                }
+
                 // Create vertex attribute
                 vertexAttribute = mesh->addVertexAttribute(
                     buffer,
                     gltfAccessor->offset(),
                     0,
-                    gltfBufferView->stride(),
+                    stride,
                     (gl::GLenum)gltfAccessor->componentType(),
                     numComponents,
                     false
@@ -322,24 +345,64 @@ void GltfConverter::generateScene(const Asset & gltfAsset, const Scene & gltfSce
     m_scenes.push_back(std::move(scene));
 }
 
-rendercore::opengl::Texture * GltfConverter::loadTexture(const std::string & basePath, const std::string & filename)
+rendercore::opengl::Texture * GltfConverter::loadTexture(const std::string & basePath, const Asset & gltfAsset, int textureInfoIndex)
 {
-    // Check filename
-    if (filename == "") {
+    // Check texture index
+    if (textureInfoIndex < 0 || textureInfoIndex >= (int)gltfAsset.textureInfos().size()) {
         return nullptr;
     }
+
+    // Get texture info
+    auto * gltfTextureInfo = gltfAsset.textureInfo(textureInfoIndex);
+    if (!gltfTextureInfo) return nullptr;
+
+    // Get texture
+    auto * gltfTexture = gltfAsset.texture(gltfTextureInfo->texture());
+    if (!gltfTexture) return nullptr;
+
+    // Get image
+    auto * gltfImage = gltfAsset.image(gltfTexture->image());
+    if (!gltfImage) return nullptr;
 
     // Create texture
     auto texture = cppassist::make_unique<rendercore::opengl::Texture>();
     auto * texturePtr = texture.get();
 
-    // Load texture
-    texture->load(basePath + filename);
+    // Set texture data
+    if (gltfImage->uri() != "") {
+        // Load from file
+        texture->load(basePath + gltfImage->uri());
+    } else if (gltfImage->bufferView() > -1) {
+        // Get buffer view
+        auto * gtlfBufferView = gltfAsset.bufferView(gltfImage->bufferView());
+        if (gtlfBufferView) {
+            // Get buffer index
+            auto bufferIndex = gtlfBufferView->buffer();
+
+            // Get data
+            std::vector<char> * data = (bufferIndex < m_data.size()) ? m_data[bufferIndex].get() : nullptr;
+            if (data) {
+                // Create texture from data
+                ImageLoader loader;
+                auto image = loader.loadFromMemory(data->data() + gtlfBufferView->offset(), gtlfBufferView->size());
+                texture->setImage(std::move(image));
+            }
+        }
+    }
+
+    // Set texture options
+    auto * gltfSampler = gltfAsset.sampler(gltfTexture->sampler());
+    if (gltfSampler) {
+        texture->setMinFilter((gl::GLenum)gltfSampler->minFilter());
+        texture->setMagFilter((gl::GLenum)gltfSampler->magFilter());
+        texture->setWrapS((gl::GLenum)gltfSampler->wrapS());
+        texture->setWrapT((gl::GLenum)gltfSampler->wrapT());
+    }
 
     // Save texture
     m_textures.push_back(std::move(texture));
 
-    // Return texture :)
+    // Return texture
     return texturePtr;
 }
 

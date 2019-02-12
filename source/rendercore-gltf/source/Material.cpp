@@ -9,9 +9,14 @@ namespace gltf
 
 
 Material::Material()
-: m_baseColorFactor(1.0f, 1.0f, 1.0f, 1.0f)
+: m_baseColorTexture(-1)
+, m_baseColorFactor(1.0f, 1.0f, 1.0f, 1.0f)
+, m_metallicRoughnessTexture(-1)
 , m_metallicFactor(1.0f)
 , m_roughnessFactor(1.0f)
+, m_normalTexture(-1)
+, m_occlusionTexture(-1)
+, m_emissiveTexture(-1)
 , m_emissiveFactor(0.0f, 0.0f, 0.0f)
 , m_alphaMode("OPAQUE")
 , m_alphaCutoff(0.5f)
@@ -33,14 +38,14 @@ void Material::setName(const std::string & name)
     m_name = name;
 }
 
-const std::string & Material::baseColorTexture() const
+int Material::baseColorTexture() const
 {
     return m_baseColorTexture;
 }
 
-void Material::setBaseColorTexture(const std::string & filename)
+void Material::setBaseColorTexture(int index)
 {
-    m_baseColorTexture = filename;
+    m_baseColorTexture = index;
 }
 
 glm::vec4 Material::baseColorFactor() const
@@ -53,14 +58,14 @@ void Material::setBaseColorFactor(const glm::vec4 & baseColorFactor)
     m_baseColorFactor = baseColorFactor;
 }
 
-const std::string & Material::metallicRoughnessTexture() const
+int Material::metallicRoughnessTexture() const
 {
     return m_metallicRoughnessTexture;
 }
 
-void Material::setMetallicRoughnessTexture(const std::string & filename)
+void Material::setMetallicRoughnessTexture(int index)
 {
-    m_metallicRoughnessTexture = filename;
+    m_metallicRoughnessTexture = index;
 }
 
 float Material::metallicFactor() const
@@ -83,34 +88,34 @@ void Material::setRoughnessFactor(float roughnessFactor)
     m_roughnessFactor = roughnessFactor;
 }
 
-const std::string & Material::normalTexture() const
+int Material::normalTexture() const
 {
     return m_normalTexture;
 }
 
-void Material::setNormalTexture(const std::string & filename)
+void Material::setNormalTexture(int index)
 {
-    m_normalTexture = filename;
+    m_normalTexture = index;
 }
 
-const std::string & Material::occlusionTexture() const
+int Material::occlusionTexture() const
 {
     return m_occlusionTexture;
 }
 
-void Material::setOcclusionTexture(const std::string & filename)
+void Material::setOcclusionTexture(int index)
 {
-    m_occlusionTexture = filename;
+    m_occlusionTexture = index;
 }
 
-const std::string & Material::emissiveTexture() const
+int Material::emissiveTexture() const
 {
     return m_emissiveTexture;
 }
 
-void Material::setEmissiveTexture(const std::string & filename)
+void Material::setEmissiveTexture(int index)
 {
-    m_emissiveTexture = filename;
+    m_emissiveTexture = index;
 }
 
 glm::vec3 Material::emissiveFactor() const

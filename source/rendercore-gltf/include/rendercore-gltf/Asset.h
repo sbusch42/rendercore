@@ -13,6 +13,7 @@
 #include <rendercore-gltf/Accessor.h>
 #include <rendercore-gltf/Mesh.h>
 #include <rendercore-gltf/Material.h>
+#include <rendercore-gltf/TextureInfo.h>
 #include <rendercore-gltf/Texture.h>
 #include <rendercore-gltf/Sampler.h>
 #include <rendercore-gltf/Image.h>
@@ -327,6 +328,36 @@ public:
 
     /**
     *  @brief
+    *    Get texture infos
+    *
+    *  @return
+    *    List of texture infos
+    */
+    std::vector<TextureInfo *> textureInfos() const;
+
+    /**
+    *  @brief
+    *    Get texture info
+    *
+    *  @param[in] index
+    *    Texture info index
+    *
+    *  @return
+    *    Texture info (can be null)
+    */
+    TextureInfo * textureInfo(size_t index) const;
+
+    /**
+    *  @brief
+    *    Add texture info
+    *
+    *  @param[in] textureInfo
+    *    Texture info (must NOT be nullptr)
+    */
+    void addTextureInfo(std::unique_ptr<TextureInfo> && textureInfo);
+
+    /**
+    *  @brief
     *    Get textures
     *
     *  @return
@@ -351,7 +382,7 @@ public:
     *    Add texture
     *
     *  @param[in] texture
-    *    Material (must NOT be nullptr)
+    *    Texture (must NOT be nullptr)
     */
     void addTexture(std::unique_ptr<Texture> && texture);
 
@@ -423,16 +454,17 @@ protected:
     int         m_scene;      ///< Index of default scene (-1 for none)
 
     // Data
-    std::vector< std::unique_ptr<Scene> >      m_scenes;
-    std::vector< std::unique_ptr<Node> >       m_nodes;
-    std::vector< std::unique_ptr<Buffer> >     m_buffers;
-    std::vector< std::unique_ptr<BufferView> > m_bufferViews;
-    std::vector< std::unique_ptr<Accessor> >   m_accessors;
-    std::vector< std::unique_ptr<Mesh> >       m_meshes;
-    std::vector< std::unique_ptr<Material> >   m_materials;
-    std::vector< std::unique_ptr<Texture> >    m_textures;
-    std::vector< std::unique_ptr<Sampler> >    m_samplers;
-    std::vector< std::unique_ptr<Image> >      m_images;
+    std::vector< std::unique_ptr<Scene> >       m_scenes;
+    std::vector< std::unique_ptr<Node> >        m_nodes;
+    std::vector< std::unique_ptr<Buffer> >      m_buffers;
+    std::vector< std::unique_ptr<BufferView> >  m_bufferViews;
+    std::vector< std::unique_ptr<Accessor> >    m_accessors;
+    std::vector< std::unique_ptr<Mesh> >        m_meshes;
+    std::vector< std::unique_ptr<Material> >    m_materials;
+    std::vector< std::unique_ptr<TextureInfo> > m_textureInfos;
+    std::vector< std::unique_ptr<Texture> >     m_textures;
+    std::vector< std::unique_ptr<Sampler> >     m_samplers;
+    std::vector< std::unique_ptr<Image> >       m_images;
 };
 
 

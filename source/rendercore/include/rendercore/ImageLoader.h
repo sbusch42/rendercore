@@ -43,6 +43,20 @@ public:
     */
     std::unique_ptr<Image> load(const std::string & filename) const;
 
+    /**
+    *  @brief
+    *    Load image from memory
+    *
+    *  @param[in] data
+    *    Image data (must NOT be null)
+    *  @param[in] size
+    *    Image data size
+    *
+    *  @return
+    *    Image (can be null)
+    */
+    std::unique_ptr<Image> loadFromMemory(const char * data, size_t size) const;
+
 protected:
     /**
     *  @brief

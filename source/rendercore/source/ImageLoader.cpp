@@ -41,6 +41,30 @@ std::unique_ptr<Image> ImageLoader::load(const std::string & filename) const
     }
 }
 
+std::unique_ptr<Image> ImageLoader::loadFromMemory(const char * buffer, size_t size) const
+{
+    // Create image
+    auto image = cppassist::make_unique<Image>();
+
+    // Load image
+    int width    = 0;
+    int height   = 0;
+    int channels = 0;
+    char * data = reinterpret_cast<char *>(stbi_load_from_memory(reinterpret_cast<const unsigned char*>(buffer), size, &width, &height, &channels, 4));
+    if (data) {
+        // Set image data
+        unsigned int format = 6408; // gl::GL_RGBA
+        unsigned int type   = 5121; // gl::GL_UNSIGNED_BYTE
+        image->setData(width, height, 1, format, type, width * height * 4, data);
+
+        // Free image data
+        stbi_image_free(data);
+    }
+
+    // Return image
+    return std::move(image);
+}
+
 std::unique_ptr<Image> ImageLoader::loadCommonImage(const std::string & filename) const
 {
     // Create image

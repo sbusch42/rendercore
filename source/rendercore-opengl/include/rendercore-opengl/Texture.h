@@ -4,6 +4,8 @@
 
 #include <memory>
 
+#include <glbinding/gl/gl.h>
+
 #include <globjects/Texture.h>
 
 #include <rendercore/GpuObject.h>
@@ -88,6 +90,78 @@ public:
 
     /**
     *  @brief
+    *    Get minification filter
+    *
+    *  @return
+    *    Minification filter (OpenGL enum, e.g., GL_NEAREST)
+    */
+    gl::GLenum minFilter() const;
+
+    /**
+    *  @brief
+    *    Set minification filter
+    *
+    *  @param[in] filter
+    *    Minification filter (OpenGL enum, e.g., GL_NEAREST)
+    */
+    void setMinFilter(gl::GLenum filter);
+
+    /**
+    *  @brief
+    *    Get magnification filter
+    *
+    *  @return
+    *    Magnification filter (OpenGL enum, e.g., GL_NEAREST)
+    */
+    gl::GLenum magFilter() const;
+
+    /**
+    *  @brief
+    *    Set magnification filter
+    *
+    *  @param[in] filter
+    *    Magnification filter (OpenGL enum, e.g., GL_NEAREST)
+    */
+    void setMagFilter(gl::GLenum filter);
+
+    /**
+    *  @brief
+    *    Get wrapping mode (S)
+    *
+    *  @return
+    *    Wrapping mode (OpenGL enum, e.g., GL_NEAREST)
+    */
+    gl::GLenum wrapS() const;
+
+    /**
+    *  @brief
+    *    Set wrapping filter (S)
+    *
+    *  @param[in] mode
+    *    Magnification filter (OpenGL enum, e.g., GL_NEAREST)
+    */
+    void setWrapS(gl::GLenum mode);
+
+    /**
+    *  @brief
+    *    Get wrapping mode (T)
+    *
+    *  @return
+    *    Wrapping mode (OpenGL enum, e.g., GL_NEAREST)
+    */
+    gl::GLenum wrapT() const;
+
+    /**
+    *  @brief
+    *    Set wrapping filter (T)
+    *
+    *  @param[in] mode
+    *    Magnification filter (OpenGL enum, e.g., GL_NEAREST)
+    */
+    void setWrapT(gl::GLenum mode);
+
+    /**
+    *  @brief
     *    Get OpenGL texture
     *
     *  @return
@@ -97,6 +171,8 @@ public:
     *    - Requires an active rendering context
     */
     globjects::Texture * texture();
+
+    // [TODO]
 
 protected:
     // Virtual GpuObject functions
@@ -112,6 +188,11 @@ protected:
     void createFromImage();
 
 protected:
+    gl::GLenum m_minFilter; ///< Minification filter
+    gl::GLenum m_magFilter; ///< Magnification filter
+    gl::GLenum m_wrapS;     ///< Wrapping mode
+    gl::GLenum m_wrapT;     ///< Wrapping mode
+
     std::unique_ptr<globjects::Texture> m_texture; ///< OpenGL texture (can be null)
     std::unique_ptr<rendercore::Image>  m_image;   ///< Image that is the source for the texture (can be null)
 };

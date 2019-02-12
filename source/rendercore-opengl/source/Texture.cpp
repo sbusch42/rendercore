@@ -16,6 +16,10 @@ namespace opengl
 
 Texture::Texture(GpuContainer * container)
 : GpuObject(container)
+, m_minFilter(gl::GL_LINEAR)
+, m_magFilter(gl::GL_LINEAR)
+, m_wrapS(gl::GL_CLAMP_TO_EDGE)
+, m_wrapT(gl::GL_CLAMP_TO_EDGE)
 {
 }
 
@@ -47,6 +51,46 @@ void Texture::load(const std::string & filename)
     // Load image
     ImageLoader loader;
     setImage(loader.load(filename));
+}
+
+gl::GLenum Texture::minFilter() const
+{
+    return m_minFilter;
+}
+
+void Texture::setMinFilter(gl::GLenum filter)
+{
+    m_minFilter = filter;
+}
+
+gl::GLenum Texture::magFilter() const
+{
+    return m_magFilter;
+}
+
+void Texture::setMagFilter(gl::GLenum filter)
+{
+    m_magFilter = filter;
+}
+
+gl::GLenum Texture::wrapS() const
+{
+    return m_wrapS;
+}
+
+void Texture::setWrapS(gl::GLenum filter)
+{
+    m_wrapS = filter;
+}
+
+gl::GLenum Texture::wrapT() const
+{
+    return m_wrapT;
+}
+
+void Texture::setWrapT(gl::GLenum filter)
+{
+    m_wrapT = filter;
 }
 
 globjects::Texture * Texture::texture()
@@ -87,6 +131,12 @@ void Texture::createFromImage()
         static_cast<gl::GLenum>(m_image->dataType()),
         m_image->data()
     );
+
+    // Set texture parameters
+    m_texture->setParameter(gl::GL_TEXTURE_MIN_FILTER, m_minFilter);
+    m_texture->setParameter(gl::GL_TEXTURE_MAG_FILTER, m_magFilter);
+    m_texture->setParameter(gl::GL_TEXTURE_WRAP_S,     m_wrapS);
+    m_texture->setParameter(gl::GL_TEXTURE_WRAP_T,     m_wrapT);
 
     // Flag texture valid
     setValid(true);

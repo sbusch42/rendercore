@@ -9,7 +9,7 @@ namespace gltf
 
 
 Primitive::Primitive()
-: m_mode(0)
+: m_mode(4)
 , m_material(0)
 , m_indices(-1)
 {

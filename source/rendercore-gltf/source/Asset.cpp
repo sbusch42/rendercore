@@ -234,6 +234,31 @@ void Asset::addMaterial(std::unique_ptr<Material> && material)
     m_materials.push_back(std::move(material));
 }
 
+std::vector<TextureInfo *> Asset::textureInfos() const
+{
+    std::vector<TextureInfo *> lst;
+
+    for (auto & textureInfo : m_textureInfos) {
+        lst.push_back(textureInfo.get());
+    }
+
+    return lst;
+}
+
+TextureInfo * Asset::textureInfo(size_t index) const
+{
+    if (index < m_textureInfos.size()) {
+        return m_textureInfos[index].get();
+    } else {
+        return nullptr;
+    }
+}
+
+void Asset::addTextureInfo(std::unique_ptr<TextureInfo> && textureInfo)
+{
+    m_textureInfos.push_back(std::move(textureInfo));
+}
+
 std::vector<Texture *> Asset::textures() const
 {
     std::vector<Texture *> lst;

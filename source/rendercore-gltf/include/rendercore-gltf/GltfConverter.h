@@ -131,10 +131,12 @@ protected:
     *
     *  @param[in] basePath
     *    Path to directory
-    *  @param[in] filename
-    *    Filename
+    *  @param[in] asset
+    *    GLTF asset
+    *  @param[in] textureInfoIndex
+    *    Texture info index
     */
-    rendercore::opengl::Texture * loadTexture(const std::string & basePath, const std::string & filename);
+    rendercore::opengl::Texture * loadTexture(const std::string & basePath, const Asset & asset, int textureInfoIndex);
 
     /**
     *  @brief

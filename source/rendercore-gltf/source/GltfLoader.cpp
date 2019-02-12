@@ -80,7 +80,8 @@ std::unique_ptr<Asset> GltfLoader::parseFile(const cppexpose::Object & root, con
         } else if (key == "meshes") {
             res &= parseMeshes(*asset.get(), value);
         } else if (key == "animations") {
-            res &= parseAnimations(*asset.get(), value);
+            // [TODO]
+            // res &= parseAnimations(*asset.get(), value);
         } else if (key == "accessors") {
             res &= parseAccessors(*asset.get(), value);
         } else if (key == "materials") {
@@ -89,6 +90,12 @@ std::unique_ptr<Asset> GltfLoader::parseFile(const cppexpose::Object & root, con
             res &= parseBuffers(*asset.get(), value);
         } else if (key == "bufferViews") {
             res &= parseBufferViews(*asset.get(), value);
+        } else if (key == "textures") {
+            res &= parseTextures(*asset.get(), value);
+        } else if (key == "samplers") {
+            res &= parseSamplers(*asset.get(), value);
+        } else if (key == "images") {
+            res &= parseImages(*asset.get(), value);
         }
     }
 
@@ -122,11 +129,6 @@ bool GltfLoader::parseAsset(Asset & asset, const cppexpose::AbstractVar * value)
 
 bool GltfLoader::parseDefaultScene(Asset & asset, const cppexpose::AbstractVar * value)
 {
-    // Value must be an unsigned int
-    if (!value->canConvert<unsigned int>()) {
-        return false;
-    }
-
     // Get default scene
     asset.setDefaultScene(value->convert<int>());
 
@@ -352,7 +354,7 @@ bool GltfLoader::parsePrimitive(Mesh & mesh, const cppexpose::AbstractVar * valu
     // 'mode'
     if (obj.propertyExists("mode")) {
         primitive->setMode(obj.property("mode")->convert<unsigned int>());
-    } else return false;
+    };
 
     // 'material'
     if (obj.propertyExists("material")) {
@@ -438,7 +440,7 @@ bool GltfLoader::parseAccessor(Asset & asset, const cppexpose::AbstractVar * val
     // 'byteOffset'
     if (obj.propertyExists("byteOffset")) {
         accessor->setOffset(obj.property("byteOffset")->convert<unsigned int>());
-    } else return false;
+    };
 
     // 'count'
     if (obj.propertyExists("count")) {
@@ -529,7 +531,28 @@ bool GltfLoader::parseMaterial(Asset & asset, const cppexpose::AbstractVar * val
 
             // 'baseColorTexture'
             if (subObj->propertyExists("baseColorTexture")) {
-                material->setBaseColorTexture(subObj->property("baseColorTexture")->convert<std::string>());
+                // Get object
+                const cppexpose::Object * subObj2 = subObj->property("baseColorTexture")->asObject();
+                if (subObj2) {
+                    // Create texture info
+                    auto textureInfo = cppassist::make_unique<TextureInfo>();
+
+                    // 'index'
+                    if (subObj2->propertyExists("index")) {
+                        textureInfo->setTexture(subObj2->property("index")->convert<unsigned int>());
+                    }
+
+                    // 'texCoord'
+                    if (subObj2->propertyExists("texCoord")) {
+                        textureInfo->setUVSet(subObj2->property("texCoord")->convert<unsigned int>());
+                    }
+
+                    // Add texture info
+                    asset.addTextureInfo(std::move(textureInfo));
+
+                    // Set base color texture info
+                    material->setBaseColorTexture(asset.textureInfos().size() - 1);
+                }
             }
 
             // 'metallicFactor'
@@ -544,24 +567,118 @@ bool GltfLoader::parseMaterial(Asset & asset, const cppexpose::AbstractVar * val
 
             // 'metallicRoughnessTexture'
             if (subObj->propertyExists("metallicRoughnessTexture")) {
-                material->setMetallicRoughnessTexture(subObj->property("metallicRoughnessTexture")->convert<std::string>());
+                // Get object
+                const cppexpose::Object * subObj2 = subObj->property("metallicRoughnessTexture")->asObject();
+                if (subObj2) {
+                    // Create texture info
+                    auto textureInfo = cppassist::make_unique<TextureInfo>();
+
+                    // 'index'
+                    if (subObj2->propertyExists("index")) {
+                        textureInfo->setTexture(subObj2->property("index")->convert<unsigned int>());
+                    }
+
+                    // 'texCoord'
+                    if (subObj2->propertyExists("texCoord")) {
+                        textureInfo->setUVSet(subObj2->property("texCoord")->convert<unsigned int>());
+                    }
+
+                    // Add texture info
+                    asset.addTextureInfo(std::move(textureInfo));
+
+                    // Set base color texture info
+                    material->setMetallicRoughnessTexture(asset.textureInfos().size() - 1);
+                }
             }
         }
     }
 
     // 'normalTexture'
     if (obj.propertyExists("normalTexture")) {
-        material->setNormalTexture(obj.property("normalTexture")->convert<std::string>());
+        // Get object
+        const cppexpose::Object * subObj = obj.property("normalTexture")->asObject();
+        if (subObj) {
+            // Create texture info
+            auto textureInfo = cppassist::make_unique<TextureInfo>();
+
+            // 'index'
+            if (subObj->propertyExists("index")) {
+                textureInfo->setTexture(subObj->property("index")->convert<unsigned int>());
+            }
+
+            // 'texCoord'
+            if (subObj->propertyExists("texCoord")) {
+                textureInfo->setUVSet(subObj->property("texCoord")->convert<unsigned int>());
+            }
+
+            // 'scale'
+            if (subObj->propertyExists("scale")) {
+                textureInfo->setScale(subObj->property("scale")->convert<float>());
+            }
+
+            // Add texture info
+            asset.addTextureInfo(std::move(textureInfo));
+
+            // Set normal texture info
+            material->setNormalTexture(asset.textureInfos().size() - 1);
+        }
     }
 
     // 'occlusionTexture'
     if (obj.propertyExists("occlusionTexture")) {
-        material->setOcclusionTexture(obj.property("occlusionTexture")->convert<std::string>());
+        // Get object
+        const cppexpose::Object * subObj = obj.property("occlusionTexture")->asObject();
+        if (subObj) {
+            // Create texture info
+            auto textureInfo = cppassist::make_unique<TextureInfo>();
+
+            // 'index'
+            if (subObj->propertyExists("index")) {
+                textureInfo->setTexture(subObj->property("index")->convert<unsigned int>());
+            }
+
+            // 'texCoord'
+            if (subObj->propertyExists("texCoord")) {
+                textureInfo->setUVSet(subObj->property("texCoord")->convert<unsigned int>());
+            }
+
+            // 'strength'
+            if (subObj->propertyExists("strength")) {
+                textureInfo->setStrength(subObj->property("strength")->convert<float>());
+            }
+
+            // Add texture info
+            asset.addTextureInfo(std::move(textureInfo));
+
+            // Set normal texture info
+            material->setOcclusionTexture(asset.textureInfos().size() - 1);
+        }
     }
 
     // 'emissiveTexture'
     if (obj.propertyExists("emissiveTexture")) {
-        material->setEmissiveTexture(obj.property("emissiveTexture")->convert<std::string>());
+        // Get object
+        const cppexpose::Object * subObj = obj.property("emissiveTexture")->asObject();
+        if (subObj) {
+            // Create texture info
+            auto textureInfo = cppassist::make_unique<TextureInfo>();
+
+            // 'index'
+            if (subObj->propertyExists("index")) {
+                textureInfo->setTexture(subObj->property("index")->convert<unsigned int>());
+            }
+
+            // 'texCoord'
+            if (subObj->propertyExists("texCoord")) {
+                textureInfo->setUVSet(subObj->property("texCoord")->convert<unsigned int>());
+            }
+
+            // Add texture info
+            asset.addTextureInfo(std::move(textureInfo));
+
+            // Set emissive texture info
+            material->setEmissiveTexture(asset.textureInfos().size() - 1);
+        }
     }
 
     // 'emissiveFactor'
@@ -684,7 +801,7 @@ bool GltfLoader::parseBufferView(Asset & asset, const cppexpose::AbstractVar * v
     // 'byteOffset'
     if (obj.propertyExists("byteOffset")) {
         bufferView->setOffset(obj.property("byteOffset")->convert<unsigned int>());
-    } else return false;
+    };
 
     // 'byteLength'
     if (obj.propertyExists("byteLength")) {
@@ -871,7 +988,7 @@ bool GltfLoader::parseImage(Asset & asset, const cppexpose::AbstractVar * value)
 
     // 'uri'
     if (obj.propertyExists("uri")) {
-        image->setMimeType(obj.property("uri")->convert<std::string>());
+        image->setURI(obj.property("uri")->convert<std::string>());
     }
 
     // 'mimeType'

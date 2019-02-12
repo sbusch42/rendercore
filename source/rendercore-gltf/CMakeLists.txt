@@ -52,6 +52,7 @@ set(headers
     ${include_path}/Sampler.h
     ${include_path}/Scene.h
     ${include_path}/Texture.h
+    ${include_path}/TextureInfo.h
 )
 
 set(sources
@@ -70,6 +71,7 @@ set(sources
     ${source_path}/Sampler.cpp
     ${source_path}/Scene.cpp
     ${source_path}/Texture.cpp
+    ${source_path}/TextureInfo.cpp
 )
 
 # Group source files

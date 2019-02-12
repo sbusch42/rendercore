@@ -57,18 +57,18 @@ public:
     *    Get base color texture
     *
     *  @return
-    *    Filename of base color texture
+    *    Index of base color texture info (-1 for none)
     */
-    const std::string & baseColorTexture() const;
+    int baseColorTexture() const;
 
     /**
     *  @brief
     *    Set base color texture
     *
-    *  @param[in] filename
-    *    Filename of base color texture
+    *  @param[in] index
+    *    Index of base color texture info (-1 for none)
     */
-    void setBaseColorTexture(const std::string & filename);
+    void setBaseColorTexture(int index);
 
     /**
     *  @brief
@@ -93,18 +93,18 @@ public:
     *    Get metallic-roughness texture
     *
     *  @return
-    *    Filename of metallic-roughness texture
+    *    Index of metallic-roughness texture info (-1 for none)
     */
-    const std::string & metallicRoughnessTexture() const;
+    int metallicRoughnessTexture() const;
 
     /**
     *  @brief
     *    Set metallic-roughness texture
     *
-    *  @param[in] filename
-    *    Filename of metallic-roughness texture
+    *  @param[in] index
+    *    Index of metallic-roughness texture info (-1 for none)
     */
-    void setMetallicRoughnessTexture(const std::string & filename);
+    void setMetallicRoughnessTexture(int index);
 
     /**
     *  @brief
@@ -147,54 +147,54 @@ public:
     *    Get normal texture
     *
     *  @return
-    *    Filename of normal texture
+    *    Index of normal texture info (-1 for none)
     */
-    const std::string & normalTexture() const;
+    int normalTexture() const;
 
     /**
     *  @brief
     *    Set normal texture
     *
-    *  @param[in] filename
-    *    Filename of normal texture
+    *  @param[in] index
+    *    Index of normal texture info (-1 for none)
     */
-    void setNormalTexture(const std::string & filename);
+    void setNormalTexture(int index);
 
     /**
     *  @brief
     *    Get occlusion texture
     *
     *  @return
-    *    Filename of occlusion texture
+    *    Index of occlusion texture info (-1 for none)
     */
-    const std::string & occlusionTexture() const;
+    int occlusionTexture() const;
 
     /**
     *  @brief
     *    Set occlusion texture
     *
-    *  @param[in] filename
-    *    Filename of occlusion texture
+    *  @param[in] index
+    *    Index of occlusion texture info (-1 for none)
     */
-    void setOcclusionTexture(const std::string & filename);
+    void setOcclusionTexture(int index);
 
     /**
     *  @brief
     *    Get emissive texture
     *
     *  @return
-    *    Filename of emissive texture
+    *    Index of emissive texture info (-1 for none)
     */
-    const std::string & emissiveTexture() const;
+    int emissiveTexture() const;
 
     /**
     *  @brief
     *    Set emissive texture
     *
-    *  @param[in] filename
-    *    Filename of emissive texture
+    *  @param[in] index
+    *    Index of emissive texture info (-1 for none)
     */
-    void setEmissiveTexture(const std::string & filename);
+    void setEmissiveTexture(int index);
 
     /**
     *  @brief
@@ -270,14 +270,14 @@ public:
 
 protected:
     std::string m_name;                     ///< Material name
-    std::string m_baseColorTexture;         ///< Filename of base color texture
+    int         m_baseColorTexture;         ///< Filename of base color texture
     glm::vec4   m_baseColorFactor;          ///< Base color factor
-    std::string m_metallicRoughnessTexture; ///< Filename of metallic-roughness texture
+    int         m_metallicRoughnessTexture; ///< Filename of metallic-roughness texture
     float       m_metallicFactor;           ///< Metalness of the material
     float       m_roughnessFactor;          ///< Roughness of the material
-    std::string m_normalTexture;            ///< Filename of normal texture
-    std::string m_occlusionTexture;         ///< Filename of occlusion texture
-    std::string m_emissiveTexture;          ///< Filename of emissive texture
+    int         m_normalTexture;            ///< Filename of normal texture
+    int         m_occlusionTexture;         ///< Filename of occlusion texture
+    int         m_emissiveTexture;          ///< Filename of emissive texture
     glm::vec3   m_emissiveFactor;           ///< Emissive color of the material
     std::string m_alphaMode;                ///< Alpha mode
     float       m_alphaCutoff;              ///< Alpha cutoff value
