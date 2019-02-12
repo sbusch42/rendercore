@@ -36,7 +36,6 @@ MeshExampleRenderer::MeshExampleRenderer(GpuContainer * container)
 
     // Load texture
     m_texture = cppassist::make_unique<Texture>(this);
-    //m_texture->load(rendercore::dataPath() + "/rendercore/textures/brickwall.glraw");
     m_texture->load(rendercore::dataPath() + "/rendercore/textures/elegant-blue-floral-texture.png");
 
     // Create material

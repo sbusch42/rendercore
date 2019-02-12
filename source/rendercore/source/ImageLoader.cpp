@@ -29,7 +29,7 @@ std::unique_ptr<Image> ImageLoader::load(const std::string & filename) const
 {
     // Check filename extension
     std::string ext = cppfs::FilePath(filename).extension();
-    if (ext == ".png" || ext == ".jpg") {
+    if (ext == ".png" || ext == ".jpg" || ext == ".bmp") {
         // Load image file
         return loadCommonImage(filename);
     } else if (ext == ".glraw") {
