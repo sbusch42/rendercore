@@ -40,6 +40,8 @@ GltfExampleRenderer::GltfExampleRenderer(GpuContainer * container)
     // auto asset = loader.load(rendercore::dataPath() + "/rendercore/gltf/BoxAnimated/BoxAnimated.gltf");
     // auto asset = loader.load(rendercore::dataPath() + "/rendercore/gltf/TextureCoordinateTest/TextureCoordinateTest.gltf");
     auto asset = loader.load(rendercore::dataPath() + "/rendercore/gltf/BoomBox/BoomBox.gltf");
+    // auto asset = loader.load(rendercore::dataPath() + "/rendercore/gltf/PbrTest/PbrTest.gltf");
+    // auto asset = loader.load(rendercore::dataPath() + "/rendercore/gltf/Taxi/Taxi.gltf");
 
     // Transfer data from GLTF
     GltfConverter converter;
