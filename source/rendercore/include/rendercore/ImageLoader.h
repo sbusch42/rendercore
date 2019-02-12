@@ -46,6 +46,18 @@ public:
 protected:
     /**
     *  @brief
+    *    Load image from common file formats
+    *
+    *  @param[in] filename
+    *    path of the image file
+    *
+    *  @return
+    *    Loaded image, null on error
+    */
+    std::unique_ptr<Image> loadCommonImage(const std::string & filename) const;
+
+    /**
+    *  @brief
     *    Create image from .glraw file
     *
     *  @param[in] filename

@@ -165,6 +165,7 @@ target_include_directories(${target}
     ${PROJECT_BINARY_DIR}/source/include
     ${CMAKE_CURRENT_SOURCE_DIR}/include
     ${CMAKE_CURRENT_BINARY_DIR}/include
+    ${PROJECT_SOURCE_DIR}/3rdparty
 
     PUBLIC
     ${DEFAULT_INCLUDE_DIRECTORIES}

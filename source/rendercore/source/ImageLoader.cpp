@@ -1,6 +1,9 @@
 
 #include <rendercore/ImageLoader.h>
 
+#define STB_IMAGE_IMPLEMENTATION
+#include <stb/stb_image.h>
+
 #include <cppfs/FilePath.h>
 
 #include <cppassist/memory/make_unique.h>
@@ -26,13 +29,40 @@ std::unique_ptr<Image> ImageLoader::load(const std::string & filename) const
 {
     // Check filename extension
     std::string ext = cppfs::FilePath(filename).extension();
-    if (ext == ".glraw") {
-        // Parse glraw file (RAW file with extended header)
+    if (ext == ".png" || ext == ".jpg") {
+        // Load image file
+        return loadCommonImage(filename);
+    } else if (ext == ".glraw") {
+        // Load glraw file (RAW file with extended header)
         return loadGLRawImage(filename);
     } else {
         // Unsupported file
         return nullptr;
     }
+}
+
+std::unique_ptr<Image> ImageLoader::loadCommonImage(const std::string & filename) const
+{
+    // Create image
+    auto image = cppassist::make_unique<Image>();
+
+    // Load image
+    int width    = 0;
+    int height   = 0;
+    int channels = 0;
+    char * data = reinterpret_cast<char *>(stbi_load(filename.c_str(), &width, &height, &channels, 4));
+    if (data) {
+        // Set image data
+        unsigned int format = 6408; // gl::GL_RGBA
+        unsigned int type   = 5121; // gl::GL_UNSIGNED_BYTE
+        image->setData(width, height, 1, format, type, width * height * 4, data);
+
+        // Free image data
+        stbi_image_free(data);
+    }
+
+    // Return image
+    return std::move(image);
 }
 
 std::unique_ptr<Image> ImageLoader::loadGLRawImage(const std::string & filename) const
