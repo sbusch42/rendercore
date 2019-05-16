@@ -266,7 +266,7 @@ void GeometryExampleRenderer::onRender()
     // Release program
     m_program->program()->release();
 
-    // Release program
+    // Release texture
     m_texture->texture()->unbindActive(0);
 }
 
